@@ -1,168 +1,72 @@
-"""GreenWorks lawn_mower platform: exposes GreenWorks mowers as Home Assistant lawn mower entities."""
+"""Maeher-Entitaet (lawn_mower) fuer Greenworks."""
 
 from __future__ import annotations
 
-from typing import Any, cast
-import logging
+from typing import Any
 
-try:
-    from homeassistant.components import lawn_mower as lm  # type: ignore[reportMissingImports]
-    LawnMowerActivity = lm.LawnMowerActivity  # type: ignore[attr-defined]
-    LawnMowerEntity = lm.LawnMowerEntity  # type: ignore[attr-defined]
-    LawnMowerEntityFeature = lm.LawnMowerEntityFeature  # type: ignore[attr-defined]
-except Exception:  # pragma: no cover - allows local linting without HA installed
-    from .const import LawnMowerActivity, LawnMowerEntityFeature  # type: ignore
-
-    class LawnMowerEntity:  # type: ignore
-        pass
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.components.lawn_mower import (
+    LawnMowerActivity,
+    LawnMowerEntity,
+    LawnMowerEntityFeature,
+)
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
+from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import CONF_MOWER_NAME, DOMAIN
-from . import GreenWorksDataCoordinator
-from GreenWorksAPI.GreenWorksAPI import Mower
+from .const import MOWER_STATES
+from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
+from .entity import GreenworksEntity
 
-_LOGGER = logging.getLogger(__name__)
+_RETURNING = getattr(LawnMowerActivity, "RETURNING", LawnMowerActivity.MOWING)
+
+ACTIVITY_MAP: dict[int, LawnMowerActivity] = {
+    1: LawnMowerActivity.PAUSED,  # Stopp-Taste gedrueckt
+    2: LawnMowerActivity.DOCKED,  # vom Benutzer geparkt
+    3: LawnMowerActivity.PAUSED,
+    4: LawnMowerActivity.MOWING,
+    5: LawnMowerActivity.MOWING,  # verlaesst die Station
+    6: _RETURNING,  # sucht die Station
+    7: LawnMowerActivity.DOCKED,  # laedt
+    8: LawnMowerActivity.ERROR,
+}
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant,
+    entry: GreenworksConfigEntry,
+    async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
-    """Set up GreenWorks lawn mower entity for a config entry."""
-    mower_name: str = cast(str, entry.data.get(CONF_MOWER_NAME, ""))
-    key = "coordinator" + mower_name
-
-    coordinator: GreenWorksDataCoordinator = hass.data[DOMAIN][key]
-
-    # Find the mower matching the selected name
-    target = next((m for m in coordinator.mower if m.name == mower_name), None)
-    if target is None:
-        _LOGGER.warning("No mower named '%s' found; delaying entity creation until data refresh.", mower_name)
-
-    entity = GreenWorksMowerEntity(coordinator, mower_name)
-    async_add_entities([entity], update_before_add=True)
+    coordinator = entry.runtime_data
+    async_add_entities(
+        GreenworksLawnMower(coordinator, device_id) for device_id in coordinator.data
+    )
 
 
-class GreenWorksMowerEntity(CoordinatorEntity, LawnMowerEntity):  # type: ignore[misc]
-    """Representation of a GreenWorks mower."""
+class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
+    """Der Maehroboter selbst (vorerst nur Statusanzeige)."""
 
-    def __init__(self, coordinator: GreenWorksDataCoordinator, mower_name: str) -> None:
-        super().__init__(coordinator)
-        self._mower_name = mower_name
-        self._attr_name = mower_name
-        # unique_id should be stable; fallback to name if we can't resolve id yet
-        self._attr_unique_id = f"greenworks_{mower_name}"
-        # Remove control abilities: do not advertise any supported features
-        self._attr_supported_features = LawnMowerEntityFeature(0)
+    _attr_name = None
+    _attr_supported_features = LawnMowerEntityFeature(0)
 
-        # Try to set a better unique_id if available from current data
-        mower = self._current_mower
-        if mower is not None:
-            uid = getattr(mower, "sn", None) or getattr(mower, "id", None)
-            if uid is not None:
-                self._attr_unique_id = str(uid)
-
-    # Helpers
-    @property
-    def _current_mower(self) -> Mower | None:
-        """Return the latest mower object matching this entity."""
-        data = self.coordinator.data or []
-        for m in data:
-            try:
-                if getattr(m, "name", None) == self._mower_name:
-                    return m
-            except Exception:  # pragma: no cover - defensive
-                continue
-        return None
-
-    # Entity properties
-    @property
-    def available(self) -> bool:
-        mower = self._current_mower
-        base_available = bool(super().available)
-        mower_online = bool(getattr(mower, "is_online", True)) if mower is not None else False
-        return base_available and mower_online
+    def __init__(self, coordinator: GreenworksCoordinator, device_id: int) -> None:
+        super().__init__(coordinator, device_id, "mower")
 
     @property
-    def device_info(self) -> dict[str, Any]:
-        mower = self._current_mower
-        identifiers = {(
-            DOMAIN,
-            str(getattr(mower, "sn", None) or getattr(mower, "id", self._mower_name)),
-        )}
+    def activity(self) -> LawnMowerActivity | None:
+        mower = self.mower
+        if mower is None or mower.state_code is None:
+            return None
+        return ACTIVITY_MAP.get(mower.state_code)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        mower = self.mower
+        if mower is None:
+            return {}
         return {
-            "identifiers": identifiers,
-            "manufacturer": "GreenWorks",
-            "model": getattr(mower, "model", "GreenWorks Mower"),
-            "name": self._mower_name,
-            # Firmware version not available on Mower dataclass; leave empty
-            "sw_version": "",
+            "status_code": mower.state_code,
+            "status": MOWER_STATES.get(mower.state_code or -1, "unknown"),
+            "sub_status_code": mower.sub_state_code,
         }
 
-    @property
-    def activity(self) -> Any | None:
-        mower = self._current_mower
 
-        if mower is None:
-            return None
-
-        # Attempt to read state from various likely attributes
-        state = None
-        try:
-            # Common patterns: mower.operating_status.mower_main_state, mower.state, mower.status
-            operating_status = getattr(mower, "operating_status", None)
-            if operating_status is not None:
-                state = getattr(operating_status, "mower_main_state", None)
-            if state is None:
-                state = getattr(mower, "mower_main_state", None)
-            if state is None:
-                state = getattr(mower, "state", None)
-            if state is None:
-                state = getattr(mower, "status", None)
-        except Exception:  # pragma: no cover - defensive
-            state = None
-
-        # Normalize enum-like to string name
-        if state is not None and hasattr(state, "name"):
-            state_name: str = str(getattr(state, "name"))
-        else:
-            state_name = str(state).upper() if state is not None else "UNKNOWN"
-
-        # Map vendor states to HA activities
-        mapping: dict[str, Any] = {
-            "MOWING": LawnMowerActivity.MOWING,
-            "LEAVING_CHARGING_STATION": LawnMowerActivity.MOWING,
-            "CHARGING": LawnMowerActivity.DOCKED,
-            "PARKED_BY_USER": LawnMowerActivity.DOCKED,
-            "SEARCHING_FOR_CHARGING_STATION": LawnMowerActivity.RETURNING, # type: ignore
-            "PAUSED": LawnMowerActivity.PAUSED,
-            "STOP_BUTTON_PRESSED": LawnMowerActivity.ERROR,
-            
-        }
-        return mapping.get(state_name)
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any] | None:
-        """Return additional mower attributes such as battery and schedule."""
-        mower = self._current_mower
-        if mower is None:
-            return None
-        attrs: dict[str, Any] = {}
-        # Battery level from operating_status
-        try:
-            operating_status = getattr(mower, "operating_status", None)
-            if operating_status is not None:
-                battery = getattr(operating_status, "battery_status", None)
-                if battery is not None:
-                    attrs["battery_level"] = battery
-                next_start = getattr(operating_status, "next_start", None)
-                if next_start is not None:
-                    attrs["next_start"] = getattr(next_start, "isoformat", lambda: str(next_start))()
-                request_time = getattr(operating_status, "request_time", None)
-                if request_time is not None:
-                    attrs["request_time"] = getattr(request_time, "isoformat", lambda: str(request_time))()
-        except Exception:  # pragma: no cover
-            pass
-        return attrs
-
+# Version 0.2.0

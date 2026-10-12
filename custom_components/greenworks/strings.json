@@ -1,0 +1,93 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Greenworks account",
+        "description": "Enter the credentials of your Greenworks app.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Re-authenticate",
+        "description": "The password for {email} was rejected. Please enter the current password.",
+        "data": {
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid email or password.",
+      "cannot_connect": "Cannot connect to the Greenworks cloud.",
+      "no_devices": "No mower found for this account.",
+      "unknown": "Unexpected error, see log."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "reauth_successful": "Re-authentication successful."
+    }
+  },
+  "entity": {
+    "sensor": {
+      "status": {
+        "name": "Status",
+        "state": {
+          "stop_button_pressed": "Stop button pressed",
+          "parked_by_user": "Parked by user",
+          "paused": "Paused",
+          "mowing": "Mowing",
+          "leaving_station": "Leaving station",
+          "searching_station": "Searching station",
+          "charging": "Charging",
+          "error": "Error",
+          "state_9": "State 9",
+          "unknown": "Unknown"
+        }
+      },
+      "next_start": {
+        "name": "Next start"
+      },
+      "last_error": {
+        "name": "Last error code"
+      },
+      "last_error_time": {
+        "name": "Last error"
+      },
+      "cutting_time": {
+        "name": "Total cutting time"
+      },
+      "running_time": {
+        "name": "Total running time"
+      },
+      "charging_time": {
+        "name": "Total charging time"
+      },
+      "fatal_errors": {
+        "name": "Fatal errors"
+      },
+      "signal_quality": {
+        "name": "Signal quality"
+      },
+      "status_time": {
+        "name": "Last status report"
+      }
+    },
+    "binary_sensor": {
+      "online": {
+        "name": "Online"
+      },
+      "rain_sensor": {
+        "name": "Rain sensor enabled"
+      },
+      "frost_sensor": {
+        "name": "Frost sensor enabled"
+      }
+    },
+    "device_tracker": {
+      "position": {
+        "name": "Position"
+      }
+    }
+  }
+}

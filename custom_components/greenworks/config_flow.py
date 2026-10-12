@@ -1,93 +1,101 @@
-"""Config flow for the GreenWorks integration."""
-import voluptuous as vol
+"""Einrichtung der Greenworks-Integration ueber die Oberflaeche."""
+
+from __future__ import annotations
+
+from collections.abc import Mapping
 import logging
-import homeassistant.helpers.config_validation as cv
 from typing import Any
-from homeassistant import config_entries
+
+import voluptuous as vol
+
+from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
-from homeassistant.data_entry_flow import FlowResult
-from GreenWorksAPI.GreenWorksAPI import UnauthorizedException, GreenWorksAPI
-from .const import CONF_MOWER_NAME, DOMAIN
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+from .api import GreenworksAuthError, GreenworksClient, GreenworksError
+from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
-AUTH_SCHEMA = vol.Schema(
-    {vol.Required(CONF_EMAIL): cv.string, vol.Required(CONF_PASSWORD): cv.string}
+USER_SCHEMA = vol.Schema(
+    {vol.Required(CONF_EMAIL): str, vol.Required(CONF_PASSWORD): str}
 )
 
-class GreenworksConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Greenworks config flow."""
 
-    def __init__(self) -> None:
-        """Initialize the Hass config flow."""
-        super().__init__()
-        self._email = None
-        self._password = None
+class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
+    """Konfigurationsablauf fuer Greenworks."""
 
-    async def async_step_user(self, user_input: dict[str, Any] | None = None):
-        """Invoke when a user initiates a flow via the user interface."""
+    VERSION = 2
+
+    async def _async_validate(
+        self, email: str, password: str
+    ) -> tuple[dict[str, str], int | None, int]:
+        """Zugangsdaten pruefen. Gibt Fehler, user_id und Anzahl Maeher zurueck."""
+        errors: dict[str, str] = {}
+        client = GreenworksClient(async_get_clientsession(self.hass), email, password)
+        try:
+            await client.async_login()
+            devices = await client.async_get_devices()
+        except GreenworksAuthError:
+            errors["base"] = "invalid_auth"
+            return errors, None, 0
+        except GreenworksError:
+            errors["base"] = "cannot_connect"
+            return errors, None, 0
+        except Exception:  # noqa: BLE001
+            _LOGGER.exception("Unerwarteter Fehler bei der Einrichtung")
+            errors["base"] = "unknown"
+            return errors, None, 0
+        if not devices:
+            errors["base"] = "no_devices"
+        return errors, client.user_id, len(devices)
+
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
         errors: dict[str, str] = {}
         if user_input is not None:
-            self._email = user_input[CONF_EMAIL]
-            self._password = user_input[CONF_PASSWORD]
-            # Return the form of the next step.
-            return await self.async_step_device()
-
-        return self.async_show_form(
-            step_id="user", data_schema=AUTH_SCHEMA, errors=errors
-        )
-
-    async def async_step_device(self, data: dict[str, Any] | None = None):
-        """Second step in config flow to choose the device."""
-        if data is not None:
-            data[CONF_EMAIL] = self._email
-            data[CONF_PASSWORD] = self._password
-            return await self.async_create_entry(title=data[CONF_MOWER_NAME], data=data)
-
-        errors = {}
-        try:
-            api = await self.hass.async_add_executor_job(
-                GreenWorksAPI, self._email, self._password, self.hass.config.time_zone
+            email = user_input[CONF_EMAIL].strip()
+            errors, user_id, _ = await self._async_validate(
+                email, user_input[CONF_PASSWORD]
             )
-        except UnauthorizedException:
-            errors["base"] = "auth_error"
-            return self.async_show_form(
-                step_id="user", data_schema=AUTH_SCHEMA, errors=errors)
-
-        if self._email is None or self._password is None:
-            errors["base"] = "auth_error"
-            return self.async_show_form(step_id="user", data_schema=AUTH_SCHEMA, errors=errors)
-        
-        try:
-            mowers = await self.hass.async_add_executor_job(api.get_devices)
-        except UnauthorizedException as ex:
-            errors["base"] = "auth_error"
-            _LOGGER.error("Unauthorized error fetching devices", ex, exc_info=True, stack_info=True)
-            return self.async_show_form(step_id="user", data_schema=AUTH_SCHEMA, errors=errors)
-        except Exception as ex:
-            _LOGGER.error("Error fetching devices: %s", ex)
-            errors["base"] = "unknown_error"
-            return self.async_show_form(step_id="user", data_schema=AUTH_SCHEMA, errors=errors)
-
-        all_mowers = {m.name for m in mowers}
-
-        DEVICE_SCHEMA = vol.Schema(
-            {vol.Optional(CONF_MOWER_NAME): vol.In(all_mowers)}
+            if not errors:
+                await self.async_set_unique_id(str(user_id))
+                self._abort_if_unique_id_configured()
+                return self.async_create_entry(
+                    title=f"Greenworks ({email})",
+                    data={CONF_EMAIL: email, CONF_PASSWORD: user_input[CONF_PASSWORD]},
+                )
+        return self.async_show_form(
+            step_id="user",
+            data_schema=self.add_suggested_values_to_schema(USER_SCHEMA, user_input),
+            errors=errors,
         )
 
-        return self.async_show_form(step_id="device", data_schema=DEVICE_SCHEMA, errors=errors)
+    async def async_step_reauth(
+        self, entry_data: Mapping[str, Any]
+    ) -> ConfigFlowResult:
+        return await self.async_step_reauth_confirm()
 
-    async def async_step_reauth(self, user_input=None):
-        """Handle re-authentication step in the config flow."""
-        return await self.async_step_user()
+    async def async_step_reauth_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
+        entry = self._get_reauth_entry()
+        if user_input is not None:
+            errors, _, _ = await self._async_validate(
+                entry.data[CONF_EMAIL], user_input[CONF_PASSWORD]
+            )
+            if not errors:
+                return self.async_update_reload_and_abort(
+                    entry, data_updates={CONF_PASSWORD: user_input[CONF_PASSWORD]}
+                )
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=vol.Schema({vol.Required(CONF_PASSWORD): str}),
+            description_placeholders={"email": entry.data[CONF_EMAIL]},
+            errors=errors,
+        )
 
-    async def async_create_entry(self, title: str, data: dict) -> FlowResult:
-        """Create an oauth config entry or update existing entry for reauth."""
-        # TODO: This example supports only a single config entry. Consider
-        # any special handling needed for multiple config entries.
-        existing_entry = await self.async_set_unique_id(data[CONF_MOWER_NAME])
-        if existing_entry:
-            self.hass.config_entries.async_update_entry(existing_entry, data=data)
-            await self.hass.config_entries.async_reload(existing_entry.entry_id)
-            return self.async_abort(reason="reauth_successful")
-        return super().async_create_entry(title=title, data=data)
+
+# Version 0.2.0

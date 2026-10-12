@@ -1,17 +1,25 @@
-# Green Works for Home Assistant
+# Greenworks für Home Assistant
 
-## Requirements
-- A Green Works account with at least one Mower registered to your account.
+Custom Integration für Greenworks-Mähroboter (getestet mit dem **Optimow 10**) über die Greenworks-Cloud.
 
-## Installation
-Files are installed by downloading the files to your custom_components folder directly from here or by adding it via HACS.
+Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) mit Erkenntnissen aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT).
 
-Afterwards you can go to the Integrations sections and click the add integration button. Search for Green Works and choose the newly added Green Works integration.
+## Funktionen (v0.2.0)
 
-- First step will ask you to enter you username and password. 
-- Second step will ask you to choose the location (controller) you want to add
+- **Mäher** (`lawn_mower`): Status Mäht / Geparkt / Pausiert / Fährt zur Station / Fehler
+- **Sensoren:** Status, Akku, nächster Start, letzter Fehler (Code und Zeitpunkt), Mähzeit, Laufzeit, Ladezeit, schwere Fehler, Signalqualität
+- **Binärsensoren:** Online, Regensensor aktiv, Frostsensor aktiv
+- **Position** (`device_tracker`): GPS-Position für die Karte, standardmäßig deaktiviert
+- Steuerung (Start, Pause, Docken) ist noch nicht enthalten
 
-It will automatically add all the mowers to your Home Assistant installation and show each one as a mower in the standard lovelace mower UI.
+## Installation über HACS
 
-## Changelog
-- 2025-08-01: Initial release# GreenWorks-HA
+1. HACS → Menü (⋮) → **Benutzerdefinierte Repositories**
+2. URL `https://github.com/paberke/GreenWorks-HA`, Typ **Integration**, hinzufügen
+3. **Greenworks** herunterladen, Home Assistant neu starten
+4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → *Greenworks*
+5. E-Mail und Passwort der Greenworks-App eingeben
+
+## Versionen
+
+- **0.2.0** – Cloud-Anbindung neu geschrieben (tolerant gegenüber neuen/fehlenden Feldern, Winterpause ohne Absturz), ein Eintrag pro Konto für alle Mäher, neue Sensoren, deutsche Übersetzung, Diagnose-Download
