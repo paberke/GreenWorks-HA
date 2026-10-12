@@ -18,6 +18,17 @@ Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWork
 - **Position** (`device_tracker`): GPS-Position für die Karte, standardmäßig deaktiviert
 - Steuerung (Start, Pause, Docken) ist noch nicht enthalten
 
+## Wichtig: Abmeldung in der Greenworks-App
+
+Die Greenworks-Cloud erlaubt anscheinend **nur eine aktive Anmeldung pro Konto**. Sobald Home Assistant sich anmeldet, wirst du in der Greenworks-App abgemeldet – und wenn du dich in der App wieder anmeldest, meldet sich Home Assistant kurz darauf erneut an. App und Home Assistant können sich so **regelmäßig gegenseitig abmelden**.
+
+Empfehlung:
+
+- Lege für Home Assistant ein **eigenes, zweites Greenworks-Konto** an und teile den Mäher in der App mit diesem Konto (falls deine App-Version das Teilen unterstützt).
+- Alternativ die Integration kurz deaktivieren (Einstellungen → Geräte & Dienste → Greenworks → ⋮ → Deaktivieren), solange du die App benutzt.
+
+> **Note (EN):** The Greenworks cloud seems to allow only one active login per account. Using the same account in Home Assistant and in the app may log you out of the app repeatedly. Use a separate account for Home Assistant if possible.
+
 ## Installation über HACS
 
 1. HACS → Menü (⋮) → **Benutzerdefinierte Repositories**
