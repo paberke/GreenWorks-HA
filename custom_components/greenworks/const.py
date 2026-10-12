@@ -34,7 +34,7 @@ MOWER_STATES: Final[dict[int, str]] = {
     6: "searching_station",
     7: "charging",
     8: "error",
-    # Bedeutung von 9 noch unklar (alte Bibliothek: "getrennt", bei Patricks
+    # Bedeutung von 9 noch unklar (alte Bibliothek: "getrennt", beim Test-
     # Maeher aber auch bei bestehender Verbindung gemeldet)
     9: "state_9",
 }
