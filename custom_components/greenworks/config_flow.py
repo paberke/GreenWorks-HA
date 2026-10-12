@@ -25,7 +25,7 @@ USER_SCHEMA = vol.Schema(
 class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
     """Konfigurationsablauf fuer Greenworks."""
 
-    VERSION = 2
+    VERSION = 1
 
     async def _async_validate(
         self, email: str, password: str
