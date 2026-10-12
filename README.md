@@ -18,16 +18,22 @@ Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWork
 - **Position** (`device_tracker`): GPS-Position für die Karte, standardmäßig deaktiviert
 - Steuerung (Start, Pause, Docken) ist noch nicht enthalten
 
-## Wichtig: Abmeldung in der Greenworks-App
+## Wichtig: Du wirst öfter aus der Greenworks-App abgemeldet
 
-Die Greenworks-Cloud erlaubt anscheinend **nur eine aktive Anmeldung pro Konto**. Sobald Home Assistant sich anmeldet, wirst du in der Greenworks-App abgemeldet – und wenn du dich in der App wieder anmeldest, meldet sich Home Assistant kurz darauf erneut an. App und Home Assistant können sich so **regelmäßig gegenseitig abmelden**.
+**Kurz gesagt:** Home Assistant läuft zuverlässig weiter. Aber in der Greenworks-App musst du dich öfter neu anmelden, wenn du für beides dasselbe Konto nutzt.
 
-Empfehlung:
+**Warum?** Ein Greenworks-Konto kann anscheinend immer nur an **einer** Stelle gleichzeitig angemeldet sein.
 
-- Lege für Home Assistant ein **eigenes, zweites Greenworks-Konto** an und teile den Mäher in der App mit diesem Konto (falls deine App-Version das Teilen unterstützt).
-- Alternativ die Integration kurz deaktivieren (Einstellungen → Geräte & Dienste → Greenworks → ⋮ → Deaktivieren), solange du die App benutzt.
+1. Du meldest dich in der App an → die Anmeldung von Home Assistant wird ungültig.
+2. Home Assistant merkt das spätestens nach einer Minute und meldet sich automatisch neu an. Davon bekommst du in Home Assistant nichts mit.
+3. Dadurch wirst du in der App abgemeldet. Beim nächsten Öffnen der App musst du dich wieder anmelden.
 
-> **Note (EN):** The Greenworks cloud seems to allow only one active login per account. Using the same account in Home Assistant and in the app may log you out of the app repeatedly. Use a separate account for Home Assistant if possible.
+**Was kann ich tun?**
+
+- **Beste Lösung:** Lege für Home Assistant ein **zweites Greenworks-Konto** (andere E-Mail-Adresse) an und teile den Mäher in der App mit diesem Konto – falls die App das Teilen anbietet. Dann nutzt Home Assistant das zweite Konto und du die App mit deinem Hauptkonto, ohne dass sich etwas gegenseitig abmeldet.
+- **Für zwischendurch:** Die Integration kurz ausschalten, solange du die App benutzt: *Einstellungen → Geräte & Dienste → Greenworks → ⋮ → Deaktivieren*. Danach wieder aktivieren.
+
+> **English:** You will often be logged out of the Greenworks app if Home Assistant uses the same account. Home Assistant itself keeps working – it silently logs back in, which logs the app out. Best fix: use a second Greenworks account for Home Assistant and share the mower with it in the app (if supported).
 
 ## Installation über HACS
 
