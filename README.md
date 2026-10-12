@@ -10,7 +10,7 @@ Custom Integration für Greenworks-Mähroboter (getestet mit dem **Optimow 10**)
 
 Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) mit Erkenntnissen aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT).
 
-## Funktionen (v0.2.0)
+## Funktionen (v0.2.1)
 
 - **Mäher** (`lawn_mower`): Status Mäht / Geparkt / Pausiert / Fährt zur Station / Fehler
 - **Sensoren:** Status, Akku, nächster Start, letzter Fehler (Code und Zeitpunkt), Mähzeit, Laufzeit, Ladezeit, schwere Fehler, Signalqualität
@@ -39,4 +39,5 @@ Empfehlung:
 
 ## Versionen
 
+- **0.2.1** – Bekannte Fehlercodes aus der App-Fehlerliste (13, 34, 47, 53, 59, 64) als mögliche Bedeutung am Sensor „Letzter Fehlercode“ (Zuordnung noch unbestätigt)
 - **0.2.0** – Cloud-Anbindung neu geschrieben (tolerant gegenüber neuen/fehlenden Feldern, Winterpause ohne Absturz), ein Eintrag pro Konto für alle Mäher, neue Sensoren, deutsche Übersetzung, Diagnose-Download

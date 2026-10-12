@@ -17,7 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .api import GreenworksMower
-from .const import MOWER_STATES
+from .const import ERROR_CODES, MOWER_STATES
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
 
@@ -29,6 +29,7 @@ def _hours(seconds: int | None) -> float | None:
 @dataclass(frozen=True, kw_only=True)
 class GreenworksSensorDescription(SensorEntityDescription):
     value_fn: Callable[[GreenworksMower], Any]
+    attr_fn: Callable[[GreenworksMower], dict[str, Any]] | None = None
 
 
 SENSORS: tuple[GreenworksSensorDescription, ...] = (
@@ -58,6 +59,14 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         key="last_error",
         translation_key="last_error",
         value_fn=lambda m: m.last_error_code,
+        attr_fn=lambda m: {
+            "moegliche_bedeutung": (
+                None
+                if m.last_error_code is None
+                else ERROR_CODES.get(m.last_error_code, "unbekannt")
+            ),
+            "hinweis": "Zuordnung zur Fehlerliste der App noch nicht bestaetigt",
+        },
     ),
     GreenworksSensorDescription(
         key="last_error_time",
@@ -145,5 +154,12 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         mower = self.mower
         return None if mower is None else self.entity_description.value_fn(mower)
 
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        mower = self.mower
+        if mower is None or self.entity_description.attr_fn is None:
+            return None
+        return self.entity_description.attr_fn(mower)
 
-# Version 0.2.0
+
+# Version 0.2.1
