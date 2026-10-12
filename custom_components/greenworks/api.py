@@ -38,7 +38,26 @@ class GreenworksError(Exception):
 
 
 class GreenworksAuthError(GreenworksError):
-    """Anmeldung fehlgeschlagen (falsche E-Mail oder falsches Passwort)."""
+    """Falsches Passwort (von der Cloud mit Code 4001007 gemeldet)."""
+
+
+class GreenworksLoginRejected(GreenworksError):
+    """Anmeldung aus einem anderen Grund abgelehnt (z. B. unbekannte E-Mail,
+    zu viele Versuche). Loest in HA keine Passwort-Abfrage aus."""
+
+
+# Fehlercode der Cloud fuer ein falsches Passwort
+ERROR_WRONG_PASSWORD = 4001007
+
+# Mindestgueltigkeit eines Tokens, damit es keine Dauer-Neuanmeldung gibt
+MIN_TOKEN_LIFETIME = 600
+
+
+def _error_code(data: Any) -> int | None:
+    """Fehlercode aus einer Cloud-Antwort wie {"error": {"code": ...}} lesen."""
+    if isinstance(data, dict) and isinstance(data.get("error"), dict):
+        return _to_int(data["error"].get("code"))
+    return None
 
 
 # --------------------------------------------------------------------------
@@ -225,7 +244,13 @@ def build_mower(
     # --- Position ----------------------------------------------------------
     pos = _flatten_datapoint(datapoints.get(DP_POSITION))
     lat, lon = _to_float(pos.get("latitude")), _to_float(pos.get("longitude"))
-    if lat is not None and lon is not None and not (lat == 0 and lon == 0):
+    if (
+        lat is not None
+        and lon is not None
+        and -90 <= lat <= 90
+        and -180 <= lon <= 180
+        and not (lat == 0 and lon == 0)
+    ):
         mower.latitude, mower.longitude = lat, lon
         hdop = _to_float(pos.get("hdop"))
         # grobe Umrechnung HDOP -> Meter (ca. 5 m pro HDOP-Einheit)
@@ -266,8 +291,14 @@ class GreenworksClient:
         except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
             raise GreenworksError(f"Login nicht moeglich: {err}") from err
 
-        if status in (400, 401, 403):
-            raise GreenworksAuthError(f"Login abgelehnt (HTTP {status}): {data}")
+        if status != 200:
+            code = _error_code(data)
+            if code == ERROR_WRONG_PASSWORD:
+                raise GreenworksAuthError("Falsches Passwort (Code 4001007)")
+            if status in (400, 401, 403):
+                raise GreenworksLoginRejected(
+                    f"Login abgelehnt (HTTP {status}, Code {code}): {data}"
+                )
         if status != 200 or not isinstance(data, dict) or "access_token" not in data:
             raise GreenworksError(f"Unerwartete Login-Antwort (HTTP {status})")
 
@@ -279,7 +310,9 @@ class GreenworksClient:
         self._access_token = data.get("access_token")
         self._refresh_token = data.get("refresh_token") or self._refresh_token
         expire_in = _to_int(data.get("expire_in")) or 3600
-        self._expires_at = time.time() + expire_in - 300
+        # 5 Minuten Puffer, aber nie kuerzer als MIN_TOKEN_LIFETIME
+        lifetime = max(expire_in - 300, MIN_TOKEN_LIFETIME)
+        self._expires_at = time.time() + lifetime
 
     async def _async_refresh(self) -> None:
         """Token erneuern, bei Problemen neu anmelden."""
@@ -334,7 +367,8 @@ class GreenworksClient:
                 await self.async_login()
             return await self._async_get(path, params, _retry=False)
         if status in (401, 403):
-            raise GreenworksAuthError(f"Zugriff verweigert (HTTP {status})")
+            # Neu angemeldet und trotzdem abgelehnt: kein Passwortproblem
+            raise GreenworksError(f"Zugriff verweigert (HTTP {status})")
         if status != 200:
             raise GreenworksError(f"Anfrage {path}: HTTP {status}")
         return data
@@ -372,4 +406,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.2.1
+# Version 0.2.2

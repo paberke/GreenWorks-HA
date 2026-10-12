@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.2.1"
+VERSION: Final = "0.2.2"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -52,4 +52,4 @@ ERROR_CODES: Final[dict[int, str]] = {
     64: "Mit Sicherheitsschlüssel gestartet – erst STOP, dann START drücken",
 }
 
-# Version 0.2.1
+# Version 0.2.2

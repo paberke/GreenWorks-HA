@@ -65,7 +65,7 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
                 if m.last_error_code is None
                 else ERROR_CODES.get(m.last_error_code, "unbekannt")
             ),
-            "hinweis": "Zuordnung zur Fehlerliste der App noch nicht bestaetigt",
+            "hinweis": "Zuordnung zur Fehlerliste der App noch nicht bestätigt",
         },
     ),
     GreenworksSensorDescription(
@@ -162,4 +162,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower)
 
 
-# Version 0.2.1
+# Version 0.2.2

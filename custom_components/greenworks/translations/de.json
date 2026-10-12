@@ -21,7 +21,8 @@
       "invalid_auth": "E-Mail oder Passwort falsch.",
       "cannot_connect": "Keine Verbindung zur Greenworks-Cloud.",
       "no_devices": "Für dieses Konto wurde kein Mäher gefunden.",
-      "unknown": "Unerwarteter Fehler, siehe Protokoll."
+      "unknown": "Unerwarteter Fehler, siehe Protokoll.",
+      "login_rejected": "Die Greenworks-Cloud hat die Anmeldung abgelehnt (z. B. unbekannte E-Mail-Adresse). Details stehen im Protokoll."
     },
     "abort": {
       "already_configured": "Dieses Konto ist bereits eingerichtet.",

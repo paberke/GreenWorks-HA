@@ -12,7 +12,12 @@ from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .api import GreenworksAuthError, GreenworksClient, GreenworksError
+from .api import (
+    GreenworksAuthError,
+    GreenworksClient,
+    GreenworksError,
+    GreenworksLoginRejected,
+)
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -38,6 +43,9 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
             devices = await client.async_get_devices()
         except GreenworksAuthError:
             errors["base"] = "invalid_auth"
+            return errors, None, 0
+        except GreenworksLoginRejected:
+            errors["base"] = "login_rejected"
             return errors, None, 0
         except GreenworksError:
             errors["base"] = "cannot_connect"
@@ -98,4 +106,4 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
-# Version 0.2.1
+# Version 0.2.2

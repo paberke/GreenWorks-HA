@@ -43,4 +43,4 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
             raise UpdateFailed(str(err)) from err
 
 
-# Version 0.2.1
+# Version 0.2.2

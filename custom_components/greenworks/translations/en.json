@@ -21,7 +21,8 @@
       "invalid_auth": "Invalid email or password.",
       "cannot_connect": "Cannot connect to the Greenworks cloud.",
       "no_devices": "No mower found for this account.",
-      "unknown": "Unexpected error, see log."
+      "unknown": "Unexpected error, see log.",
+      "login_rejected": "Login was rejected by the Greenworks cloud (e.g. unknown email). See the log for details."
     },
     "abort": {
       "already_configured": "This account is already configured.",
