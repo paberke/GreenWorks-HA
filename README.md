@@ -1,5 +1,11 @@
 # Greenworks für Home Assistant
 
+> [!IMPORTANT]
+> **Diese Integration wurde von Claude (KI-Assistent von Anthropic) geschrieben.**
+> Sie ist ein privates Testprojekt, wurde nur mit einem einzelnen Greenworks Optimow 10 ausprobiert und wird ohne Gewähr und ohne Support bereitgestellt. Nutzung auf eigene Verantwortung – vorher ein Backup anlegen.
+>
+> **This integration was written by Claude (AI assistant by Anthropic).** It is a private test project, only tried with a single Greenworks Optimow 10, and comes without warranty or support. Use at your own risk.
+
 Custom Integration für Greenworks-Mähroboter (getestet mit dem **Optimow 10**) über die Greenworks-Cloud.
 
 Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) mit Erkenntnissen aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT).
