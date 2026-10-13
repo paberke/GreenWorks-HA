@@ -72,6 +72,9 @@
       },
       "status_time": {
         "name": "Letzte Statusmeldung"
+      },
+      "statistics_time": {
+        "name": "Statistik-Stand"
       }
     },
     "binary_sensor": {
@@ -79,10 +82,10 @@
         "name": "Online"
       },
       "rain_sensor": {
-        "name": "Regensensor aktiv"
+        "name": "Regenschutz"
       },
       "frost_sensor": {
-        "name": "Frostsensor aktiv"
+        "name": "Frostschutz"
       }
     },
     "device_tracker": {

@@ -108,6 +108,13 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         value_fn=lambda m: m.fatal_errors,
     ),
     GreenworksSensorDescription(
+        key="statistics_time",
+        translation_key="statistics_time",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: m.statistics_time,
+    ),
+    GreenworksSensorDescription(
         key="signal_quality",
         translation_key="signal_quality",
         state_class=SensorStateClass.MEASUREMENT,

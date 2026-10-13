@@ -157,6 +157,7 @@ class GreenworksMower:
     last_error_time: datetime | None = None
     fatal_errors: int | None = None
 
+    statistics_time: datetime | None = None
     cutting_time: int | None = None
     running_time: int | None = None
     charging_time: int | None = None
@@ -233,6 +234,11 @@ def build_mower(
         mower.running_time = _to_int(stats.get("running_time"))
         mower.charging_time = _to_int(stats.get("charging_time"))
         mower.fatal_errors = _to_int(stats.get("no_of_fatal_error"))
+        # Zeitpunkt, zu dem der Maeher die Statistik zuletzt geschickt hat
+        # (nur wenn die App sie abfragt)
+        mower.statistics_time = _to_iso(stats.get("response_time")) or _to_iso(
+            stats.get("request_time")
+        )
 
     # --- Firmware ----------------------------------------------------------
     fw = _flatten_datapoint(datapoints.get(DP_FIRMWARE))
