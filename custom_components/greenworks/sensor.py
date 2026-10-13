@@ -17,7 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .api import GreenworksMower
-from .const import ERROR_CODES, MOWER_STATES, MOWING_STATES
+from .const import ERROR_OPTIONS, MOWER_STATES, MOWING_STATES, error_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
 
@@ -80,14 +80,14 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         key="last_error",
         translation_key="last_error",
         value_fn=lambda m: m.last_error_code,
-        attr_fn=lambda m: {
-            "possible_meaning": (
-                None
-                if m.last_error_code is None
-                else ERROR_CODES.get(m.last_error_code, "unknown")
-            ),
-            "note": "mapping_unconfirmed",
-        },
+        attr_fn=lambda m: {"meaning": error_key(m.last_error_code)},
+    ),
+    GreenworksSensorDescription(
+        key="last_error_text",
+        translation_key="last_error_text",
+        device_class=SensorDeviceClass.ENUM,
+        options=ERROR_OPTIONS,
+        value_fn=lambda m: error_key(m.last_error_code),
     ),
     GreenworksSensorDescription(
         key="last_error_time",
@@ -190,4 +190,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower)
 
 
-# Version 0.2.4
+# Version 0.2.5

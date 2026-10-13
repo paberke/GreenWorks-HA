@@ -29,6 +29,8 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
+| **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App) |
+| **Letzter Fehlercode** / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
 | **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
 | **Statistik-Stand** | Wann der Mäher die Statistik-Werte zuletzt geschickt hat |
 | **Signalqualität** | Funkverbindung des Mähers |
@@ -50,7 +52,7 @@ Außerdem:
 - **Noch nicht alle Zustände geprüft:** *Verlässt Station*, *Pausiert* und *Fehler* wurden noch nicht beobachtet.
 - **Statistik nur beim Öffnen der App aktuell:** Mähzeit, Laufzeit, Ladezeit und schwere Fehler schickt der Mäher nur, wenn in der Greenworks-App die Statistik abgefragt wird. Wie alt die Werte sind, zeigt der Sensor **Statistik-Stand**.
 - **„Zustand 9“ ist unbekannt:** Der Mäher meldet manchmal einen Zustand 9, dessen Bedeutung noch nicht klar ist. Er wird als *Zustand 9* angezeigt.
-- **Fehlermeldungen unsicher:** **Letzter Fehlercode** und **Letzter Fehler** (Zeitpunkt) werden angezeigt. Die Nummer passte im Test aber **nicht** zur Fehlerliste in der App. Die Texte aus der App-Fehlerliste stehen deshalb nur als *mögliche Bedeutung* dabei.
+- **Fehlermeldung kann von der App-Fehlerliste abweichen:** Die Nummern und Texte sind dieselben wie in der App. Home Assistant zeigt aber das **zuletzt gemeldete Ereignis**, und das stand im Test nicht in der App-Fehlerliste (vermutlich kurze Warnungen, die die App nicht auflistet). Die deutschen Texte sind teils eigene Übersetzungen.
 
 ## Wichtig: Du wirst öfter aus der Greenworks-App abgemeldet
 
@@ -80,6 +82,7 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 
 ## Versionen
 
+- **0.2.5** *(im Test)* – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode** (ersetzt *Mögliche Bedeutung* und *Hinweis*)
 - **0.2.4** – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
 - **0.2.3** – Neuer Sensor **Mähende**, **Nächster Start** zeigt beim Mähen nichts Irreführendes mehr; neuer Sensor **Statistik-Stand**; **Regenschutz**/**Frostschutz** heißen wie in der App; Zustand 2 heißt jetzt *Geparkt*
 - **0.2.2** – Anmeldung robuster: nur ein echtes falsches Passwort führt zur Passwort-Abfrage, Token wird nie kürzer als 10 Minuten genutzt, unplausible GPS-Werte werden ignoriert
@@ -117,6 +120,8 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
 | **Total cutting time** / **Total running time** / **Total charging time** | Total hours since first use (see note below) |
+| **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app) |
+| **Last error code** / **Last error** | Number and time of the last error |
 | **Fatal errors** | Number of fatal errors reported by the mower (see note below) |
 | **Statistics as of** | When the mower last sent the statistics values |
 | **Signal quality** | Radio connection of the mower |
@@ -138,7 +143,7 @@ Also:
 - **Not all states checked:** *Leaving station*, *Paused* and *Error* have not been observed yet.
 - **Statistics only update when the app asks for them:** cutting time, running time, charging time and fatal errors are only sent by the mower when the statistics are opened in the Greenworks app. The **Statistics as of** sensor shows how old they are.
 - **"State 9" is unknown:** the mower sometimes reports a state 9 whose meaning is not clear yet. It is shown as *State 9*.
-- **Error messages uncertain:** **Last error code** and **Last error** (time) are shown. In testing, however, the number did **not** match the error list in the app. Texts from the app's error list are therefore only shown as *possible meaning*.
+- **Error message may differ from the app's error list:** codes and texts are the same as in the app. However, Home Assistant shows the **most recently reported event**, which in testing did not appear in the app's error list (probably short warnings the app does not list).
 
 ## Important: you will often be logged out of the Greenworks app
 

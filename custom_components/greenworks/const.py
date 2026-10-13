@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.2.4"
+VERSION: Final = "0.2.5"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -42,17 +42,16 @@ MOWER_STATES: Final[dict[int, str]] = {
 # Zustaende, in denen next_start das ENDE des Maehfensters meint
 MOWING_STATES: Final = frozenset({4, 5})
 
-# Fehlercodes laut Fehlerliste der Greenworks-App (Optimow 10).
-# Werte sind Uebersetzungs-Schluessel (Texte in translations/*.json).
-# Achtung: ob die event_id aus Datenpunkt 33 dieselbe Nummerierung nutzt,
-# ist noch nicht bestaetigt - deshalb nur als Attribut "possible_meaning".
-ERROR_CODES: Final[dict[int, str]] = {
-    13: "tilt_too_steep",
-    34: "right_wheel_motor_blocked",
-    47: "battery_empty",
-    53: "stuck",
-    59: "boundary_signal_lost",
-    64: "started_with_safety_key",
-}
+# Fehlercodes des Maehers (gleiche Nummerierung wie die Fehlerliste der App).
+# Die Texte stehen in translations/*.json unter dem Schluessel "e<Nummer>".
+ERROR_CODE_MAX: Final = 69
+ERROR_OPTIONS: Final = [f"e{n}" for n in range(1, ERROR_CODE_MAX + 1)] + ["unknown"]
 
-# Version 0.2.4
+
+def error_key(code: int | None) -> str | None:
+    """Fehlercode in den Uebersetzungs-Schluessel umwandeln."""
+    if code is None:
+        return None
+    return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
+
+# Version 0.2.5
