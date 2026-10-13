@@ -81,7 +81,7 @@ Außerdem:
 
 ## Versionen
 
-- **0.2.7** *(im Test)* – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
+- **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
 - **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
 - **0.2.5** – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**
 - **0.2.4** – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
