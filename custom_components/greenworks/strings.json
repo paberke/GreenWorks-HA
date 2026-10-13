@@ -245,6 +245,9 @@
             "name": "Text"
           }
         }
+      },
+      "blade_time": {
+        "name": "Blade time"
       }
     },
     "binary_sensor": {

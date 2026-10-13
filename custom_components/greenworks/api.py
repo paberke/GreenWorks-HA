@@ -92,6 +92,28 @@ def _flatten_datapoint(value: Any) -> dict[str, Any]:
     return merged
 
 
+def _blade_time(cutting_time: int | None, raw: Any) -> int | None:
+    """Messer-Laufzeit wie die App: gesamte Maehzeit minus Summe der Reset-Staende."""
+    if cutting_time is None:
+        return None
+    if isinstance(raw, str):
+        try:
+            raw = json.loads(raw)
+        except ValueError:
+            raw = None
+    resets = raw.get("BladeUsageTime") if isinstance(raw, dict) else None
+    if not isinstance(resets, list):
+        resets = []  # noch nie zurueckgesetzt
+    total = 0
+    for value in resets:
+        number = _to_int(value)
+        if number is None:
+            return None
+        total += number
+    result = cutting_time - total
+    return result if result >= 0 else None
+
+
 def _to_int(value: Any) -> int | None:
     try:
         return int(value)
@@ -162,6 +184,8 @@ class GreenworksMower:
     cutting_time: int | None = None
     running_time: int | None = None
     charging_time: int | None = None
+    # Maehzeit der Messer seit dem letzten Zuruecksetzen in der App (Sekunden)
+    blade_time: int | None = None
 
     latitude: float | None = None
     longitude: float | None = None
@@ -241,6 +265,9 @@ def build_mower(
         mower.statistics_time = _to_iso(stats.get("response_time")) or _to_iso(
             stats.get("request_time")
         )
+
+    # --- Messer-Laufzeit (wie in der App: Maehzeit minus Stand beim Zuruecksetzen) ---
+    mower.blade_time = _blade_time(mower.cutting_time, properties.get("device_blade_usage_time"))
 
     # --- Firmware ----------------------------------------------------------
     fw = _flatten_datapoint(datapoints.get(DP_FIRMWARE))
@@ -414,4 +441,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.2.7
+# Version 0.2.8b1

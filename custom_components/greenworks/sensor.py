@@ -106,6 +106,14 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         value_fn=lambda m: _hours(m.cutting_time),
     ),
     GreenworksSensorDescription(
+        key="blade_time",
+        translation_key="blade_time",
+        device_class=SensorDeviceClass.DURATION,
+        state_class=SensorStateClass.TOTAL_INCREASING,
+        native_unit_of_measurement=UnitOfTime.HOURS,
+        value_fn=lambda m: _hours(m.blade_time),
+    ),
+    GreenworksSensorDescription(
         key="running_time",
         translation_key="running_time",
         device_class=SensorDeviceClass.DURATION,
@@ -192,4 +200,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.2.7
+# Version 0.2.8b1

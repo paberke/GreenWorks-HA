@@ -28,6 +28,8 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → *Greenworks*
 5. E-Mail und Passwort der Greenworks-App eingeben
 
+**Beta-Versionen:** Neue Funktionen erscheinen zuerst als Beta (auf GitHub als *Pre-release* markiert, z. B. `v0.2.8b1`). HACS bietet sie nur an, wenn du am HACS-Gerät *Greenworks* den Schalter **Pre-release** einschaltest (Einstellungen → Geräte & Dienste → HACS → Greenworks; der Schalter ist anfangs deaktiviert). Ohne den Schalter bekommst du nur stabile Versionen.
+
 ## Was funktioniert
 
 Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
@@ -41,6 +43,7 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
+| **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App *(Beta)* |
 | **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App). Das Attribut *Klartext* enthält den Text auch für Benachrichtigungen |
 | **Letzter Fehlercode** / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
 | **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
@@ -81,6 +84,7 @@ Außerdem:
 
 ## Versionen
 
+- **0.2.8b1** *(Beta)* – Neuer Sensor **Messer-Laufzeit**
 - **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
 - **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
 - **0.2.5** – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**
@@ -120,6 +124,8 @@ The button above opens the repository directly in HACS. Or manually:
 4. Settings → Devices & services → **Add integration** → *Greenworks*
 5. Enter the email and password of the Greenworks app
 
+**Beta versions:** new features are released as a beta first (marked as *Pre-release* on GitHub, e.g. `v0.2.8b1`). HACS only offers them if you turn on the **Pre-release** switch on the HACS device *Greenworks* (Settings → Devices & services → HACS → Greenworks; the switch is disabled at first). Without it you only get stable versions.
+
 ## What works
 
 Checked with a real Optimow 10 in Home Assistant:
@@ -133,6 +139,7 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
 | **Total cutting time** / **Total running time** / **Total charging time** | Total hours since first use (see note below) |
+| **Blade time** | Mowing hours since the blade time was last reset in the app – same calculation as the app *(beta)* |
 | **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app). The *Text* attribute holds the text for use in notifications |
 | **Last error code** / **Last error** | Number and time of the last error |
 | **Fatal errors** | Number of fatal errors reported by the mower (see note below) |

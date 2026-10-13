@@ -245,6 +245,9 @@
             "name": "Klartext"
           }
         }
+      },
+      "blade_time": {
+        "name": "Messer-Laufzeit"
       }
     },
     "binary_sensor": {
