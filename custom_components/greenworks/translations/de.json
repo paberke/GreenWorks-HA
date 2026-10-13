@@ -50,7 +50,27 @@
         "name": "Nächster Start"
       },
       "last_error": {
-        "name": "Letzter Fehlercode"
+        "name": "Letzter Fehlercode",
+        "state_attributes": {
+          "possible_meaning": {
+            "name": "Mögliche Bedeutung",
+            "state": {
+              "tilt_too_steep": "Zu starke Neigung",
+              "right_wheel_motor_blocked": "Rechter Radmotor blockiert",
+              "battery_empty": "Akku leer",
+              "stuck": "Steckengeblieben",
+              "boundary_signal_lost": "Begrenzungssignal verloren",
+              "started_with_safety_key": "Mit Sicherheitsschlüssel gestartet – erst STOP, dann START drücken",
+              "unknown": "Unbekannt"
+            }
+          },
+          "note": {
+            "name": "Hinweis",
+            "state": {
+              "mapping_unconfirmed": "Zuordnung zur Fehlerliste der App noch nicht bestätigt"
+            }
+          }
+        }
       },
       "last_error_time": {
         "name": "Letzter Fehler"

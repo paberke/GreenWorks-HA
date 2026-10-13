@@ -81,12 +81,12 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         translation_key="last_error",
         value_fn=lambda m: m.last_error_code,
         attr_fn=lambda m: {
-            "moegliche_bedeutung": (
+            "possible_meaning": (
                 None
                 if m.last_error_code is None
-                else ERROR_CODES.get(m.last_error_code, "unbekannt")
+                else ERROR_CODES.get(m.last_error_code, "unknown")
             ),
-            "hinweis": "Zuordnung zur Fehlerliste der App noch nicht bestätigt",
+            "note": "mapping_unconfirmed",
         },
     ),
     GreenworksSensorDescription(
@@ -190,4 +190,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower)
 
 
-# Version 0.2.3
+# Version 0.2.4

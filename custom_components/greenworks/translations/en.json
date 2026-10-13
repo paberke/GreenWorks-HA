@@ -50,7 +50,27 @@
         "name": "Next start"
       },
       "last_error": {
-        "name": "Last error code"
+        "name": "Last error code",
+        "state_attributes": {
+          "possible_meaning": {
+            "name": "Possible meaning",
+            "state": {
+              "tilt_too_steep": "Tilt too steep",
+              "right_wheel_motor_blocked": "Right wheel motor blocked",
+              "battery_empty": "Battery empty",
+              "stuck": "Stuck",
+              "boundary_signal_lost": "Boundary signal lost",
+              "started_with_safety_key": "Started with safety key – press STOP, then START on the mower",
+              "unknown": "Unknown"
+            }
+          },
+          "note": {
+            "name": "Note",
+            "state": {
+              "mapping_unconfirmed": "Mapping to the app's error list not yet confirmed"
+            }
+          }
+        }
       },
       "last_error_time": {
         "name": "Last error"
