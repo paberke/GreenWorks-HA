@@ -20,32 +20,33 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 
 | Anzeige in Home Assistant | Was sie zeigt |
 |---|---|
-| **Mäher** | Zustand des Mähers, z. B. *Angedockt* |
-| **Batterie** | Akkustand in % |
-| **Status** | Genauer Zustand, z. B. *Geparkt (Benutzer)* |
-| **Nächster Start** | Datum und Uhrzeit des nächsten geplanten Mähens |
+| **Mäher** | Zustand des Mähers: *Angedockt* oder *Mäht* (beides geprüft) |
+| **Batterie** | Akkustand in %, sinkt beim Mähen live mit |
+| **Status** | Genauer Zustand: *Geparkt (Benutzer)*, *Lädt* oder *Mäht* (geprüft) |
+| **Nächster Start** | Datum und Uhrzeit des nächsten geplanten Mähens (stimmt, solange der Mäher in der Station steht – siehe unten) |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme |
 | **Schwere Fehler** | Anzahl schwerer Fehler laut Mäher |
 | **Signalqualität** | Funkverbindung des Mähers |
 | **Online** | Ob der Mäher mit der Cloud verbunden ist |
 | **Regensensor aktiv** / **Frostsensor aktiv** | Ob diese Sensoren in der App eingeschaltet sind |
-| **Position** | GPS-Position für die Karte (standardmäßig ausgeschaltet, unter den Entitäten des Geräts aktivierbar) |
+| **Position** | GPS-Position für die Karte, wandert beim Mähen mit (standardmäßig ausgeschaltet, unter den Entitäten des Geräts aktivierbar) |
 
 Außerdem:
 
 - Einrichtung über die Oberfläche mit E-Mail und Passwort der Greenworks-App
 - Bei falschem Passwort eine verständliche Meldung statt Absturz. Lehnt die Cloud die Anmeldung aus einem anderen Grund ab, versucht Home Assistant es später erneut, statt nach einem neuen Passwort zu fragen
+- Die Werte werden jede Minute aktualisiert
 - Wenn die Greenworks-Cloud kurz nicht erreichbar ist, versucht Home Assistant es automatisch später erneut
 - Deutsch und Englisch
 
 ## Was noch nicht geht oder noch unsicher ist
 
 - **Steuerung fehlt:** Starten, Pausieren und Zurück zur Station sind noch nicht möglich.
-- **Zustände beim Mähen ungeprüft:** Bisher wurde der Mäher nur im angedockten Zustand beobachtet. Ob *Mäht*, *Pausiert*, *Fährt zur Station* usw. richtig angezeigt werden, ist noch nicht bestätigt.
+- **Noch nicht alle Zustände geprüft:** *Angedockt*, *Lädt* und *Mäht* werden richtig angezeigt. *Verlässt Station*, *Fährt zur Station*, *Pausiert* und *Fehler* wurden noch nicht beobachtet.
+- **„Nächster Start“ beim Mähen irreführend:** Während der Mäher mäht, liefert die Cloud in diesem Feld das **Ende** des Mähfensters statt des nächsten Starts. Das wird in einer der nächsten Versionen angepasst.
 - **„Zustand 9“ ist unbekannt:** Der Mäher meldet manchmal einen Zustand 9, dessen Bedeutung noch nicht klar ist. Er wird als *Zustand 9* angezeigt.
 - **Fehlermeldungen unsicher:** **Letzter Fehlercode** und **Letzter Fehler** (Zeitpunkt) werden angezeigt. Die Nummer passte im Test aber **nicht** zur Fehlerliste in der App. Die Texte aus der App-Fehlerliste stehen deshalb nur als *mögliche Bedeutung* dabei.
-- **GPS beim Mähen ungeprüft:** Die Position stimmt, solange der Mäher in der Station steht. Wie genau sie während des Mähens ist, wurde noch nicht geprüft.
 
 ## Wichtig: Du wirst öfter aus der Greenworks-App abgemeldet
 
