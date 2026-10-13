@@ -106,4 +106,4 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
-# Version 0.2.6
+# Version 0.2.7

@@ -41,7 +41,7 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
-| **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App) |
+| **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App). Das Attribut *Klartext* enthält den Text auch für Benachrichtigungen |
 | **Letzter Fehlercode** / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
 | **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
 | **Statistik-Stand** | Wann der Mäher die Statistik-Werte zuletzt geschickt hat |
@@ -81,6 +81,7 @@ Außerdem:
 
 ## Versionen
 
+- **0.2.7** *(im Test)* – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
 - **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
 - **0.2.5** – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**
 - **0.2.4** – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
@@ -132,7 +133,7 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
 | **Total cutting time** / **Total running time** / **Total charging time** | Total hours since first use (see note below) |
-| **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app) |
+| **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app). The *Text* attribute holds the text for use in notifications |
 | **Last error code** / **Last error** | Number and time of the last error |
 | **Fatal errors** | Number of fatal errors reported by the mower (see note below) |
 | **Statistics as of** | When the mower last sent the statistics values |

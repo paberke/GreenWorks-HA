@@ -34,4 +34,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) 
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
-# Version 0.2.6
+# Version 0.2.7

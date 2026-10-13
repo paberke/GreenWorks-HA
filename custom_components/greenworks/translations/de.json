@@ -239,6 +239,11 @@
           "e68": "Ladesystem im Mäher defekt",
           "e69": "Wochenplan aktiv, aber Uhrzeit nicht eingestellt",
           "unknown": "Unbekannt"
+        },
+        "state_attributes": {
+          "text": {
+            "name": "Klartext"
+          }
         }
       }
     },

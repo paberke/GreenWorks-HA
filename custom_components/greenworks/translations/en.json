@@ -239,6 +239,11 @@
           "e68": "Charging system defect in mower",
           "e69": "Week timer enabled, but clock is not set",
           "unknown": "Unknown"
+        },
+        "state_attributes": {
+          "text": {
+            "name": "Text"
+          }
         }
       }
     },

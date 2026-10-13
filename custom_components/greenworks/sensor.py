@@ -20,6 +20,7 @@ from .api import GreenworksMower
 from .const import ERROR_OPTIONS, MOWING_STATES, STATUS_OPTIONS, error_key, status_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
+from .error_texts import error_text
 
 
 def _hours(seconds: int | None) -> float | None:
@@ -44,7 +45,8 @@ def _mowing_end(m: GreenworksMower):
 @dataclass(frozen=True, kw_only=True)
 class GreenworksSensorDescription(SensorEntityDescription):
     value_fn: Callable[[GreenworksMower], Any]
-    attr_fn: Callable[[GreenworksMower], dict[str, Any]] | None = None
+    # Zweites Argument: Sprache von Home Assistant (z. B. "de")
+    attr_fn: Callable[[GreenworksMower, str], dict[str, Any]] | None = None
 
 
 SENSORS: tuple[GreenworksSensorDescription, ...] = (
@@ -78,7 +80,7 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         key="last_error",
         translation_key="last_error",
         value_fn=lambda m: m.last_error_code,
-        attr_fn=lambda m: {"meaning": error_key(m.last_error_code)},
+        attr_fn=lambda m, lang: {"meaning": error_key(m.last_error_code)},
     ),
     GreenworksSensorDescription(
         key="last_error_text",
@@ -86,6 +88,8 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         device_class=SensorDeviceClass.ENUM,
         options=ERROR_OPTIONS,
         value_fn=lambda m: error_key(m.last_error_code),
+        # Klartext als Attribut, damit er in Benachrichtigungen nutzbar ist
+        attr_fn=lambda m, lang: {"text": error_text(m.last_error_code, lang)},
     ),
     GreenworksSensorDescription(
         key="last_error_time",
@@ -185,7 +189,7 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         mower = self.mower
         if mower is None or self.entity_description.attr_fn is None:
             return None
-        return self.entity_description.attr_fn(mower)
+        return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.2.6
+# Version 0.2.7

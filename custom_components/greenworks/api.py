@@ -414,4 +414,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.2.6
+# Version 0.2.7
