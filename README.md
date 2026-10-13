@@ -80,7 +80,7 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 
 ## Versionen
 
-- **0.2.4** *(im Test)* – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
+- **0.2.4** – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
 - **0.2.3** – Neuer Sensor **Mähende**, **Nächster Start** zeigt beim Mähen nichts Irreführendes mehr; neuer Sensor **Statistik-Stand**; **Regenschutz**/**Frostschutz** heißen wie in der App; Zustand 2 heißt jetzt *Geparkt*
 - **0.2.2** – Anmeldung robuster: nur ein echtes falsches Passwort führt zur Passwort-Abfrage, Token wird nie kürzer als 10 Minuten genutzt, unplausible GPS-Werte werden ignoriert
 - **0.2.1** – Texte aus der App-Fehlerliste als *mögliche Bedeutung* am Sensor **Letzter Fehlercode**
