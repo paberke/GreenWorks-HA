@@ -12,7 +12,7 @@
 >
 > **Testing phase – not finished.** Written by **Claude (AI assistant by Anthropic)**, private test project. **Read-only** – it cannot control the mower. Only tried with a single Optimow 10. Using the same account will often log you out of the Greenworks app. No warranty, no support. Use at your own risk and make a backup first.
 
-Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an. **Steuern kann sie ihn noch nicht.**
+Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an. **Sie kann den Mäher nicht steuern** – Starten, Parken und Zurückschicken gehen weiterhin nur über die Greenworks-App.
 
 Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) mit Erkenntnissen aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT). Vielen Dank an Boes24 für die Vorarbeit.
 
@@ -24,7 +24,7 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 |---|---|
 | **Mäher** | Zustand des Mähers: *Angedockt*, *Mäht* oder *Fährt zurück* (geprüft) |
 | **Batterie** | Akkustand in %, sinkt beim Mähen live mit |
-| **Status** | Genauer Zustand: *Geparkt*, *Lädt*, *Mäht* oder *Sucht Station* (geprüft) |
+| **Status** | Genauer Zustand mit den Bezeichnungen der App, z. B. *Nach Zeitplan geparkt*, *Lädt*, *Mäht*, *Sucht Station*, *Schwerer Fehler* |
 | **Nächster Start** | Wann der Mäher das nächste Mal losfährt. Nach dem Mähfenster der nächste Termin laut Zeitplan; beim Zwischenladen eine **Schätzung** des Mähers, wann er weitermacht. Während er mäht: leer |
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
@@ -46,13 +46,12 @@ Außerdem:
 - Wenn die Greenworks-Cloud kurz nicht erreichbar ist, versucht Home Assistant es automatisch später erneut
 - Deutsch und Englisch – Home Assistant wählt automatisch die eingestellte Sprache, auch für die Fehlertexte
 
-## Was noch nicht geht oder noch unsicher ist
+## Was (noch) nicht geht
 
-- **Steuerung fehlt:** Starten, Pausieren und Zurück zur Station sind noch nicht möglich.
-- **Noch nicht alle Zustände geprüft:** *Verlässt Station*, *Pausiert* und *Fehler* wurden noch nicht beobachtet.
+- **Keine Steuerung:** Die Integration liest nur aus. Starten, Parken oder Zurückschicken ist über Home Assistant **nicht** möglich und auch nicht geplant – das bleibt der Greenworks-App vorbehalten.
+- **Nur mit einem Mäher getestet:** Alles wurde mit einem einzigen Optimow 10 geprüft. Bei anderen Modellen oder mehreren Mähern im Konto kann es Abweichungen geben.
 - **Statistik nur beim Öffnen der App aktuell:** Mähzeit, Laufzeit, Ladezeit und schwere Fehler schickt der Mäher nur, wenn in der Greenworks-App die Statistik abgefragt wird. Wie alt die Werte sind, zeigt der Sensor **Statistik-Stand**.
-- **„Zustand 9“ ist unbekannt:** Der Mäher meldet manchmal einen Zustand 9, dessen Bedeutung noch nicht klar ist. Er wird als *Zustand 9* angezeigt.
-- **Fehlermeldung kann von der App-Fehlerliste abweichen:** Die Nummern und Texte sind dieselben wie in der App. Home Assistant zeigt aber das **zuletzt gemeldete Ereignis**, und das stand im Test nicht in der App-Fehlerliste (vermutlich kurze Warnungen, die die App nicht auflistet). Die deutschen Texte sind teils eigene Übersetzungen.
+- **Fehlermeldung kann von der App-Fehlerliste abweichen:** Nummern und Texte sind dieselben wie in der App. Home Assistant zeigt aber das **zuletzt gemeldete Ereignis**; das war im Test nicht immer das, was in der App-Fehlerliste steht (vermutlich kurze Warnungen, die die App nicht auflistet). Die deutschen Texte sind teils eigene Übersetzungen.
 
 ## Wichtig: Du wirst öfter aus der Greenworks-App abgemeldet
 
@@ -82,7 +81,7 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 
 ## Versionen
 
-- **0.2.5** *(im Test)* – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode** (ersetzt *Mögliche Bedeutung* und *Hinweis*)
+- **0.2.5** *(im Test)* – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**. Status nutzt jetzt die vollständigen App-Bezeichnungen (inkl. Park-Grund wie *Nach Zeitplan geparkt* und *Schwerer Fehler*; der frühere *Zustand 9* ist damit geklärt)
 - **0.2.4** – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
 - **0.2.3** – Neuer Sensor **Mähende**, **Nächster Start** zeigt beim Mähen nichts Irreführendes mehr; neuer Sensor **Statistik-Stand**; **Regenschutz**/**Frostschutz** heißen wie in der App; Zustand 2 heißt jetzt *Geparkt*
 - **0.2.2** – Anmeldung robuster: nur ein echtes falsches Passwort führt zur Passwort-Abfrage, Token wird nie kürzer als 10 Minuten genutzt, unplausible GPS-Werte werden ignoriert
@@ -103,7 +102,7 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 > - You will often be **logged out of the Greenworks app** if Home Assistant uses the same account (see below).
 > - **No warranty, no support.** Use at your own risk – make a backup first.
 
-The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant. **It cannot control the mower yet.**
+The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant. **It cannot control the mower** – starting, parking and sending it home still only work through the Greenworks app.
 
 Based on [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) with findings from [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT). Many thanks to Boes24 for the groundwork.
 
@@ -115,7 +114,7 @@ Checked with a real Optimow 10 in Home Assistant:
 |---|---|
 | **Mower** | Mower state: *Docked*, *Mowing* or *Returning* (checked) |
 | **Battery** | Battery level in %, drops live while mowing |
-| **Status** | Detailed state: *Parked*, *Charging*, *Mowing* or *Searching station* (checked) |
+| **Status** | Detailed state with the app's wording, e.g. *Parked by schedule*, *Charging*, *Mowing*, *Searching station*, *Fatal error* |
 | **Next start** | When the mower will start next. After the mowing window: the next scheduled start; while recharging in between: the mower's **estimate** of when it continues. While mowing: empty |
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
@@ -139,11 +138,10 @@ Also:
 
 ## Not working yet / uncertain
 
-- **No control:** start, pause and return to station are not possible yet.
-- **Not all states checked:** *Leaving station*, *Paused* and *Error* have not been observed yet.
+- **No control:** the integration is read-only. Starting, parking or sending the mower home is **not** possible from Home Assistant and not planned – that stays with the Greenworks app.
+- **Tested with one mower only:** everything was checked with a single Optimow 10. Other models or several mowers per account may behave differently.
 - **Statistics only update when the app asks for them:** cutting time, running time, charging time and fatal errors are only sent by the mower when the statistics are opened in the Greenworks app. The **Statistics as of** sensor shows how old they are.
-- **"State 9" is unknown:** the mower sometimes reports a state 9 whose meaning is not clear yet. It is shown as *State 9*.
-- **Error message may differ from the app's error list:** codes and texts are the same as in the app. However, Home Assistant shows the **most recently reported event**, which in testing did not appear in the app's error list (probably short warnings the app does not list).
+- **Error message may differ from the app's error list:** codes and texts are the same as in the app. However, Home Assistant shows the **most recently reported event**, which in testing was not always what the app's error list shows (probably short warnings the app does not list). Some German texts are our own translations.
 
 ## Important: you will often be logged out of the Greenworks app
 

@@ -17,7 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .api import GreenworksMower
-from .const import ERROR_OPTIONS, MOWER_STATES, MOWING_STATES, error_key
+from .const import ERROR_OPTIONS, MOWING_STATES, STATUS_OPTIONS, error_key, status_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
 
@@ -52,10 +52,8 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         key="status",
         translation_key="status",
         device_class=SensorDeviceClass.ENUM,
-        options=[*MOWER_STATES.values(), "unknown"],
-        value_fn=lambda m: (
-            None if m.state_code is None else MOWER_STATES.get(m.state_code, "unknown")
-        ),
+        options=STATUS_OPTIONS,
+        value_fn=lambda m: status_key(m.state_code, m.park_reason),
     ),
     GreenworksSensorDescription(
         key="battery",

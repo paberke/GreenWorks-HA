@@ -12,7 +12,7 @@ from homeassistant.components.lawn_mower import (
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
-from .const import MOWER_STATES
+from .const import status_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
 
@@ -20,13 +20,17 @@ _RETURNING = getattr(LawnMowerActivity, "RETURNING", LawnMowerActivity.MOWING)
 
 ACTIVITY_MAP: dict[int, LawnMowerActivity] = {
     1: LawnMowerActivity.PAUSED,  # Stopp-Taste gedrueckt
-    2: LawnMowerActivity.DOCKED,  # vom Benutzer geparkt
+    2: LawnMowerActivity.DOCKED,  # geparkt (Grund siehe Status)
     3: LawnMowerActivity.PAUSED,
     4: LawnMowerActivity.MOWING,
     5: LawnMowerActivity.MOWING,  # verlaesst die Station
     6: _RETURNING,  # sucht die Station
     7: LawnMowerActivity.DOCKED,  # laedt
     8: LawnMowerActivity.ERROR,
+    9: LawnMowerActivity.ERROR,  # schwerer Fehler
+    10: LawnMowerActivity.ERROR,  # Wiederherstellung nach Fehler
+    11: LawnMowerActivity.ERROR,  # Alarm (z. B. angehoben, Geofence)
+    12: LawnMowerActivity.MOWING,  # maeht Nebenflaeche
 }
 
 
@@ -64,7 +68,8 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
             return {}
         return {
             "status_code": mower.state_code,
-            "status": MOWER_STATES.get(mower.state_code or -1, "unknown"),
+            "status": status_key(mower.state_code, mower.park_reason),
+            "park_reason_code": mower.park_reason,
             "sub_status_code": mower.sub_state_code,
         }
 

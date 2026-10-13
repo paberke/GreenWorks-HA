@@ -24,23 +24,50 @@ DP_POSITION: Final = "34"
 DP_STATISTICS: Final = "48"
 DP_FIRMWARE: Final = "117"
 
-# Hauptzustand des Maehers (mower_main_state)
+# Hauptzustand des Maehers (mower_main_state), Bedeutung laut Greenworks-App
 MOWER_STATES: Final[dict[int, str]] = {
+    0: "starting_up",
     1: "stop_button_pressed",
-    2: "parked_by_user",
+    2: "parked",
     3: "paused",
     4: "mowing",
     5: "leaving_station",
     6: "searching_station",
     7: "charging",
     8: "error",
-    # Bedeutung von 9 noch unklar (alte Bibliothek: "getrennt", beim Test-
-    # Maeher aber auch bei bestehender Verbindung gemeldet)
-    9: "state_9",
+    9: "fatal_error",
+    10: "recovery",
+    11: "alarm",
+    12: "mowing_secondary_area",
 }
 
+# Bei Zustand 2 (geparkt) nennt source_for_next_start den Grund
+PARK_REASONS: Final[dict[int, str]] = {
+    1: "charging",
+    2: "parked_by_schedule",
+    3: "parked_max_cutting_time",
+    4: "parked_by_user",
+    5: "parked_by_rain_guard",
+    6: "parked_by_frost_guard",
+    7: "energy_saving",
+}
+
+STATUS_OPTIONS: Final = sorted(
+    {*MOWER_STATES.values(), *PARK_REASONS.values(), "unknown"}
+)
+
+
+def status_key(state: int | None, park_reason: int | None) -> str | None:
+    """Zustand (und bei 'geparkt' den Grund) in einen Status-Schluessel umwandeln."""
+    if state is None:
+        return None
+    if state == 2 and park_reason in PARK_REASONS:
+        return PARK_REASONS[park_reason]
+    return MOWER_STATES.get(state, "unknown")
+
+
 # Zustaende, in denen next_start das ENDE des Maehfensters meint
-MOWING_STATES: Final = frozenset({4, 5})
+MOWING_STATES: Final = frozenset({4, 5, 12})
 
 # Fehlercodes des Maehers (gleiche Nummerierung wie die Fehlerliste der App).
 # Die Texte stehen in translations/*.json unter dem Schluessel "e<Nummer>".

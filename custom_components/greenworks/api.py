@@ -145,6 +145,7 @@ class GreenworksMower:
 
     state_code: int | None = None
     sub_state_code: int | None = None
+    park_reason: int | None = None
     battery: int | None = None
     next_start: datetime | None = None
     status_time: datetime | None = None
@@ -211,6 +212,7 @@ def build_mower(
         status = candidates[-1]
         mower.state_code = _to_int(status.get("mower_main_state"))
         mower.sub_state_code = _to_int(status.get("mower_sub_state"))
+        mower.park_reason = _to_int(status.get("source_for_next_start"))
         battery = _to_int(status.get("battery_status"))
         mower.battery = battery if battery is not None and 0 <= battery <= 100 else None
         mower.next_start = _to_timestamp(status.get("next_start"))

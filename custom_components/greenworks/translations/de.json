@@ -34,15 +34,25 @@
       "status": {
         "name": "Status",
         "state": {
+          "starting_up": "Startet",
           "stop_button_pressed": "Stopp-Taste gedrückt",
-          "parked_by_user": "Geparkt",
+          "parked": "Geparkt",
           "paused": "Pausiert",
           "mowing": "Mäht",
           "leaving_station": "Verlässt Station",
           "searching_station": "Sucht Station",
           "charging": "Lädt",
           "error": "Fehler",
-          "state_9": "Zustand 9",
+          "fatal_error": "Schwerer Fehler",
+          "recovery": "Wiederherstellung nach Fehler",
+          "alarm": "Alarm",
+          "mowing_secondary_area": "Mäht Nebenfläche",
+          "parked_by_schedule": "Nach Zeitplan geparkt",
+          "parked_max_cutting_time": "Maximale Tagesmähzeit erreicht",
+          "parked_by_user": "Vom Benutzer geparkt",
+          "parked_by_rain_guard": "Vom Regenschutz geparkt",
+          "parked_by_frost_guard": "Vom Frostschutz geparkt",
+          "energy_saving": "Energiesparmodus",
           "unknown": "Unbekannt"
         }
       },
