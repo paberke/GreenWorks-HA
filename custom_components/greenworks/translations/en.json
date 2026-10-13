@@ -35,7 +35,7 @@
         "name": "Status",
         "state": {
           "stop_button_pressed": "Stop button pressed",
-          "parked_by_user": "Parked by user",
+          "parked_by_user": "Parked",
           "paused": "Paused",
           "mowing": "Mowing",
           "leaving_station": "Leaving station",
@@ -75,6 +75,9 @@
       },
       "statistics_time": {
         "name": "Statistics as of"
+      },
+      "mowing_end": {
+        "name": "Mowing end"
       }
     },
     "binary_sensor": {

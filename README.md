@@ -20,16 +20,18 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 
 | Anzeige in Home Assistant | Was sie zeigt |
 |---|---|
-| **Mäher** | Zustand des Mähers: *Angedockt* oder *Mäht* (beides geprüft) |
+| **Mäher** | Zustand des Mähers: *Angedockt*, *Mäht* oder *Fährt zurück* (geprüft) |
 | **Batterie** | Akkustand in %, sinkt beim Mähen live mit |
-| **Status** | Genauer Zustand: *Geparkt (Benutzer)*, *Lädt* oder *Mäht* (geprüft) |
-| **Nächster Start** | Datum und Uhrzeit des nächsten geplanten Mähens (stimmt, solange der Mäher in der Station steht – siehe unten) |
+| **Status** | Genauer Zustand: *Geparkt*, *Lädt*, *Mäht* oder *Sucht Station* (geprüft) |
+| **Nächster Start** | Wann der Mäher das nächste Mal losfährt. Nach dem Mähfenster der nächste Termin laut Zeitplan; beim Zwischenladen eine **Schätzung** des Mähers, wann er weitermacht. Während er mäht: leer |
+| **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
-| **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme |
-| **Schwere Fehler** | Anzahl schwerer Fehler laut Mäher |
+| **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
+| **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
+| **Statistik-Stand** | Wann der Mäher die Statistik-Werte zuletzt geschickt hat |
 | **Signalqualität** | Funkverbindung des Mähers |
 | **Online** | Ob der Mäher mit der Cloud verbunden ist |
-| **Regensensor aktiv** / **Frostsensor aktiv** | Ob diese Sensoren in der App eingeschaltet sind |
+| **Regenschutz** / **Frostschutz** | Ob diese Funktionen im „Wetterwächter“ der App eingeschaltet sind (nicht, ob es gerade regnet) |
 | **Position** | GPS-Position für die Karte, wandert beim Mähen mit (standardmäßig ausgeschaltet, unter den Entitäten des Geräts aktivierbar) |
 
 Außerdem:
@@ -43,8 +45,8 @@ Außerdem:
 ## Was noch nicht geht oder noch unsicher ist
 
 - **Steuerung fehlt:** Starten, Pausieren und Zurück zur Station sind noch nicht möglich.
-- **Noch nicht alle Zustände geprüft:** *Angedockt*, *Lädt* und *Mäht* werden richtig angezeigt. *Verlässt Station*, *Fährt zur Station*, *Pausiert* und *Fehler* wurden noch nicht beobachtet.
-- **„Nächster Start“ beim Mähen irreführend:** Während der Mäher mäht, liefert die Cloud in diesem Feld das **Ende** des Mähfensters statt des nächsten Starts. Das wird in einer der nächsten Versionen angepasst.
+- **Noch nicht alle Zustände geprüft:** *Verlässt Station*, *Pausiert* und *Fehler* wurden noch nicht beobachtet.
+- **Statistik nur beim Öffnen der App aktuell:** Mähzeit, Laufzeit, Ladezeit und schwere Fehler schickt der Mäher nur, wenn in der Greenworks-App die Statistik abgefragt wird. Wie alt die Werte sind, zeigt der Sensor **Statistik-Stand**.
 - **„Zustand 9“ ist unbekannt:** Der Mäher meldet manchmal einen Zustand 9, dessen Bedeutung noch nicht klar ist. Er wird als *Zustand 9* angezeigt.
 - **Fehlermeldungen unsicher:** **Letzter Fehlercode** und **Letzter Fehler** (Zeitpunkt) werden angezeigt. Die Nummer passte im Test aber **nicht** zur Fehlerliste in der App. Die Texte aus der App-Fehlerliste stehen deshalb nur als *mögliche Bedeutung* dabei.
 
@@ -76,6 +78,7 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 
 ## Versionen
 
+- **0.2.3** *(im Test)* – Neuer Sensor **Mähende**, **Nächster Start** zeigt beim Mähen nichts Irreführendes mehr; neuer Sensor **Statistik-Stand**; **Regenschutz**/**Frostschutz** heißen wie in der App; Zustand 2 heißt jetzt *Geparkt*
 - **0.2.2** – Anmeldung robuster: nur ein echtes falsches Passwort führt zur Passwort-Abfrage, Token wird nie kürzer als 10 Minuten genutzt, unplausible GPS-Werte werden ignoriert
 - **0.2.1** – Texte aus der App-Fehlerliste als *mögliche Bedeutung* am Sensor **Letzter Fehlercode**
 - **0.2.0** – Verbindung zur Greenworks-Cloud neu geschrieben: läuft wieder mit der aktuellen Cloud und auch in der Winterpause, alle Mäher eines Kontos in einem Eintrag, neue Sensoren, deutsche Übersetzung

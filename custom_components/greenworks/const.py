@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.2.2"
+VERSION: Final = "0.2.3"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -39,6 +39,9 @@ MOWER_STATES: Final[dict[int, str]] = {
     9: "state_9",
 }
 
+# Zustaende, in denen next_start das ENDE des Maehfensters meint
+MOWING_STATES: Final = frozenset({4, 5})
+
 # Fehlercodes laut Fehlerliste der Greenworks-App (Optimow 10).
 # Achtung: ob die event_id aus Datenpunkt 33 dieselbe Nummerierung nutzt,
 # ist noch nicht bestaetigt - deshalb wird der Text nur als Attribut
@@ -52,4 +55,4 @@ ERROR_CODES: Final[dict[int, str]] = {
     64: "Mit Sicherheitsschlüssel gestartet – erst STOP, dann START drücken",
 }
 
-# Version 0.2.2
+# Version 0.2.3

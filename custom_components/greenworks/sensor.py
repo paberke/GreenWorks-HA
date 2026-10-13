@@ -17,13 +17,28 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .api import GreenworksMower
-from .const import ERROR_CODES, MOWER_STATES
+from .const import ERROR_CODES, MOWER_STATES, MOWING_STATES
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
 
 
 def _hours(seconds: int | None) -> float | None:
     return round(seconds / 3600, 1) if seconds is not None else None
+
+
+def _is_mowing(m: GreenworksMower) -> bool:
+    return m.state_code in MOWING_STATES
+
+
+def _next_start(m: GreenworksMower):
+    """Naechster Start: nur wenn der Maeher NICHT maeht.
+    Beim Laden mitten im Fenster ist das eine Schaetzung des Maehers."""
+    return None if _is_mowing(m) else m.next_start
+
+
+def _mowing_end(m: GreenworksMower):
+    """Maehende: beim Maehen liefert die Cloud im selben Feld das Fensterende."""
+    return m.next_start if _is_mowing(m) else None
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -53,7 +68,13 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         key="next_start",
         translation_key="next_start",
         device_class=SensorDeviceClass.TIMESTAMP,
-        value_fn=lambda m: m.next_start,
+        value_fn=_next_start,
+    ),
+    GreenworksSensorDescription(
+        key="mowing_end",
+        translation_key="mowing_end",
+        device_class=SensorDeviceClass.TIMESTAMP,
+        value_fn=_mowing_end,
     ),
     GreenworksSensorDescription(
         key="last_error",
@@ -169,4 +190,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower)
 
 
-# Version 0.2.2
+# Version 0.2.3
