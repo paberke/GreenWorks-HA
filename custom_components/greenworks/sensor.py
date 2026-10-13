@@ -188,4 +188,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower)
 
 
-# Version 0.2.5
+# Version 0.2.6
