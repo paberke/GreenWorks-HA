@@ -16,6 +16,18 @@ Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud a
 
 Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) mit Erkenntnissen aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT). Vielen Dank an Boes24 für die Vorarbeit.
 
+## Installation über HACS
+
+[![In HACS öffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
+
+Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
+
+1. HACS → Menü (⋮) → **Benutzerdefinierte Repositories**
+2. URL `https://github.com/paberke/GreenWorks-HA`, Typ **Integration**, hinzufügen
+3. **Greenworks** herunterladen und Home Assistant neu starten
+4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → *Greenworks*
+5. E-Mail und Passwort der Greenworks-App eingeben
+
 ## Was funktioniert
 
 Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
@@ -67,21 +79,9 @@ Außerdem:
 
 > **English:** You will often be logged out of the Greenworks app if Home Assistant uses the same account. Home Assistant itself keeps working – it silently logs back in, which logs the app out. If that bothers you, disable the integration while using the app and re-enable it afterwards.
 
-## Installation über HACS
-
-[![In HACS öffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
-
-Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
-
-1. HACS → Menü (⋮) → **Benutzerdefinierte Repositories**
-2. URL `https://github.com/paberke/GreenWorks-HA`, Typ **Integration**, hinzufügen
-3. **Greenworks** herunterladen und Home Assistant neu starten
-4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → *Greenworks*
-5. E-Mail und Passwort der Greenworks-App eingeben
-
 ## Versionen
 
-- **0.2.6** *(im Test)* – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
+- **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
 - **0.2.5** – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**
 - **0.2.4** – Fehlertexte (*Mögliche Bedeutung*, *Hinweis*) erscheinen jetzt in der Sprache von Home Assistant (Deutsch/Englisch); README auch auf Englisch
 - **0.2.3** – Neuer Sensor **Mähende**, **Nächster Start** zeigt beim Mähen nichts Irreführendes mehr; neuer Sensor **Statistik-Stand**; **Regenschutz**/**Frostschutz** heißen wie in der App; Zustand 2 heißt jetzt *Geparkt*
@@ -106,6 +106,18 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant. **It cannot control the mower** – starting, parking and sending it home still only work through the Greenworks app.
 
 Based on [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) with findings from [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT). Many thanks to Boes24 for the groundwork.
+
+## Installation via HACS
+
+[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
+
+The button above opens the repository directly in HACS. Or manually:
+
+1. HACS → menu (⋮) → **Custom repositories**
+2. URL `https://github.com/paberke/GreenWorks-HA`, type **Integration**, add
+3. Download **Greenworks** and restart Home Assistant
+4. Settings → Devices & services → **Add integration** → *Greenworks*
+5. Enter the email and password of the Greenworks app
 
 ## What works
 
@@ -137,7 +149,7 @@ Also:
 - If the Greenworks cloud is briefly unreachable, Home Assistant automatically retries later
 - English and German – Home Assistant automatically uses your language, including the error texts
 
-## Not working yet / uncertain
+## What does not work
 
 - **No control:** the integration is read-only. Starting, parking or sending the mower home is **not** possible from Home Assistant and not planned – that stays with the Greenworks app.
 - **Tested with one mower only:** everything was checked with a single Optimow 10. Other models or several mowers per account may behave differently.
@@ -155,17 +167,5 @@ Also:
 3. This logs you out of the app. The next time you open the app, you have to log in again.
 
 **What can I do?** If it bothers you: disable the integration while you use the app – *Settings → Devices & services → Greenworks → ⋮ → Disable*. Enable it again afterwards.
-
-## Installation via HACS
-
-[![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
-
-The button above opens the repository directly in HACS. Or manually:
-
-1. HACS → menu (⋮) → **Custom repositories**
-2. URL `https://github.com/paberke/GreenWorks-HA`, type **Integration**, add
-3. Download **Greenworks** and restart Home Assistant
-4. Settings → Devices & services → **Add integration** → *Greenworks*
-5. Enter the email and password of the Greenworks app
 
 The version history is in the German section above ("Versionen").
