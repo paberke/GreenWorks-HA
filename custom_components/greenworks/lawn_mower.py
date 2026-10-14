@@ -55,6 +55,12 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         super().__init__(coordinator, device_id, "mower")
 
     @property
+    def available(self) -> bool:
+        """Nicht verfuegbar, solange der Maeher offline ist."""
+        mower = self.mower
+        return super().available and mower is not None and mower.online is not False
+
+    @property
     def activity(self) -> LawnMowerActivity | None:
         mower = self.mower
         if mower is None or mower.state_code is None:
@@ -74,4 +80,4 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         }
 
 
-# Version 0.2.9
+# Version 0.2.10

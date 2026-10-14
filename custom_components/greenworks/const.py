@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.2.9"
+VERSION: Final = "0.2.10"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -61,9 +61,13 @@ PARK_REASONS: Final[dict[int, str]] = {
     7: "energy_saving",
 }
 
-STATUS_OPTIONS: Final = sorted(
+# Eigener Zustand, wenn der Maeher nicht mit der Cloud verbunden ist
+STATUS_OFFLINE: Final = "offline"
+
+LAST_STATUS_OPTIONS: Final = sorted(
     {*MOWER_STATES.values(), *PARK_REASONS.values(), "unknown"}
 )
+STATUS_OPTIONS: Final = sorted({*LAST_STATUS_OPTIONS, STATUS_OFFLINE})
 
 
 def status_key(state: int | None, park_reason: int | None) -> str | None:
@@ -90,4 +94,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.2.9
+# Version 0.2.10

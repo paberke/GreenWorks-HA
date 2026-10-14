@@ -32,9 +32,9 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 
 | Anzeige in Home Assistant | Was sie zeigt |
 |---|---|
-| **Mäher** ⓘ | Zustand des Mähers: *Angedockt*, *Mäht* oder *Fährt zurück* (geprüft) |
+| **Mäher** ⓘ | Zustand des Mähers: *Angedockt*, *Mäht*, *Fährt zurück* oder *Fehler*. Ist der Mäher offline, steht hier *nicht verfügbar* |
 | **Batterie** | Akkustand in %, sinkt beim Mähen live mit |
-| **Status** | Genauer Zustand mit den Bezeichnungen der App, z. B. *Nach Zeitplan geparkt*, *Lädt*, *Mäht*, *Sucht Station*, *Schwerer Fehler* |
+| **Status** ⓘ | Genauer Zustand mit den Bezeichnungen der App, z. B. *Nach Zeitplan geparkt*, *Lädt*, *Mäht*, *Sucht Station*, *Schwerer Fehler*. Ist der Mäher offline: *Offline* |
 | **Nächster Start** | Wann der Mäher das nächste Mal losfährt. Nach dem Mähfenster der nächste Termin laut Zeitplan; beim Zwischenladen eine **Schätzung** des Mähers, wann er weitermacht. Während er mäht: leer |
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
@@ -61,6 +61,7 @@ Einige Anzeigen haben weitere Angaben. So findest du sie: Anzeige antippen → o
 
 | Anzeige | Attribute |
 |---|---|
+| **Status** | *Letzter Zustand* – nur wenn der Mäher offline ist: der Zustand vor dem Ausfall |
 | **Letzter Fehlercode** | *Bedeutung* – der Fehler als Klartext |
 | **Letzte Fehlermeldung** | *Klartext* (für Benachrichtigungen), *Verlauf* (Fehlerliste der App mit Datum), *Verlauf aktualisiert* |
 | **Mähplan** | *Montag* bis *Sonntag* mit den Mähzeiten, *Aktualisiert* |
@@ -105,6 +106,7 @@ Außerdem:
 
 ## Versionen
 
+- **0.2.10** *(im Test)* – Ist der Mäher offline, zeigt **Status** *Offline* (mit Attribut *Letzter Zustand*) und **Mäher** *nicht verfügbar*
 - **0.2.9** *(im Test)* – Status zeigt bei einem neueren Fehler den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*); kurze Verbindungsaussetzer (bis ca. 5 Minuten) werden überbrückt, statt alles auf *nicht verfügbar* zu setzen
 - **0.2.8** – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Einstellungen (**Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte**) als Anzeige, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
 - **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
@@ -154,9 +156,9 @@ Checked with a real Optimow 10 in Home Assistant:
 
 | Entity | What it shows |
 |---|---|
-| **Mower** ⓘ | Mower state: *Docked*, *Mowing* or *Returning* (checked) |
+| **Mower** ⓘ | Mower state: *Docked*, *Mowing*, *Returning* or *Error*. While the mower is offline it shows *unavailable* |
 | **Battery** | Battery level in %, drops live while mowing |
-| **Status** | Detailed state with the app's wording, e.g. *Parked by schedule*, *Charging*, *Mowing*, *Searching station*, *Fatal error* |
+| **Status** ⓘ | Detailed state with the app's wording, e.g. *Parked by schedule*, *Charging*, *Mowing*, *Searching station*, *Fatal error*. While the mower is offline: *Offline* |
 | **Next start** | When the mower will start next. After the mowing window: the next scheduled start; while recharging in between: the mower's **estimate** of when it continues. While mowing: empty |
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
@@ -183,6 +185,7 @@ Some entities carry more details. To see them: tap the entity → **⋮** at the
 
 | Entity | Attributes |
 |---|---|
+| **Status** | *Last state* – only while the mower is offline: the state before it went offline |
 | **Last error code** | *Meaning* – the error as plain text |
 | **Last error message** | *Text* (for notifications), *History* (the app's error list with dates), *History updated* |
 | **Mowing schedule** | *Monday* to *Sunday* with the mowing times, *Updated* |

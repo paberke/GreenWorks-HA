@@ -18,7 +18,14 @@ from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from .api import WEEKDAYS, GreenworksMower
-from .const import ERROR_OPTIONS, MOWING_STATES, STATUS_OPTIONS, error_key, status_key
+from .const import (
+    ERROR_OPTIONS,
+    MOWING_STATES,
+    STATUS_OFFLINE,
+    STATUS_OPTIONS,
+    error_key,
+    status_key,
+)
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
 from .error_texts import error_text
@@ -146,7 +153,13 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         translation_key="status",
         device_class=SensorDeviceClass.ENUM,
         options=STATUS_OPTIONS,
-        value_fn=lambda m: status_key(m.state_code, m.park_reason),
+        # Maeher offline -> "Offline"; der Zustand davor steht im Attribut
+        value_fn=lambda m: STATUS_OFFLINE
+        if m.online is False
+        else status_key(m.state_code, m.park_reason),
+        attr_fn=lambda m, lang: {"last_status": status_key(m.state_code, m.park_reason)}
+        if m.online is False
+        else {},
     ),
     GreenworksSensorDescription(
         key="battery",
@@ -338,4 +351,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.2.9
+# Version 0.2.10
