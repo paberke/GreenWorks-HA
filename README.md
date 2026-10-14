@@ -26,8 +26,6 @@ Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
 4. Einstellungen → Geräte & Dienste → **Integration hinzufügen** → *Greenworks*
 5. E-Mail und Passwort der Greenworks-App eingeben
 
-**Beta-Versionen:** Neue Funktionen erscheinen zuerst als Beta (auf GitHub als *Pre-release* markiert, z. B. `v0.2.8b1`). HACS bietet sie nur an, wenn du am HACS-Gerät *Greenworks* den Schalter **Pre-release** einschaltest (Einstellungen → Geräte & Dienste → HACS → Greenworks; der Schalter ist anfangs deaktiviert). Ohne den Schalter bekommst du nur stabile Versionen.
-
 ## Was funktioniert
 
 Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
@@ -41,11 +39,11 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
-| **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App *(Beta)* |
-| **Mähplan** | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute *(Beta)* |
-| **Fehlerverlauf** | Attribut *Verlauf* an **Letzte Fehlermeldung**: die Meldungen aus der Fehlerliste der App mit Datum und Klartext *(Beta)* |
-| **Software** | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) *(Beta)* |
-| **Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte** | Die Einstellungen aus der App als reine Anzeige (Diagnose). Ändern geht weiterhin nur in der App *(Beta)* |
+| **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App |
+| **Mähplan** | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute |
+| **Fehlerverlauf** | Attribut *Verlauf* an **Letzte Fehlermeldung**: die Meldungen aus der Fehlerliste der App mit Datum und Klartext |
+| **Software** | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) |
+| **Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte** | Die Einstellungen aus der App als reine Anzeige (Diagnose). Ändern geht weiterhin nur in der App |
 | **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App). Das Attribut *Klartext* enthält den Text auch für Benachrichtigungen |
 | **Letzter Fehlercode** / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
 | **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
@@ -87,7 +85,7 @@ Außerdem:
 
 ## Versionen
 
-- **0.2.8b1** *(Beta)* – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Einstellungen (**Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte**) als Anzeige, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
+- **0.2.8** *(im Test)* – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Einstellungen (**Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte**) als Anzeige, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
 - **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
 - **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
 - **0.2.5** – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**
@@ -129,8 +127,6 @@ The button above opens the repository directly in HACS. Or manually:
 4. Settings → Devices & services → **Add integration** → *Greenworks*
 5. Enter the email and password of the Greenworks app
 
-**Beta versions:** new features are released as a beta first (marked as *Pre-release* on GitHub, e.g. `v0.2.8b1`). HACS only offers them if you turn on the **Pre-release** switch on the HACS device *Greenworks* (Settings → Devices & services → HACS → Greenworks; the switch is disabled at first). Without it you only get stable versions.
-
 ## What works
 
 Checked with a real Optimow 10 in Home Assistant:
@@ -144,11 +140,11 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
 | **Total cutting time** / **Total running time** / **Total charging time** | Total hours since first use (see note below) |
-| **Blade time** | Mowing hours since the blade time was last reset in the app – same calculation as the app *(beta)* |
-| **Mowing schedule** | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes *(beta)* |
-| **Error history** | *History* attribute on **Last error message**: the entries of the app's error list with date and text *(beta)* |
-| **Software** | Mower software version, plus cutting unit and charging station as attributes (diagnostic) *(beta)* |
-| **Drive past wire distance**, **Follow wire distance**, **Starting points** | The app settings, display only (diagnostic). Changing them still only works in the app *(beta)* |
+| **Blade time** | Mowing hours since the blade time was last reset in the app – same calculation as the app |
+| **Mowing schedule** | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes |
+| **Error history** | *History* attribute on **Last error message**: the entries of the app's error list with date and text |
+| **Software** | Mower software version, plus cutting unit and charging station as attributes (diagnostic) |
+| **Drive past wire distance**, **Follow wire distance**, **Starting points** | The app settings, display only (diagnostic). Changing them still only works in the app |
 | **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app). The *Text* attribute holds the text for use in notifications |
 | **Last error code** / **Last error** | Number and time of the last error |
 | **Fatal errors** | Number of fatal errors reported by the mower (see note below) |
