@@ -32,7 +32,7 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 
 | Anzeige in Home Assistant | Was sie zeigt |
 |---|---|
-| **Mäher** | Zustand des Mähers: *Angedockt*, *Mäht* oder *Fährt zurück* (geprüft) |
+| **Mäher** ⓘ | Zustand des Mähers: *Angedockt*, *Mäht* oder *Fährt zurück* (geprüft) |
 | **Batterie** | Akkustand in %, sinkt beim Mähen live mit |
 | **Status** | Genauer Zustand mit den Bezeichnungen der App, z. B. *Nach Zeitplan geparkt*, *Lädt*, *Mäht*, *Sucht Station*, *Schwerer Fehler* |
 | **Nächster Start** | Wann der Mäher das nächste Mal losfährt. Nach dem Mähfenster der nächste Termin laut Zeitplan; beim Zwischenladen eine **Schätzung** des Mähers, wann er weitermacht. Während er mäht: leer |
@@ -40,18 +40,20 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
 | **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App |
-| **Mähplan** | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute |
+| **Mähplan** ⓘ | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute |
 | **Fehlerverlauf** | Attribut *Verlauf* an **Letzte Fehlermeldung**: die Meldungen aus der Fehlerliste der App mit Datum und Klartext |
-| **Software** | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) |
-| **Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte** | Die Einstellungen aus der App als reine Anzeige (Diagnose). Ändern geht weiterhin nur in der App |
-| **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App). Das Attribut *Klartext* enthält den Text auch für Benachrichtigungen |
-| **Letzter Fehlercode** / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
+| **Software** ⓘ | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) |
+| **Überfahrweite** ⓘ, **Abstand beim Drahtfolgen** ⓘ, **Startpunkte** ⓘ | Die Einstellungen aus der App als reine Anzeige (Diagnose). Ändern geht weiterhin nur in der App |
+| **Letzte Fehlermeldung** ⓘ | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App). Das Attribut *Klartext* enthält den Text auch für Benachrichtigungen |
+| **Letzter Fehlercode** ⓘ / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
 | **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
 | **Statistik-Stand** | Wann der Mäher die Statistik-Werte zuletzt geschickt hat |
 | **Signalqualität** | Funkverbindung des Mähers |
 | **Online** | Ob der Mäher mit der Cloud verbunden ist |
 | **Regenschutz** / **Frostschutz** | Ob diese Funktionen im „Wetterwächter“ der App eingeschaltet sind (nicht, ob es gerade regnet) |
 | **Position** | GPS-Position für die Karte, wandert beim Mähen mit (standardmäßig ausgeschaltet, unter den Entitäten des Geräts aktivierbar) |
+
+ⓘ = hat Zusatzinfos, siehe [Zusatzinfos (Attribute)](#zusatzinfos-attribute).
 
 ### Zusatzinfos (Attribute)
 
@@ -150,7 +152,7 @@ Checked with a real Optimow 10 in Home Assistant:
 
 | Entity | What it shows |
 |---|---|
-| **Mower** | Mower state: *Docked*, *Mowing* or *Returning* (checked) |
+| **Mower** ⓘ | Mower state: *Docked*, *Mowing* or *Returning* (checked) |
 | **Battery** | Battery level in %, drops live while mowing |
 | **Status** | Detailed state with the app's wording, e.g. *Parked by schedule*, *Charging*, *Mowing*, *Searching station*, *Fatal error* |
 | **Next start** | When the mower will start next. After the mowing window: the next scheduled start; while recharging in between: the mower's **estimate** of when it continues. While mowing: empty |
@@ -158,18 +160,20 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Last status report** | When the mower last reported data |
 | **Total cutting time** / **Total running time** / **Total charging time** | Total hours since first use (see note below) |
 | **Blade time** | Mowing hours since the blade time was last reset in the app – same calculation as the app |
-| **Mowing schedule** | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes |
+| **Mowing schedule** ⓘ | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes |
 | **Error history** | *History* attribute on **Last error message**: the entries of the app's error list with date and text |
-| **Software** | Mower software version, plus cutting unit and charging station as attributes (diagnostic) |
-| **Drive past wire distance**, **Follow wire distance**, **Starting points** | The app settings, display only (diagnostic). Changing them still only works in the app |
-| **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app). The *Text* attribute holds the text for use in notifications |
-| **Last error code** / **Last error** | Number and time of the last error |
+| **Software** ⓘ | Mower software version, plus cutting unit and charging station as attributes (diagnostic) |
+| **Drive past wire distance** ⓘ, **Follow wire distance** ⓘ, **Starting points** ⓘ | The app settings, display only (diagnostic). Changing them still only works in the app |
+| **Last error message** ⓘ | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app). The *Text* attribute holds the text for use in notifications |
+| **Last error code** ⓘ / **Last error** | Number and time of the last error |
 | **Fatal errors** | Number of fatal errors reported by the mower (see note below) |
 | **Statistics as of** | When the mower last sent the statistics values |
 | **Signal quality** | Radio connection of the mower |
 | **Online** | Whether the mower is connected to the cloud |
 | **Rain protection** / **Frost protection** | Whether these options are enabled in the app's "weather guard" (not whether it is raining right now) |
 | **Position** | GPS position for the map, moves while mowing (disabled by default, can be enabled under the device's entities) |
+
+ⓘ = has extra details, see [Extra details (attributes)](#extra-details-attributes).
 
 ### Extra details (attributes)
 
