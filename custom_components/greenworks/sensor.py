@@ -15,8 +15,9 @@ from homeassistant.components.sensor import (
 from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+from homeassistant.util import dt as dt_util
 
-from .api import GreenworksMower
+from .api import WEEKDAYS, GreenworksMower
 from .const import ERROR_OPTIONS, MOWING_STATES, STATUS_OPTIONS, error_key, status_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import GreenworksEntity
@@ -40,6 +41,68 @@ def _next_start(m: GreenworksMower):
 def _mowing_end(m: GreenworksMower):
     """Maehende: beim Maehen liefert die Cloud im selben Feld das Fensterende."""
     return m.next_start if _is_mowing(m) else None
+
+
+_DAY_SHORT = {
+    "de": ("Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"),
+    "en": ("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"),
+}
+
+
+def _lang(lang: str | None) -> str:
+    return "de" if (lang or "").startswith("de") else "en"
+
+
+def _hhmm(minutes: int) -> str:
+    minutes %= 1440
+    return f"{minutes // 60:02d}:{minutes % 60:02d}"
+
+
+def _day_windows(m: GreenworksMower, day: int) -> str:
+    windows = (m.schedule or {}).get(day) or []
+    return ", ".join(f"{_hhmm(start)}–{_hhmm(start + length)}" for start, length in windows)
+
+
+def _schedule_summary(m: GreenworksMower, lang: str) -> str | None:
+    """Kurzform des Maehplans, z. B. 'Mo–Fr 09:00–12:30'."""
+    if m.schedule is None:
+        return None
+    short = _DAY_SHORT[_lang(lang)]
+    groups: list[tuple[int, int, str]] = []
+    for day in range(7):
+        text = _day_windows(m, day)
+        if groups and text and groups[-1][2] == text and groups[-1][1] == day - 1:
+            groups[-1] = (groups[-1][0], day, text)
+        elif text:
+            groups.append((day, day, text))
+    if not groups:
+        return "Kein Mähplan" if _lang(lang) == "de" else "No schedule"
+    parts = [
+        f"{short[a]}{'' if a == b else (', ' if b == a + 1 else '–') + short[b]} {text}"
+        for a, b, text in groups
+    ]
+    return "; ".join(parts)[:255]
+
+
+def _schedule_attrs(m: GreenworksMower, lang: str) -> dict[str, Any]:
+    if m.schedule is None:
+        return {}
+    attrs: dict[str, Any] = {day: (_day_windows(m, i) or "–") for i, day in enumerate(WEEKDAYS)}
+    attrs["updated"] = m.schedule_time.isoformat() if m.schedule_time else None
+    return attrs
+
+
+def _error_attrs(m: GreenworksMower, lang: str) -> dict[str, Any]:
+    attrs: dict[str, Any] = {"text": error_text(m.last_error_code, lang)}
+    if m.error_history is not None:
+        attrs["history"] = [
+            f"{dt_util.as_local(when).strftime('%d.%m.%Y %H:%M')} – {error_text(code, lang)} ({code})"
+            for when, code in m.error_history
+        ]
+        attrs["history_updated"] = (
+            m.error_history_time.isoformat() if m.error_history_time else None
+        )
+    return attrs
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -89,13 +152,29 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         options=ERROR_OPTIONS,
         value_fn=lambda m: error_key(m.last_error_code),
         # Klartext als Attribut, damit er in Benachrichtigungen nutzbar ist
-        attr_fn=lambda m, lang: {"text": error_text(m.last_error_code, lang)},
+        attr_fn=_error_attrs,
     ),
     GreenworksSensorDescription(
         key="last_error_time",
         translation_key="last_error_time",
         device_class=SensorDeviceClass.TIMESTAMP,
         value_fn=lambda m: m.last_error_time,
+    ),
+    GreenworksSensorDescription(
+        key="schedule",
+        translation_key="schedule",
+        value_fn=lambda m: None,  # wird sprachabhaengig in native_value gebildet
+        attr_fn=_schedule_attrs,
+    ),
+    GreenworksSensorDescription(
+        key="software",
+        translation_key="software",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: m.firmware,
+        attr_fn=lambda m, lang: {
+            "cutting_unit": m.sw_cutting,
+            "charging_station": m.sw_charging_station,
+        },
     ),
     GreenworksSensorDescription(
         key="cutting_time",
@@ -190,7 +269,11 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
     @property
     def native_value(self) -> Any:
         mower = self.mower
-        return None if mower is None else self.entity_description.value_fn(mower)
+        if mower is None:
+            return None
+        if self.entity_description.key == "schedule":
+            return _schedule_summary(mower, self.hass.config.language)
+        return self.entity_description.value_fn(mower)
 
     @property
     def extra_state_attributes(self) -> dict[str, Any] | None:

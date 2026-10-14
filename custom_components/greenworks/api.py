@@ -19,7 +19,10 @@ import aiohttp
 from .const import (
     BASE_URL,
     CORP_ID,
+    DP_ERROR_HISTORY,
     DP_FIRMWARE,
+    DP_SCHEDULE_READ,
+    DP_SCHEDULE_WRITE,
     DP_LAST_ERROR,
     DP_POSITION,
     DP_STATISTICS,
@@ -148,6 +151,40 @@ def _to_iso(value: Any) -> datetime | None:
         return None
 
 
+WEEKDAYS = ("monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday")
+
+
+def _parse_schedule(data: dict[str, Any]) -> dict[int, list[tuple[int, int]]] | None:
+    """Wochenplan aus den Feldern <tag>_timer_<n>_... lesen."""
+    if not any(k.endswith("_timer_mode") for k in data):
+        return None
+    plan: dict[int, list[tuple[int, int]]] = {}
+    for idx, day in enumerate(WEEKDAYS):
+        windows: list[tuple[int, int]] = []
+        for slot in (1, 2):
+            pre = f"{day}_timer_{slot}_"
+            mode = _to_int(data.get(pre + "timer_mode"))
+            hour = _to_int(data.get(pre + "start_time_hour"))
+            minute = _to_int(data.get(pre + "start_time_minute"))
+            length = _to_int(data.get(pre + "length_minutes"))
+            if not mode or not length or hour is None or minute is None:
+                continue
+            if not (0 <= hour < 24 and 0 <= minute < 60 and 0 < length <= 1440):
+                continue
+            windows.append((hour * 60 + minute, length))
+        plan[idx] = sorted(windows)
+    return plan
+
+
+def _dp_time(value: Any, *keys: str) -> datetime | None:
+    flat = _flatten_datapoint(value)
+    for key in keys:
+        ts = _to_iso(flat.get(key))
+        if ts:
+            return ts
+    return None
+
+
 # --------------------------------------------------------------------------
 # Datenmodell
 # --------------------------------------------------------------------------
@@ -190,6 +227,16 @@ class GreenworksMower:
     latitude: float | None = None
     longitude: float | None = None
     gps_accuracy: float | None = None
+
+    # Maehplan: Wochentag (0 = Montag) -> Liste (Startminute, Dauer in Minuten)
+    schedule: dict[int, list[tuple[int, int]]] | None = None
+    schedule_time: datetime | None = None
+    # Fehlerverlauf: (Zeitpunkt, Fehlercode), neueste zuerst
+    error_history: list[tuple[datetime, int]] | None = None
+    error_history_time: datetime | None = None
+    # Softwarestaende weiterer Bauteile
+    sw_cutting: str | None = None
+    sw_charging_station: str | None = None
 
     raw_properties: dict[str, Any] = field(default_factory=dict)
     raw_datapoints: dict[str, Any] = field(default_factory=dict)
@@ -275,6 +322,44 @@ def build_mower(
     minor = fw.get("mower_main_application_minor_sw_version")
     if major is not None and minor is not None:
         mower.firmware = f"{major}.{minor}"
+
+    # --- Softwarestaende von Maehwerk und Ladestation ---------------------
+    for attr, prefix in (("sw_cutting", "mower_cutting"), ("sw_charging_station", "mower_cs")):
+        major = fw.get(f"{prefix}_application_major_sw_version")
+        minor = fw.get(f"{prefix}_application_minor_sw_version")
+        if major is not None and minor is not None:
+            setattr(mower, attr, f"{major}.{minor}")
+
+    # --- Maehplan: 125 (gelesen) oder 124 (zuletzt gespeichert), der neuere --
+    plans = []
+    for key, time_keys in (
+        (DP_SCHEDULE_READ, ("response_time", "request_time")),
+        (DP_SCHEDULE_WRITE, ("request_time",)),
+    ):
+        raw = datapoints.get(key)
+        plan = _parse_schedule(_flatten_datapoint(raw))
+        if plan is not None:
+            plans.append((_dp_time(raw, *time_keys), plan))
+    if plans:
+        plans.sort(key=lambda p: p[0] or datetime.min.replace(tzinfo=timezone.utc))
+        mower.schedule_time, mower.schedule = plans[-1]
+
+    # --- Fehlerverlauf (nur aktuell, wenn die App die Fehlerliste abfragt) --
+    hist = _flatten_datapoint(datapoints.get(DP_ERROR_HISTORY)).get("data")
+    if isinstance(hist, list):
+        entries = []
+        for item in hist:
+            if not isinstance(item, dict):
+                continue
+            code = _to_int(item.get("event_id"))
+            when = _to_timestamp(item.get("timestamp"))
+            if code is not None and when is not None:
+                entries.append((when, code))
+        entries.sort(key=lambda e: e[0], reverse=True)
+        mower.error_history = entries
+        mower.error_history_time = _dp_time(
+            datapoints.get(DP_ERROR_HISTORY), "response_time", "request_time"
+        )
 
     # --- Position ----------------------------------------------------------
     pos = _flatten_datapoint(datapoints.get(DP_POSITION))

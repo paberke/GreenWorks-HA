@@ -23,6 +23,9 @@ DP_LAST_ERROR: Final = "33"
 DP_POSITION: Final = "34"
 DP_STATISTICS: Final = "48"
 DP_FIRMWARE: Final = "117"
+DP_ERROR_HISTORY: Final = "52"
+DP_SCHEDULE_WRITE: Final = "124"
+DP_SCHEDULE_READ: Final = "125"
 
 # Hauptzustand des Maehers (mower_main_state), Bedeutung laut Greenworks-App
 MOWER_STATES: Final[dict[int, str]] = {

@@ -243,11 +243,57 @@
         "state_attributes": {
           "text": {
             "name": "Klartext"
+          },
+          "history": {
+            "name": "Verlauf"
+          },
+          "history_updated": {
+            "name": "Verlauf aktualisiert"
           }
         }
       },
       "blade_time": {
         "name": "Messer-Laufzeit"
+      },
+      "schedule": {
+        "name": "Mähplan",
+        "state_attributes": {
+          "monday": {
+            "name": "Montag"
+          },
+          "tuesday": {
+            "name": "Dienstag"
+          },
+          "wednesday": {
+            "name": "Mittwoch"
+          },
+          "thursday": {
+            "name": "Donnerstag"
+          },
+          "friday": {
+            "name": "Freitag"
+          },
+          "saturday": {
+            "name": "Samstag"
+          },
+          "sunday": {
+            "name": "Sonntag"
+          },
+          "updated": {
+            "name": "Aktualisiert"
+          }
+        }
+      },
+      "software": {
+        "name": "Software",
+        "state_attributes": {
+          "cutting_unit": {
+            "name": "Mähwerk"
+          },
+          "charging_station": {
+            "name": "Ladestation"
+          }
+        }
       }
     },
     "binary_sensor": {

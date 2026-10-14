@@ -43,7 +43,11 @@ if __name__ == "__main__":
         sensors["last_error_text"] = {
             "name": "Last error message" if lang == "en" else "Letzte Fehlermeldung",
             "state": texts,
-            "state_attributes": {"text": {"name": "Text" if lang == "en" else "Klartext"}},
+            "state_attributes": {
+                "text": {"name": "Text" if lang == "en" else "Klartext"},
+                "history": {"name": "History" if lang == "en" else "Verlauf"},
+                "history_updated": {"name": "History updated" if lang == "en" else "Verlauf aktualisiert"},
+            },
         }
         path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
         print("geschrieben:", rel)

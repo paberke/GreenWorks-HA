@@ -243,11 +243,57 @@
         "state_attributes": {
           "text": {
             "name": "Text"
+          },
+          "history": {
+            "name": "History"
+          },
+          "history_updated": {
+            "name": "History updated"
           }
         }
       },
       "blade_time": {
         "name": "Blade time"
+      },
+      "schedule": {
+        "name": "Mowing schedule",
+        "state_attributes": {
+          "monday": {
+            "name": "Monday"
+          },
+          "tuesday": {
+            "name": "Tuesday"
+          },
+          "wednesday": {
+            "name": "Wednesday"
+          },
+          "thursday": {
+            "name": "Thursday"
+          },
+          "friday": {
+            "name": "Friday"
+          },
+          "saturday": {
+            "name": "Saturday"
+          },
+          "sunday": {
+            "name": "Sunday"
+          },
+          "updated": {
+            "name": "Updated"
+          }
+        }
+      },
+      "software": {
+        "name": "Software",
+        "state_attributes": {
+          "cutting_unit": {
+            "name": "Cutting unit"
+          },
+          "charging_station": {
+            "name": "Charging station"
+          }
+        }
       }
     },
     "binary_sensor": {
