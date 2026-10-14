@@ -53,6 +53,23 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Regenschutz** / **Frostschutz** | Ob diese Funktionen im „Wetterwächter“ der App eingeschaltet sind (nicht, ob es gerade regnet) |
 | **Position** | GPS-Position für die Karte, wandert beim Mähen mit (standardmäßig ausgeschaltet, unter den Entitäten des Geräts aktivierbar) |
 
+### Zusatzinfos (Attribute)
+
+Einige Anzeigen haben weitere Angaben. So findest du sie: Anzeige antippen → oben rechts **⋮** → **Details**, dort unter **Attribute**. In Automationen und Vorlagen kommst du mit `state_attr()` an sie heran.
+
+| Anzeige | Attribute |
+|---|---|
+| **Letzter Fehlercode** | *Bedeutung* – der Fehler als Klartext |
+| **Letzte Fehlermeldung** | *Klartext* (für Benachrichtigungen), *Verlauf* (Fehlerliste der App mit Datum), *Verlauf aktualisiert* |
+| **Mähplan** | *Montag* bis *Sonntag* mit den Mähzeiten, *Aktualisiert* |
+| **Software** | *Mähwerk*, *Ladestation* |
+| **Abstand beim Drahtfolgen** | *Leitdraht 1*, *Leitdraht 2*, *Aktualisiert* |
+| **Startpunkte** | *Punkt 1* bis *Punkt 5* (Draht, Entfernung, Anteil der Starts), *Ladestation* (Anteil der Starts direkt an der Station), *Aktualisiert* |
+| **Überfahrweite** | *Aktualisiert* |
+| **Mäher** | *status* (genauer Zustand), *status_code*, *park_reason_code*, *sub_status_code* – die Rohwerte des Mähers, praktisch für Automationen |
+
+*Aktualisiert* zeigt, wann die App den Wert zuletzt aus dem Mäher gelesen hat.
+
 Außerdem:
 
 - Einrichtung über die Oberfläche mit E-Mail und Passwort der Greenworks-App
@@ -153,6 +170,23 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Online** | Whether the mower is connected to the cloud |
 | **Rain protection** / **Frost protection** | Whether these options are enabled in the app's "weather guard" (not whether it is raining right now) |
 | **Position** | GPS position for the map, moves while mowing (disabled by default, can be enabled under the device's entities) |
+
+### Extra details (attributes)
+
+Some entities carry more details. To see them: tap the entity → **⋮** at the top right → **Details**, under **Attributes**. In automations and templates use `state_attr()`.
+
+| Entity | Attributes |
+|---|---|
+| **Last error code** | *Meaning* – the error as plain text |
+| **Last error message** | *Text* (for notifications), *History* (the app's error list with dates), *History updated* |
+| **Mowing schedule** | *Monday* to *Sunday* with the mowing times, *Updated* |
+| **Software** | *Cutting unit*, *Charging station* |
+| **Follow wire distance** | *Guide wire 1*, *Guide wire 2*, *Updated* |
+| **Starting points** | *Point 1* to *Point 5* (wire, distance, share of starts), *Charging station* (share of starts at the station), *Updated* |
+| **Drive past wire distance** | *Updated* |
+| **Mower** | *status* (detailed state), *status_code*, *park_reason_code*, *sub_status_code* – the mower's raw values, handy for automations |
+
+*Updated* shows when the app last read the value from the mower.
 
 Also:
 
