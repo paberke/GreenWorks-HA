@@ -10,11 +10,10 @@ from homeassistant.components.lawn_mower import (
     LawnMowerEntityFeature,
 )
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .const import status_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
-from .entity import GreenworksEntity
+from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 
 _RETURNING = getattr(LawnMowerActivity, "RETURNING", LawnMowerActivity.MOWING)
 
@@ -80,4 +79,4 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         }
 
 
-# Version 0.2.10
+# Version 0.2.11

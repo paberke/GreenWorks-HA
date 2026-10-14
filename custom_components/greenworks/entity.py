@@ -5,6 +5,13 @@ from __future__ import annotations
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
+try:  # ab Home Assistant 2025.3
+    from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
+except ImportError:  # aeltere Versionen
+    from homeassistant.helpers.entity_platform import (  # type: ignore[assignment]
+        AddEntitiesCallback as AddConfigEntryEntitiesCallback,
+    )
+
 from .api import GreenworksMower
 from .const import DOMAIN
 from .coordinator import GreenworksCoordinator
@@ -38,4 +45,4 @@ class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
         return super().available and self.mower is not None
 
 
-# Version 0.2.10
+# Version 0.2.11

@@ -14,7 +14,6 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfLength, UnitOfTime
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
 
 from .api import WEEKDAYS, GreenworksMower
@@ -27,7 +26,7 @@ from .const import (
     status_key,
 )
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
-from .entity import GreenworksEntity
+from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 from .error_texts import error_text
 
 
@@ -351,4 +350,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.2.10
+# Version 0.2.11

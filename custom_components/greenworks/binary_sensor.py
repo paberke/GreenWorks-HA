@@ -12,11 +12,10 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .api import GreenworksMower
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
-from .entity import GreenworksEntity
+from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -78,4 +77,4 @@ class GreenworksBinarySensor(GreenworksEntity, BinarySensorEntity):
         return None if mower is None else self.entity_description.value_fn(mower)
 
 
-# Version 0.2.10
+# Version 0.2.11

@@ -16,6 +16,8 @@ Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud a
 
 ## Installation über HACS
 
+**Voraussetzung:** Home Assistant **2025.1 oder neuer**. Automatisch getestet mit 2024.12, 2025.1, 2025.2 und 2026.2, im echten Betrieb mit 2026.10.
+
 [![In HACS öffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
 
 Mit dem Button oben wird das Repository direkt in HACS geöffnet. Oder von Hand:
@@ -106,7 +108,8 @@ Außerdem:
 
 ## Versionen
 
-- **0.2.10** *(im Test)* – Ist der Mäher offline, zeigt **Status** *Offline* (mit Attribut *Letzter Zustand*) und **Mäher** *nicht verfügbar*
+- **0.2.11** *(im Test)* – Läuft wieder mit älteren Home-Assistant-Versionen ab 2025.1 (vorher startete die Integration erst ab 2025.3)
+- **0.2.10** – Ist der Mäher offline, zeigt **Status** *Offline* (mit Attribut *Letzter Zustand*) und **Mäher** *nicht verfügbar*
 - **0.2.9** *(im Test)* – Status zeigt bei einem neueren Fehler den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*); kurze Verbindungsaussetzer (bis ca. 5 Minuten) werden überbrückt, statt alles auf *nicht verfügbar* zu setzen
 - **0.2.8** – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Einstellungen (**Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte**) als Anzeige, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
 - **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
@@ -139,6 +142,8 @@ Entstanden als Fork von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWo
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant. **It cannot control the mower** – starting, parking and sending it home still only work through the Greenworks app.
 
 ## Installation via HACS
+
+**Requirement:** Home Assistant **2025.1 or newer**. Automatically tested with 2024.12, 2025.1, 2025.2 and 2026.2, in real use with 2026.10.
 
 [![Open in HACS](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
 

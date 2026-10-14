@@ -87,4 +87,4 @@ def error_text(code: int | None, language: str | None) -> str | None:
     if texts is None:
         return f"Unbekannter Fehler {code}" if (language or "").startswith("de") else f"Unknown error {code}"
     return texts[1] if (language or "").startswith("de") else texts[0]
-# Version 0.2.10
+# Version 0.2.11

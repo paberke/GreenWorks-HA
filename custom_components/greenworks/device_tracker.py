@@ -4,10 +4,9 @@ from __future__ import annotations
 
 from homeassistant.components.device_tracker import SourceType, TrackerEntity
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
-from .entity import GreenworksEntity
+from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 
 
 async def async_setup_entry(
@@ -47,4 +46,4 @@ class GreenworksTracker(GreenworksEntity, TrackerEntity):
         return (mower.gps_accuracy if mower else None) or 0
 
 
-# Version 0.2.10
+# Version 0.2.11
