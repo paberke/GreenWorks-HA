@@ -14,8 +14,6 @@
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an. **Sie kann den Mäher nicht steuern** – Starten, Parken und Zurückschicken gehen weiterhin nur über die Greenworks-App.
 
-Weiterentwicklung von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) mit Erkenntnissen aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT). Vielen Dank an Boes24 für die Vorarbeit.
-
 ## Installation über HACS
 
 [![In HACS öffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
@@ -98,6 +96,10 @@ Außerdem:
 - **0.2.1** – Texte aus der App-Fehlerliste als *mögliche Bedeutung* am Sensor **Letzter Fehlercode**
 - **0.2.0** – Verbindung zur Greenworks-Cloud neu geschrieben: läuft wieder mit der aktuellen Cloud und auch in der Winterpause, alle Mäher eines Kontos in einem Eintrag, neue Sensoren, deutsche Übersetzung
 
+## Danksagung
+
+Entstanden als Fork von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA). Der Code wurde inzwischen vollständig neu geschrieben; die Adresse der Greenworks-Cloud und der Anmeldeweg stammen ursprünglich aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core). Danke an Boes24 für den Anstoß.
+
 ---
 
 <a id="english"></a>
@@ -113,8 +115,6 @@ Außerdem:
 > - **No warranty, no support.** Use at your own risk – make a backup first.
 
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant. **It cannot control the mower** – starting, parking and sending it home still only work through the Greenworks app.
-
-Based on [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA) with findings from [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core) (MIT). Many thanks to Boes24 for the groundwork.
 
 ## Installation via HACS
 
@@ -185,3 +185,7 @@ Also:
 **What can I do?** If it bothers you: disable the integration while you use the app – *Settings → Devices & services → Greenworks → ⋮ → Disable*. Enable it again afterwards.
 
 The version history is in the German section above ("Versionen").
+
+## Credits
+
+Started as a fork of [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA). The code has since been completely rewritten; the Greenworks cloud address and login flow originally come from [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core). Thanks to Boes24 for the starting point.
