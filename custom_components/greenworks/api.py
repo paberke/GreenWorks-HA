@@ -328,6 +328,21 @@ def build_mower(
     if err:
         mower.last_error_code = _to_int(err.get("event_id"))
         mower.last_error_time = _to_timestamp(err.get("timestamp_for_error"))
+        # Ist die Fehlermeldung neuer als die letzte Statusmeldung, gilt der
+        # Zustand aus der Fehlermeldung (sonst bliebe z. B. "Sucht Station" stehen,
+        # obwohl der Maeher mit Fehler steht).
+        err_state = _to_int(err.get("current_mower_main_state"))
+        err_received = _to_iso(err.get("request_time"))
+        if (
+            err_state is not None
+            and 0 <= err_state <= 12
+            and err_received is not None
+            and (mower.status_time is None or err_received > mower.status_time)
+        ):
+            mower.state_code = err_state
+            mower.sub_state_code = _to_int(err.get("mower_sub_state"))
+            mower.park_reason = None
+            mower.status_time = err_received
 
     # --- Statistik ---------------------------------------------------------
     stats = _flatten_datapoint(datapoints.get(DP_STATISTICS))
@@ -591,4 +606,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.2.8
+# Version 0.2.9

@@ -77,7 +77,8 @@ Außerdem:
 - Einrichtung über die Oberfläche mit E-Mail und Passwort der Greenworks-App
 - Bei falschem Passwort eine verständliche Meldung statt Absturz. Lehnt die Cloud die Anmeldung aus einem anderen Grund ab, versucht Home Assistant es später erneut, statt nach einem neuen Passwort zu fragen
 - Die Werte werden jede Minute aktualisiert
-- Wenn die Greenworks-Cloud kurz nicht erreichbar ist, versucht Home Assistant es automatisch später erneut
+- Wenn die Greenworks-Cloud kurz nicht erreichbar ist, bleiben die letzten Werte stehen und Home Assistant versucht es jede Minute erneut. Erst nach etwa 5 Minuten ohne Verbindung wird alles als *nicht verfügbar* angezeigt
+- Meldet der Mäher nach seiner letzten Statusmeldung einen Fehler, zeigen **Status** und **Mäher** den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*)
 - Deutsch und Englisch – Home Assistant wählt automatisch die eingestellte Sprache, auch für die Fehlertexte
 
 ## Was (noch) nicht geht
@@ -104,6 +105,7 @@ Außerdem:
 
 ## Versionen
 
+- **0.2.9** *(im Test)* – Status zeigt bei einem neueren Fehler den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*); kurze Verbindungsaussetzer (bis ca. 5 Minuten) werden überbrückt, statt alles auf *nicht verfügbar* zu setzen
 - **0.2.8** – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Einstellungen (**Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte**) als Anzeige, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
 - **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
 - **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
@@ -197,7 +199,8 @@ Also:
 - Setup via the UI with the email and password of the Greenworks app
 - A clear message for a wrong password instead of a crash. If the cloud rejects the login for another reason, Home Assistant retries later instead of asking for a new password
 - Values are updated every minute
-- If the Greenworks cloud is briefly unreachable, Home Assistant automatically retries later
+- If the Greenworks cloud is briefly unreachable, the last values are kept and Home Assistant retries every minute. Only after about 5 minutes without a connection are the entities shown as *unavailable*
+- If the mower reports an error after its last status message, **Status** and **Mower** show the state from the error message (e.g. *Error* instead of *Searching station*)
 - English and German – Home Assistant automatically uses your language, including the error texts
 
 ## What does not work
