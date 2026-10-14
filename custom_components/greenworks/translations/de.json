@@ -294,6 +294,54 @@
             "name": "Ladestation"
           }
         }
+      },
+      "drive_past_wire": {
+        "name": "Überfahrweite",
+        "state_attributes": {
+          "updated": {
+            "name": "Aktualisiert"
+          }
+        }
+      },
+      "wire_distance": {
+        "name": "Abstand beim Drahtfolgen",
+        "state_attributes": {
+          "guide_wire_1": {
+            "name": "Leitdraht 1"
+          },
+          "guide_wire_2": {
+            "name": "Leitdraht 2"
+          },
+          "updated": {
+            "name": "Aktualisiert"
+          }
+        }
+      },
+      "start_points": {
+        "name": "Startpunkte",
+        "state_attributes": {
+          "point_1": {
+            "name": "Punkt 1"
+          },
+          "point_2": {
+            "name": "Punkt 2"
+          },
+          "point_3": {
+            "name": "Punkt 3"
+          },
+          "point_4": {
+            "name": "Punkt 4"
+          },
+          "point_5": {
+            "name": "Punkt 5"
+          },
+          "charging_station": {
+            "name": "Ladestation"
+          },
+          "updated": {
+            "name": "Aktualisiert"
+          }
+        }
       }
     },
     "binary_sensor": {

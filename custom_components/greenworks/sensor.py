@@ -12,7 +12,7 @@ from homeassistant.components.sensor import (
     SensorEntityDescription,
     SensorStateClass,
 )
-from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfTime
+from homeassistant.const import PERCENTAGE, EntityCategory, UnitOfLength, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddConfigEntryEntitiesCallback
 from homeassistant.util import dt as dt_util
@@ -105,6 +105,34 @@ def _error_attrs(m: GreenworksMower, lang: str) -> dict[str, Any]:
     return attrs
 
 
+_WIRE_NAMES = {
+    "de": {0: "Leitdraht 1", 1: "Leitdraht 2", 2: "Begrenzungsdraht, rechts herum", 3: "Begrenzungsdraht, links herum"},
+    "en": {0: "Guide wire 1", 1: "Guide wire 2", 2: "Boundary wire, right direction", 3: "Boundary wire, left direction"},
+}
+
+
+def _iso(value) -> str | None:
+    return value.isoformat() if value else None
+
+
+def _range(m: GreenworksMower, name: str) -> str | None:
+    pair = (m.wire_corridor or {}).get(name)
+    return f"{pair[0]}–{pair[1]}" if pair else None
+
+
+def _start_point_attrs(m: GreenworksMower, lang: str) -> dict[str, Any]:
+    if m.start_points is None:
+        return {}
+    names = _WIRE_NAMES[_lang(lang)]
+    attrs: dict[str, Any] = {}
+    for num, how, dist, often in m.start_points:
+        wire = names.get(how, names[0])
+        attrs[f"point_{num}"] = f"{wire}, {dist} m, {often} %"
+    attrs["charging_station"] = f"{max(0, 100 - sum(p[3] for p in m.start_points))} %"
+    attrs["updated"] = _iso(m.start_points_time)
+    return attrs
+
+
 @dataclass(frozen=True, kw_only=True)
 class GreenworksSensorDescription(SensorEntityDescription):
     value_fn: Callable[[GreenworksMower], Any]
@@ -175,6 +203,33 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
             "cutting_unit": m.sw_cutting,
             "charging_station": m.sw_charging_station,
         },
+    ),
+    GreenworksSensorDescription(
+        key="drive_past_wire",
+        translation_key="drive_past_wire",
+        device_class=SensorDeviceClass.DISTANCE,
+        native_unit_of_measurement=UnitOfLength.CENTIMETERS,
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: m.drive_past_wire / 10 if m.drive_past_wire else None,
+        attr_fn=lambda m, lang: {"updated": _iso(m.drive_past_wire_time)} if m.drive_past_wire else {},
+    ),
+    GreenworksSensorDescription(
+        key="wire_distance",
+        translation_key="wire_distance",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: _range(m, "boundary"),
+        attr_fn=lambda m, lang: {
+            "guide_wire_1": _range(m, "guide_1"),
+            "guide_wire_2": _range(m, "guide_2"),
+            "updated": _iso(m.wire_corridor_time),
+        } if m.wire_corridor else {},
+    ),
+    GreenworksSensorDescription(
+        key="start_points",
+        translation_key="start_points",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: len(m.start_points) if m.start_points is not None else None,
+        attr_fn=_start_point_attrs,
     ),
     GreenworksSensorDescription(
         key="cutting_time",

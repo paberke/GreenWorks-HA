@@ -45,6 +45,7 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Mähplan** | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute *(Beta)* |
 | **Fehlerverlauf** | Attribut *Verlauf* an **Letzte Fehlermeldung**: die Meldungen aus der Fehlerliste der App mit Datum und Klartext *(Beta)* |
 | **Software** | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) *(Beta)* |
+| **Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte** | Die Einstellungen aus der App als reine Anzeige (Diagnose). Ändern geht weiterhin nur in der App *(Beta)* |
 | **Letzte Fehlermeldung** | Letzter vom Mäher gemeldeter Fehler als Klartext, z. B. *Steckengeblieben* (alle 69 Fehlercodes der App). Das Attribut *Klartext* enthält den Text auch für Benachrichtigungen |
 | **Letzter Fehlercode** / **Letzter Fehler** | Nummer und Zeitpunkt des letzten Fehlers |
 | **Schwere Fehler** | Anzahl schwerwiegender Fehler laut Mäher (siehe Hinweis unten) |
@@ -67,7 +68,7 @@ Außerdem:
 - **Keine Steuerung:** Die Integration liest nur aus. Starten, Parken oder Zurückschicken ist über Home Assistant **nicht** möglich und auch nicht geplant – das bleibt der Greenworks-App vorbehalten.
 - **Nur mit einem Mäher getestet:** Alles wurde mit einem einzigen Optimow 10 geprüft. Bei anderen Modellen oder mehreren Mähern im Konto kann es Abweichungen geben.
 - **Statistik nur beim Öffnen der App aktuell:** Mähzeit, Laufzeit, Ladezeit und schwere Fehler schickt der Mäher nur, wenn in der Greenworks-App die Statistik abgefragt wird. Wie alt die Werte sind, zeigt der Sensor **Statistik-Stand**.
-- **Mähplan und Fehlerverlauf sind nur so aktuell wie die App:** Die Cloud aktualisiert sie nur, wenn du in der App den Zeitplan bzw. die Fehlerliste öffnest. Wann das zuletzt war, steht im Attribut *Aktualisiert* bzw. *Verlauf aktualisiert*.
+- **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie nur, wenn du in der App die jeweilige Seite öffnest. Wann das zuletzt war, steht im Attribut *Aktualisiert* bzw. *Verlauf aktualisiert*.
 - **Fehlermeldung kann von der App-Fehlerliste abweichen:** Nummern und Texte sind dieselben wie in der App. Home Assistant zeigt aber das **zuletzt gemeldete Ereignis**; das war im Test nicht immer das, was in der App-Fehlerliste steht (vermutlich kurze Warnungen, die die App nicht auflistet). Die deutschen Texte sind teils eigene Übersetzungen.
 
 ## Wichtig: Du wirst öfter aus der Greenworks-App abgemeldet
@@ -86,7 +87,7 @@ Außerdem:
 
 ## Versionen
 
-- **0.2.8b1** *(Beta)* – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
+- **0.2.8b1** *(Beta)* – Neue Sensoren **Messer-Laufzeit**, **Mähplan** und **Software**, Einstellungen (**Überfahrweite**, **Abstand beim Drahtfolgen**, **Startpunkte**) als Anzeige, Fehlerverlauf als Attribut an **Letzte Fehlermeldung**; Diagnosedaten verbergen jetzt auch Seriennummer und SIM-Kartennummer
 - **0.2.7** – Neues Attribut *Klartext* an **Letzte Fehlermeldung**: der Fehlertext in der Sprache von Home Assistant, z. B. für Push-Benachrichtigungen
 - **0.2.6** – Status nutzt die vollständigen Bezeichnungen der App, inkl. Park-Grund (z. B. *Nach Zeitplan geparkt*, *Vom Regenschutz geparkt*); der frühere *Zustand 9* heißt jetzt *Schwerer Fehler*
 - **0.2.5** – Alle **69 Fehlercodes** der App als Klartext: neuer Sensor **Letzte Fehlermeldung**, Attribut *Bedeutung* am **Letzten Fehlercode**
@@ -147,6 +148,7 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Mowing schedule** | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes *(beta)* |
 | **Error history** | *History* attribute on **Last error message**: the entries of the app's error list with date and text *(beta)* |
 | **Software** | Mower software version, plus cutting unit and charging station as attributes (diagnostic) *(beta)* |
+| **Drive past wire distance**, **Follow wire distance**, **Starting points** | The app settings, display only (diagnostic). Changing them still only works in the app *(beta)* |
 | **Last error message** | Last error reported by the mower as plain text, e.g. *Mower is stuck* (all 69 error codes of the app). The *Text* attribute holds the text for use in notifications |
 | **Last error code** / **Last error** | Number and time of the last error |
 | **Fatal errors** | Number of fatal errors reported by the mower (see note below) |
@@ -169,7 +171,7 @@ Also:
 - **No control:** the integration is read-only. Starting, parking or sending the mower home is **not** possible from Home Assistant and not planned – that stays with the Greenworks app.
 - **Tested with one mower only:** everything was checked with a single Optimow 10. Other models or several mowers per account may behave differently.
 - **Statistics only update when the app asks for them:** cutting time, running time, charging time and fatal errors are only sent by the mower when the statistics are opened in the Greenworks app. The **Statistics as of** sensor shows how old they are.
-- **Mowing schedule and error history are only as current as the app:** the cloud only updates them when you open the schedule or the error list in the app. The *Updated* / *History updated* attributes show when that was.
+- **Mowing schedule, error history and settings are only as current as the app:** the cloud only updates them when you open the respective page in the app. The *Updated* / *History updated* attributes show when that was.
 - **Error message may differ from the app's error list:** codes and texts are the same as in the app. However, Home Assistant shows the **most recently reported event**, which in testing was not always what the app's error list shows (probably short warnings the app does not list). Some German texts are our own translations.
 
 ## Important: you will often be logged out of the Greenworks app

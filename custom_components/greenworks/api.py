@@ -19,10 +19,13 @@ import aiohttp
 from .const import (
     BASE_URL,
     CORP_ID,
+    DP_DRIVE_PAST_WIRE,
     DP_ERROR_HISTORY,
     DP_FIRMWARE,
     DP_SCHEDULE_READ,
     DP_SCHEDULE_WRITE,
+    DP_START_POINTS,
+    DP_WIRE_CORRIDOR,
     DP_LAST_ERROR,
     DP_POSITION,
     DP_STATISTICS,
@@ -185,6 +188,22 @@ def _dp_time(value: Any, *keys: str) -> datetime | None:
     return None
 
 
+def _dp_newest(datapoints: dict[str, Any], keys: tuple[str, ...], needed: str):
+    """Neuesten Datenpunkt (nach Antwort-/Anfragezeit) waehlen, der `needed` enthaelt."""
+    best: tuple[datetime, dict[str, Any]] | None = None
+    for key in keys:
+        raw = datapoints.get(key)
+        flat = _flatten_datapoint(raw)
+        if not any(k.startswith(needed) for k in flat):
+            continue
+        when = _dp_time(raw, "response_time", "request_time") or datetime.min.replace(
+            tzinfo=timezone.utc
+        )
+        if best is None or when > best[0]:
+            best = (when, flat)
+    return best
+
+
 # --------------------------------------------------------------------------
 # Datenmodell
 # --------------------------------------------------------------------------
@@ -237,6 +256,16 @@ class GreenworksMower:
     # Softwarestaende weiterer Bauteile
     sw_cutting: str | None = None
     sw_charging_station: str | None = None
+
+    # Einstellungen (nur Anzeige; aktuell, wenn die App sie zuletzt gelesen hat)
+    drive_past_wire: int | None = None  # Millimeter
+    drive_past_wire_time: datetime | None = None
+    # "boundary" / "guide_1" / "guide_2" -> (min, max)
+    wire_corridor: dict[str, tuple[int, int]] | None = None
+    wire_corridor_time: datetime | None = None
+    # (Nummer, Draht-Art, Entfernung in m, Anteil der Starts in %)
+    start_points: list[tuple[int, int, int, int]] | None = None
+    start_points_time: datetime | None = None
 
     raw_properties: dict[str, Any] = field(default_factory=dict)
     raw_datapoints: dict[str, Any] = field(default_factory=dict)
@@ -360,6 +389,42 @@ def build_mower(
         mower.error_history_time = _dp_time(
             datapoints.get(DP_ERROR_HISTORY), "response_time", "request_time"
         )
+
+    # --- Einstellungen: Ueberfahrweite (89 gesetzt / 90 gelesen) ------------
+    found = _dp_newest(datapoints, DP_DRIVE_PAST_WIRE, "drive_past_wire_distance")
+    if found:
+        value = _to_int(found[1].get("drive_past_wire_distance"))
+        if value is not None and 0 < value <= 1000:
+            mower.drive_past_wire, mower.drive_past_wire_time = value, found[0]
+
+    # --- Einstellungen: Abstand beim Drahtfolgen (55/56 gesetzt, 122 gelesen) --
+    found = _dp_newest(datapoints, DP_WIRE_CORRIDOR, "min_distance_to_boundary_wire")
+    if found:
+        flat, corridor = found[1], {}
+        for name, prefix in (
+            ("boundary", "boundary"),
+            ("guide_1", "guide_wire_1"),
+            ("guide_2", "guide_wire_2"),
+        ):
+            lo = _to_int(flat.get(f"min_distance_to_{prefix}_wire", flat.get(f"min_distance_to_{prefix}")))
+            hi = _to_int(flat.get(f"max_distance_to_{prefix}_wire", flat.get(f"max_distance_to_{prefix}")))
+            if lo is not None and hi is not None:
+                corridor[name] = (lo, hi)
+        if corridor:
+            mower.wire_corridor, mower.wire_corridor_time = corridor, found[0]
+
+    # --- Einstellungen: Startpunkte (58-60 gesetzt, 123 gelesen) -------------
+    found = _dp_newest(datapoints, DP_START_POINTS, "start_position_1_")
+    if found:
+        flat, points = found[1], []
+        for n in range(1, 6):
+            how = _to_int(flat.get(f"start_position_{n}_how"))
+            dist = _to_int(flat.get(f"start_position_{n}_distance"))
+            often = _to_int(flat.get(f"start_position_{n}_how_often"))
+            if how is None or dist is None or not often or not 0 < often <= 100:
+                continue  # Startpunkt nicht belegt
+            points.append((n, how, dist, often))
+        mower.start_points, mower.start_points_time = points, found[0]
 
     # --- Position ----------------------------------------------------------
     pos = _flatten_datapoint(datapoints.get(DP_POSITION))

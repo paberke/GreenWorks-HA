@@ -26,6 +26,10 @@ DP_FIRMWARE: Final = "117"
 DP_ERROR_HISTORY: Final = "52"
 DP_SCHEDULE_WRITE: Final = "124"
 DP_SCHEDULE_READ: Final = "125"
+# Einstellungen: jeweils gesetzt (Anfrage) und gelesen (Antwort); der neueste zaehlt
+DP_DRIVE_PAST_WIRE: Final = ("89", "90")
+DP_WIRE_CORRIDOR: Final = ("55", "56", "122")
+DP_START_POINTS: Final = ("58", "59", "60", "123")
 
 # Hauptzustand des Maehers (mower_main_state), Bedeutung laut Greenworks-App
 MOWER_STATES: Final[dict[int, str]] = {
