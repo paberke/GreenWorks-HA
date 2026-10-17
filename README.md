@@ -40,8 +40,8 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Nächster Start** | Wann der Mäher das nächste Mal losfährt. Nach dem Mähfenster der nächste Termin laut Zeitplan; beim Zwischenladen eine **Schätzung** des Mähers, wann er weitermacht. Während er mäht: leer |
 | **Mähende** | Während er mäht: Ende des aktuellen Mähfensters. Sonst leer |
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
-| **Mähzeit gesamt** / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme (siehe Hinweis unten) |
-| **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App |
+| **Mähzeit gesamt** ⓘ / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme. Die Mähzeit läuft beim Mähen live mit (siehe Hinweis unten) |
+| **Messer-Laufzeit** ⓘ | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App, läuft beim Mähen live mit |
 | **Mähplan** ⓘ | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute |
 | **Fehlerverlauf** | Attribut *Verlauf* an **Letzte Fehlermeldung**: die Meldungen aus der Fehlerliste der App mit Datum und Klartext |
 | **Software** ⓘ | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) |
@@ -71,6 +71,7 @@ Einige Anzeigen haben weitere Angaben. So findest du sie: Anzeige antippen → o
 | **Abstand beim Drahtfolgen** | *Leitdraht 1*, *Leitdraht 2*, *Aktualisiert* |
 | **Startpunkte** | *Punkt 1* bis *Punkt 5* (Draht, Entfernung, Anteil der Starts), *Ladestation* (Anteil der Starts direkt an der Station), *Aktualisiert* |
 | **Überfahrweite** | *Aktualisiert* |
+| **Mähzeit gesamt**, **Messer-Laufzeit** | *Davon gezählt* – seit der letzten echten Statistik selbst mitgezählte Mähstunden, *Letzte echte Statistik* – wann der Mäher zuletzt echte Werte geschickt hat |
 | **Mäher** | *status* (genauer Zustand), *status_code*, *park_reason_code*, *sub_status_code* – die Rohwerte des Mähers, praktisch für Automationen |
 
 *Aktualisiert* zeigt, wann die App den Wert zuletzt aus dem Mäher gelesen hat.
@@ -79,7 +80,7 @@ Außerdem:
 
 - Einrichtung über die Oberfläche mit E-Mail und Passwort der Greenworks-App
 - Bei falschem Passwort eine verständliche Meldung statt Absturz. Lehnt die Cloud die Anmeldung aus einem anderen Grund ab, versucht Home Assistant es später erneut, statt nach einem neuen Passwort zu fragen
-- Die Werte werden jede Minute aktualisiert
+- Die Werte werden jede Minute aktualisiert. Unter Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren** lassen sich das Abfrage-Intervall (30–600 Sekunden) und die Zeit einstellen, wie lange bei Aussetzern die letzten Werte stehen bleiben (1–60 Minuten)
 - Wenn die Greenworks-Cloud kurz nicht erreichbar ist, bleiben die letzten Werte stehen und Home Assistant versucht es jede Minute erneut. Erst nach etwa 5 Minuten ohne Verbindung wird alles als *nicht verfügbar* angezeigt
 - Meldet der Mäher nach seiner letzten Statusmeldung einen Fehler, zeigen **Status** und **Mäher** den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*)
 - Deutsch und Englisch – Home Assistant wählt automatisch die eingestellte Sprache, auch für die Fehlertexte
@@ -88,7 +89,7 @@ Außerdem:
 
 - **Keine Steuerung:** Die Integration liest nur aus. Starten, Parken oder Zurückschicken ist über Home Assistant **nicht** möglich und auch nicht geplant – das bleibt der Greenworks-App vorbehalten.
 - **Nur mit einem Mäher getestet:** Alles wurde mit einem einzigen Optimow 10 geprüft. Bei anderen Modellen oder mehreren Mähern im Konto kann es Abweichungen geben.
-- **Statistik nur beim Öffnen der App aktuell:** Mähzeit, Laufzeit, Ladezeit und schwere Fehler schickt der Mäher nur, wenn in der Greenworks-App die Statistik abgefragt wird. Wie alt die Werte sind, zeigt der Sensor **Statistik-Stand**.
+- **Statistik nur beim Öffnen der App aktuell:** Mähzeit, Laufzeit, Ladezeit und schwere Fehler schickt der Mäher nur, wenn in der Greenworks-App die Statistik abgefragt wird. Wie alt die Werte sind, zeigt der Sensor **Statistik-Stand**. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher laut Status *mäht*, und schlägt sie auf den letzten echten Wert auf. Das ist auf wenige Minuten genau und eher etwas zu wenig als zu viel. Kommt eine neue echte Statistik, gilt wieder diese. Den gezählten Anteil zeigt das Attribut *Davon gezählt*.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie nur, wenn du in der App die jeweilige Seite öffnest. Wann das zuletzt war, steht im Attribut *Aktualisiert* bzw. *Verlauf aktualisiert*.
 - **Fehlermeldung kann von der App-Fehlerliste abweichen:** Nummern und Texte sind dieselben wie in der App. Home Assistant zeigt aber das **zuletzt gemeldete Ereignis**; das war im Test nicht immer das, was in der App-Fehlerliste steht (vermutlich kurze Warnungen, die die App nicht auflistet). Die deutschen Texte sind teils eigene Übersetzungen.
 
@@ -108,6 +109,7 @@ Außerdem:
 
 ## Versionen
 
+- **0.2.12** *(im Test)* – **Mähzeit gesamt** und **Messer-Laufzeit** laufen beim Mähen live mit (gezählter Anteil im Attribut *Davon gezählt*); neuer Knopf **Konfigurieren** für Abfrage-Intervall und Überbrückungszeit; automatische Tests laufen jetzt auf GitHub mit
 - **0.2.11** – Läuft wieder mit älteren Home-Assistant-Versionen ab 2025.1 (vorher startete die Integration auf 2025.1 und 2025.2 nicht)
 - **0.2.10** *(im Test)* – Ist der Mäher offline, zeigt **Status** *Offline* (mit Attribut *Letzter Zustand*) und **Mäher** *nicht verfügbar*
 - **0.2.9** *(im Test)* – Status zeigt bei einem neueren Fehler den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*); kurze Verbindungsaussetzer (bis ca. 5 Minuten) werden überbrückt, statt alles auf *nicht verfügbar* zu setzen
@@ -167,8 +169,8 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Next start** | When the mower will start next. After the mowing window: the next scheduled start; while recharging in between: the mower's **estimate** of when it continues. While mowing: empty |
 | **Mowing end** | While mowing: end of the current mowing window. Otherwise empty |
 | **Last status report** | When the mower last reported data |
-| **Total cutting time** / **Total running time** / **Total charging time** | Total hours since first use (see note below) |
-| **Blade time** | Mowing hours since the blade time was last reset in the app – same calculation as the app |
+| **Total cutting time** ⓘ / **Total running time** / **Total charging time** | Total hours since first use. Cutting time keeps counting live while mowing (see note below) |
+| **Blade time** ⓘ | Mowing hours since the blade time was last reset in the app – same calculation as the app, keeps counting live while mowing |
 | **Mowing schedule** ⓘ | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes |
 | **Error history** | *History* attribute on **Last error message**: the entries of the app's error list with date and text |
 | **Software** ⓘ | Mower software version, plus cutting unit and charging station as attributes (diagnostic) |
@@ -198,6 +200,7 @@ Some entities carry more details. To see them: tap the entity → **⋮** at the
 | **Follow wire distance** | *Guide wire 1*, *Guide wire 2*, *Updated* |
 | **Starting points** | *Point 1* to *Point 5* (wire, distance, share of starts), *Charging station* (share of starts at the station), *Updated* |
 | **Drive past wire distance** | *Updated* |
+| **Total cutting time**, **Blade time** | *Counted since last statistics* – mowing hours counted by the integration since the last real statistics, *Last real statistics* – when the mower last sent real values |
 | **Mower** | *status* (detailed state), *status_code*, *park_reason_code*, *sub_status_code* – the mower's raw values, handy for automations |
 
 *Updated* shows when the app last read the value from the mower.
@@ -206,7 +209,7 @@ Also:
 
 - Setup via the UI with the email and password of the Greenworks app
 - A clear message for a wrong password instead of a crash. If the cloud rejects the login for another reason, Home Assistant retries later instead of asking for a new password
-- Values are updated every minute
+- Values are updated every minute. Under Settings → Devices & services → Greenworks → **Configure** you can set the update interval (30–600 seconds) and how long the last values are kept during connection drops (1–60 minutes)
 - If the Greenworks cloud is briefly unreachable, the last values are kept and Home Assistant retries every minute. Only after about 5 minutes without a connection are the entities shown as *unavailable*
 - If the mower reports an error after its last status message, **Status** and **Mower** show the state from the error message (e.g. *Error* instead of *Searching station*)
 - English and German – Home Assistant automatically uses your language, including the error texts
@@ -215,7 +218,7 @@ Also:
 
 - **No control:** the integration is read-only. Starting, parking or sending the mower home is **not** possible from Home Assistant and not planned – that stays with the Greenworks app.
 - **Tested with one mower only:** everything was checked with a single Optimow 10. Other models or several mowers per account may behave differently.
-- **Statistics only update when the app asks for them:** cutting time, running time, charging time and fatal errors are only sent by the mower when the statistics are opened in the Greenworks app. The **Statistics as of** sensor shows how old they are.
+- **Statistics only update when the app asks for them:** cutting time, running time, charging time and fatal errors are only sent by the mower when the statistics are opened in the Greenworks app. The **Statistics as of** sensor shows how old they are. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower's status is *mowing* and adds them to the last real value. This is accurate to a few minutes and rather slightly too low than too high. When new real statistics arrive, they take over again. The counted part is shown in the *Counted since last statistics* attribute.
 - **Mowing schedule, error history and settings are only as current as the app:** the cloud only updates them when you open the respective page in the app. The *Updated* / *History updated* attributes show when that was.
 - **Error message may differ from the app's error list:** codes and texts are the same as in the app. However, Home Assistant shows the **most recently reported event**, which in testing was not always what the app's error list shows (probably short warnings the app does not list). Some German texts are our own translations.
 

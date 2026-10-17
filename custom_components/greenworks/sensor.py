@@ -34,6 +34,18 @@ def _hours(seconds: int | None) -> float | None:
     return round(seconds / 3600, 1) if seconds is not None else None
 
 
+def _with_counted(value: int | None, m: GreenworksMower) -> float | None:
+    """Echter Wert aus der Statistik plus mitgezaehlte Maehzeit."""
+    return None if value is None else _hours(value + m.counted_cutting)
+
+
+def _counted_attrs(m: GreenworksMower, lang: str) -> dict[str, Any]:
+    return {
+        "counted": _hours(m.counted_cutting),
+        "last_statistics": m.statistics_time.isoformat() if m.statistics_time else None,
+    }
+
+
 def _is_mowing(m: GreenworksMower) -> bool:
     return m.state_code in MOWING_STATES
 
@@ -249,7 +261,8 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.TOTAL_INCREASING,
         native_unit_of_measurement=UnitOfTime.HOURS,
-        value_fn=lambda m: _hours(m.cutting_time),
+        value_fn=lambda m: _with_counted(m.cutting_time, m),
+        attr_fn=_counted_attrs,
     ),
     GreenworksSensorDescription(
         key="blade_time",
@@ -257,7 +270,8 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         device_class=SensorDeviceClass.DURATION,
         state_class=SensorStateClass.TOTAL_INCREASING,
         native_unit_of_measurement=UnitOfTime.HOURS,
-        value_fn=lambda m: _hours(m.blade_time),
+        value_fn=lambda m: _with_counted(m.blade_time, m),
+        attr_fn=_counted_attrs,
     ),
     GreenworksSensorDescription(
         key="running_time",
@@ -350,4 +364,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.2.11
+# Version 0.2.12

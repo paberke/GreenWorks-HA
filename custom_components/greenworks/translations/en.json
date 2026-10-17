@@ -171,7 +171,15 @@
         "name": "Last error"
       },
       "cutting_time": {
-        "name": "Total cutting time"
+        "name": "Total cutting time",
+        "state_attributes": {
+          "counted": {
+            "name": "Counted since last statistics"
+          },
+          "last_statistics": {
+            "name": "Last real statistics"
+          }
+        }
       },
       "running_time": {
         "name": "Total running time"
@@ -281,7 +289,15 @@
         }
       },
       "blade_time": {
-        "name": "Blade time"
+        "name": "Blade time",
+        "state_attributes": {
+          "counted": {
+            "name": "Counted since last statistics"
+          },
+          "last_statistics": {
+            "name": "Last real statistics"
+          }
+        }
       },
       "schedule": {
         "name": "Mowing schedule",
@@ -386,6 +402,18 @@
     "device_tracker": {
       "position": {
         "name": "Position"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Settings",
+        "description": "How often Home Assistant asks the Greenworks cloud, and how long the last values are kept during short connection drops.",
+        "data": {
+          "scan_interval": "Update interval (seconds, 30–600)",
+          "outage_grace": "Keep last values during drops (minutes, 1–60)"
+        }
       }
     }
   }

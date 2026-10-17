@@ -23,10 +23,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -
         async_get_clientsession(hass), entry.data[CONF_EMAIL], entry.data[CONF_PASSWORD]
     )
     coordinator = GreenworksCoordinator(hass, entry, client)
+    await coordinator.async_load_counters()
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    entry.async_on_unload(entry.add_update_listener(_async_options_updated))
     return True
+
+
+async def _async_options_updated(hass: HomeAssistant, entry: GreenworksConfigEntry) -> None:
+    """Einstellungen geaendert: Integration neu laden."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -> bool:
@@ -34,4 +41,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) 
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
 
 
-# Version 0.2.11
+# Version 0.2.12

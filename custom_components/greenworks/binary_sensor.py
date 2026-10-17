@@ -77,4 +77,4 @@ class GreenworksBinarySensor(GreenworksEntity, BinarySensorEntity):
         return None if mower is None else self.entity_description.value_fn(mower)
 
 
-# Version 0.2.11
+# Version 0.2.12

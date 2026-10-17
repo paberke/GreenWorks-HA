@@ -8,8 +8,14 @@ from typing import Any
 
 import voluptuous as vol
 
-from homeassistant.config_entries import ConfigFlow, ConfigFlowResult
-from homeassistant.const import CONF_EMAIL, CONF_PASSWORD
+from homeassistant.config_entries import (
+    ConfigEntry,
+    ConfigFlow,
+    ConfigFlowResult,
+    OptionsFlow,
+)
+from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_SCAN_INTERVAL
+from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import (
@@ -18,7 +24,14 @@ from .api import (
     GreenworksError,
     GreenworksLoginRejected,
 )
-from .const import DOMAIN
+from .const import (
+    CONF_OUTAGE_GRACE,
+    DEFAULT_OUTAGE_GRACE,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    OUTAGE_GRACE_RANGE,
+    SCAN_INTERVAL_RANGE,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,6 +44,11 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
     """Konfigurationsablauf fuer Greenworks."""
 
     VERSION = 1
+
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry: ConfigEntry) -> OptionsFlow:
+        return GreenworksOptionsFlow()
 
     async def _async_validate(
         self, email: str, password: str
@@ -106,4 +124,28 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
-# Version 0.2.11
+class GreenworksOptionsFlow(OptionsFlow):
+    """Einstellungen der Integration (Knopf "Konfigurieren")."""
+
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        if user_input is not None:
+            return self.async_create_entry(data=user_input)
+        options = self.config_entry.options
+        schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_SCAN_INTERVAL,
+                    default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+                ): vol.All(vol.Coerce(int), vol.Range(*SCAN_INTERVAL_RANGE)),
+                vol.Required(
+                    CONF_OUTAGE_GRACE,
+                    default=options.get(CONF_OUTAGE_GRACE, DEFAULT_OUTAGE_GRACE),
+                ): vol.All(vol.Coerce(int), vol.Range(*OUTAGE_GRACE_RANGE)),
+            }
+        )
+        return self.async_show_form(step_id="init", data_schema=schema)
+
+
+# Version 0.2.12

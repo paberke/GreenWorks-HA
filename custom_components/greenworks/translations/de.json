@@ -171,7 +171,15 @@
         "name": "Letzter Fehler"
       },
       "cutting_time": {
-        "name": "Mähzeit gesamt"
+        "name": "Mähzeit gesamt",
+        "state_attributes": {
+          "counted": {
+            "name": "Davon gezählt"
+          },
+          "last_statistics": {
+            "name": "Letzte echte Statistik"
+          }
+        }
       },
       "running_time": {
         "name": "Laufzeit gesamt"
@@ -281,7 +289,15 @@
         }
       },
       "blade_time": {
-        "name": "Messer-Laufzeit"
+        "name": "Messer-Laufzeit",
+        "state_attributes": {
+          "counted": {
+            "name": "Davon gezählt"
+          },
+          "last_statistics": {
+            "name": "Letzte echte Statistik"
+          }
+        }
       },
       "schedule": {
         "name": "Mähplan",
@@ -386,6 +402,18 @@
     "device_tracker": {
       "position": {
         "name": "Position"
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Einstellungen",
+        "description": "Wie oft Home Assistant bei der Greenworks-Cloud nachfragt und wie lange bei kurzen Verbindungsaussetzern die letzten Werte stehen bleiben.",
+        "data": {
+          "scan_interval": "Abfrage-Intervall (Sekunden, 30–600)",
+          "outage_grace": "Letzte Werte bei Aussetzern behalten (Minuten, 1–60)"
+        }
       }
     }
   }

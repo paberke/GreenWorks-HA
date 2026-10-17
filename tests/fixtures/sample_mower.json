@@ -1,0 +1,812 @@
+{
+ "_comment": "Anonymisierte Beispieldaten eines Optimow 10 (Seriennummer, SIM, Position u. a. entfernt)",
+ "properties": {
+  "is_frost_sensor_on": true,
+  "is_rain_sensor_on": true,
+  "device_blade_usage_time": "{\"BladeUsageTime\":[114160,960193,1024026,815355,790171]}",
+  "device_type_no": "{\"SubDeviceNo\":1,\"DeviceGroupNo\":10,\"VariantNo\":2}",
+  "device_model_name": "Optimow 10"
+ },
+ "datapoints": {
+  "88": {
+   "request": {
+    "request_time": "2026-08-30T18:36:31.219Z",
+    "request_payload": "d00000"
+   },
+   "response": {
+    "enable_start_position_5": 0,
+    "response_time": "2026-08-30T18:36:32.179Z",
+    "response_payload": "d100020000"
+   }
+  },
+  "89": {
+   "request": {
+    "drive_past_wire_distance": 320,
+    "request_time": "2026-08-30T18:37:17.327Z",
+    "request_payload": "d200024001"
+   },
+   "response": {
+    "response_time": "2026-08-30T18:37:18.319Z",
+    "response_payload": "d3000100"
+   }
+  },
+  "48": {
+   "request": {
+    "request_time": "2026-10-13T12:48:24.136Z",
+    "request_payload": "7c0000"
+   },
+   "response": {
+    "last_reset_of_list": 0,
+    "cutting_time": 4031182,
+    "running_time": 4695397,
+    "charging_time": 3255667,
+    "no_of_charges": 0,
+    "no_of_fatal_error": 66,
+    "response_time": "2026-10-13T12:48:25.441Z",
+    "response_payload": "7d00150000000000ce823d0065a5470073ad310000004200"
+   }
+  },
+  "159": {
+   "request": {
+    "start_position": 9,
+    "distance_to_wire": 2,
+    "request_time": "2026-08-14T16:50:06.759Z",
+    "request_payload": "a4010409000200"
+   },
+   "response": {
+    "response_time": "2026-08-14T16:50:07.789Z",
+    "response_payload": "a5010100"
+   }
+  },
+  "last_update": "2026-10-14T03:28:03.781Z",
+  "117": {
+   "request": {
+    "mower_main_application_major_sw_version": 6,
+    "mower_main_application_minor_sw_version": 65,
+    "mower_main_application_build_no": 1775739325,
+    "mower_cutting_application_major_sw_version": 1,
+    "mower_cutting_application_minor_sw_version": 0,
+    "mower_cutting_application_build_no": 1,
+    "mower_cs_application_major_sw_version": 1,
+    "mower_cs_application_minor_sw_version": 0,
+    "mower_cs_application_build_no": 1,
+    "request_time": "2026-10-13T17:53:17.706Z",
+    "request_payload": "2201120641bda1d769010001000000010001000000"
+   },
+   "response": {
+    "sw_update": 1,
+    "response_time": "2026-10-13T17:53:17.707Z",
+    "response_payload": "2301020001"
+   }
+  },
+  "90": {
+   "request": {
+    "request_time": "2026-08-30T18:37:05.576Z",
+    "request_payload": "d400020000"
+   },
+   "response": {
+    "drive_past_wire_distance": 300,
+    "response_time": "2026-08-30T18:37:06.588Z",
+    "response_payload": "d50003002c01"
+   }
+  },
+  "95": {
+   "request": {
+    "request_time": "2026-10-09T18:06:49.341Z",
+    "request_payload": "e200020000"
+   },
+   "response": {
+    "response_time": "2026-10-09T18:06:50.520Z",
+    "response_payload": "e3000100"
+   }
+  },
+  "52": {
+   "request": {
+    "index": 12,
+    "number_of_events": 11,
+    "request_time": "2026-10-13T07:54:07.554Z",
+    "request_payload": "8400020c0b"
+   },
+   "response": {
+    "response_time": "2026-10-13T07:54:08.507Z",
+    "response_payload": "8500d200092f00b2667b6a010001000c5021010c062200092f00ab667b6a060100000f5021010c062200092f00d1657b6a060b01000e5023010c062200092f00ef406e6a060201030d5011010c06220009350060186e6a040501000110000074000e000a3c000eca686a0700010000000000950041000943004ea1636a0100020003000001630002000b3f003dda5c6a0000030041060000bda1d7690a1f0014495b6a0100020302000000740004000a3c006c5557650700030300000000950041000b3f00cf405b6a000003003f06000046b92e69",
+    "data": [
+     {
+      "severity": 9,
+      "event_id": 47,
+      "timestamp": 1786472114,
+      "previous_mower_main_state": 1,
+      "mower_sub_state": 0,
+      "pitch_angle": 1,
+      "roll_angle": 0,
+      "log_data_1": 18960396,
+      "log_data_2": 2229772
+     },
+     {
+      "severity": 9,
+      "event_id": 47,
+      "timestamp": 1786472107,
+      "previous_mower_main_state": 6,
+      "mower_sub_state": 1,
+      "pitch_angle": 0,
+      "roll_angle": 0,
+      "log_data_1": 18960399,
+      "log_data_2": 2229772
+     },
+     {
+      "severity": 9,
+      "event_id": 47,
+      "timestamp": 1786471889,
+      "previous_mower_main_state": 6,
+      "mower_sub_state": 11,
+      "pitch_angle": 1,
+      "roll_angle": 0,
+      "log_data_1": 19091470,
+      "log_data_2": 2229772
+     },
+     {
+      "severity": 9,
+      "event_id": 47,
+      "timestamp": 1785610479,
+      "previous_mower_main_state": 6,
+      "mower_sub_state": 2,
+      "pitch_angle": 1,
+      "roll_angle": 3,
+      "log_data_1": 17911821,
+      "log_data_2": 2229772
+     },
+     {
+      "severity": 9,
+      "event_id": 53,
+      "timestamp": 1785600096,
+      "previous_mower_main_state": 4,
+      "mower_sub_state": 5,
+      "pitch_angle": 1,
+      "roll_angle": 0,
+      "log_data_1": 4097,
+      "log_data_2": 917620
+     },
+     {
+      "severity": 10,
+      "event_id": 60,
+      "timestamp": 1785252366,
+      "previous_mower_main_state": 7,
+      "mower_sub_state": 0,
+      "pitch_angle": 1,
+      "roll_angle": 0,
+      "log_data_1": 0,
+      "log_data_2": 4259989
+     },
+     {
+      "severity": 9,
+      "event_id": 67,
+      "timestamp": 1784914254,
+      "previous_mower_main_state": 1,
+      "mower_sub_state": 0,
+      "pitch_angle": 2,
+      "roll_angle": 0,
+      "log_data_1": 16777219,
+      "log_data_2": 131171
+     },
+     {
+      "severity": 11,
+      "event_id": 63,
+      "timestamp": 1784470077,
+      "previous_mower_main_state": 0,
+      "mower_sub_state": 0,
+      "pitch_angle": 3,
+      "roll_angle": 0,
+      "log_data_1": 1601,
+      "log_data_2": 1775739325
+     },
+     {
+      "severity": 10,
+      "event_id": 31,
+      "timestamp": 1784367380,
+      "previous_mower_main_state": 1,
+      "mower_sub_state": 0,
+      "pitch_angle": 2,
+      "roll_angle": 3,
+      "log_data_1": 2,
+      "log_data_2": 262260
+     },
+     {
+      "severity": 10,
+      "event_id": 60,
+      "timestamp": 1700222316,
+      "previous_mower_main_state": 7,
+      "mower_sub_state": 0,
+      "pitch_angle": 3,
+      "roll_angle": 3,
+      "log_data_1": 0,
+      "log_data_2": 4259989
+     },
+     {
+      "severity": 11,
+      "event_id": 63,
+      "timestamp": 1784365263,
+      "previous_mower_main_state": 0,
+      "mower_sub_state": 0,
+      "pitch_angle": 3,
+      "roll_angle": 0,
+      "log_data_1": 1599,
+      "log_data_2": 1764669766
+     }
+    ]
+   }
+  },
+  "96": {
+   "request": {
+    "override_timer": 0,
+    "request_time": "2026-08-27T16:01:03.631Z",
+    "request_payload": "e4000400000000"
+   },
+   "response": {
+    "response_time": "2026-08-27T16:01:04.997Z",
+    "response_payload": "e5000100"
+   }
+  },
+  "97": {
+   "request": {
+    "park_rime": 408,
+    "request_time": "2026-10-07T15:11:54.466Z",
+    "request_payload": "e600029801"
+   },
+   "response": {
+    "response_time": "2026-10-07T15:11:55.525Z",
+    "response_payload": "e7000100"
+   }
+  },
+  "55": {
+   "request": {
+    "min_distance_to_wire": 4,
+    "max_distance_to_wire": 8,
+    "request_time": "2026-08-30T18:37:00.922Z",
+    "request_payload": "8a00020408"
+   },
+   "response": {
+    "min_distance_to_boundary_wire": 4,
+    "max_distance_to_boundary_wire": 8,
+    "min_distance_to_guide_wire_1_wire": 0,
+    "max_distance_to_guide_wire_1_wire": 4,
+    "min_distance_to_guide_wire_2_wire": 0,
+    "max_distance_to_guide_wire_2_wire": 8,
+    "response_time": "2026-08-30T18:37:01.565Z",
+    "response_payload": "8b000700040800040008"
+   }
+  },
+  "56": {
+   "request": {
+    "min_distance_to_wire": 0,
+    "max_distance_to_wire": 4,
+    "request_time": "2026-08-30T18:36:58.284Z",
+    "request_payload": "8c00020004"
+   },
+   "response": {
+    "min_distance_to_boundary_wire": 4,
+    "max_distance_to_boundary_wire": 6,
+    "min_distance_to_guide_wire_1_wire": 0,
+    "max_distance_to_guide_wire_1_wire": 4,
+    "min_distance_to_guide_wire_2_wire": 0,
+    "max_distance_to_guide_wire_2_wire": 8,
+    "response_time": "2026-08-30T18:36:59.385Z",
+    "response_payload": "8d000700040600040008"
+   }
+  },
+  "58": {
+   "request": {
+    "start_position_how": 0,
+    "start_position_distance": 250,
+    "start_position_how_often": 33,
+    "request_time": "2026-08-01T13:04:58.25Z",
+    "request_payload": "90000500fa002100"
+   },
+   "response": {
+    "start_position_1_how": 0,
+    "start_position_1_distance": 250,
+    "start_position_1_how_often": 33,
+    "start_position_2_how": 0,
+    "start_position_2_distance": 0,
+    "start_position_2_how_often": 0,
+    "start_position_3_how": 0,
+    "start_position_3_distance": 0,
+    "start_position_3_how_often": 0,
+    "start_position_4_how": 0,
+    "start_position_4_distance": 0,
+    "start_position_4_how_often": 0,
+    "start_position_5_how": 0,
+    "start_position_5_distance": 0,
+    "start_position_5_how_often": 0,
+    "response_time": "2026-08-01T13:04:59.752Z",
+    "response_payload": "91001a0000fa0021000000000000000000000000000000000000000000"
+   }
+  },
+  "59": {
+   "request": {
+    "start_position_how": 0,
+    "start_position_distance": 1,
+    "start_position_how_often": 34,
+    "request_time": "2022-11-17T17:23:32.872Z",
+    "request_payload": "9200050001002200"
+   },
+   "response": {
+    "start_position_1_how": 0,
+    "start_position_1_distance": 250,
+    "start_position_1_how_often": 33,
+    "start_position_2_how": 0,
+    "start_position_2_distance": 1,
+    "start_position_2_how_often": 34,
+    "start_position_3_how": 0,
+    "start_position_3_distance": 0,
+    "start_position_3_how_often": 0,
+    "start_position_4_distance": 0,
+    "start_position_4_how": 0,
+    "start_position_5_how": 0,
+    "start_position_4_how_often": 0,
+    "start_position_5_how_often": 0,
+    "start_position_5_distance": 0,
+    "response_time": "2022-11-17T17:23:34.76Z",
+    "response_payload": "93001a0000fa0021000001002200000000000000000000000000000000"
+   }
+  },
+  "122": {
+   "request": {
+    "request_time": "2026-08-30T18:36:44.870Z",
+    "request_payload": "380100"
+   },
+   "response": {
+    "min_distance_to_boundary_wire": 4,
+    "max_distance_to_boundary_wire": 6,
+    "min_distance_to_guide_wire_1": 0,
+    "max_distance_to_guide_wire_1": 0,
+    "min_distance_to_guide_wire_2": 0,
+    "max_distance_to_guide_wire_2": 8,
+    "response_time": "2026-08-30T18:36:45.969Z",
+    "response_payload": "39010700040600000008"
+   }
+  },
+  "2": true,
+  "123": {
+   "request": {
+    "request_time": "2026-08-30T18:36:26.15Z",
+    "request_payload": "3a0100"
+   },
+   "response": {
+    "start_position_1_how": 0,
+    "start_position_1_distance": 250,
+    "start_position_1_how_often": 33,
+    "start_position_2_how": 0,
+    "start_position_2_distance": 0,
+    "start_position_2_how_often": 0,
+    "start_position_3_how": 0,
+    "start_position_3_distance": 0,
+    "start_position_3_how_often": 0,
+    "start_position_4_how": 0,
+    "start_position_4_distance": 0,
+    "start_position_4_how_often": 0,
+    "start_position_5_how": 0,
+    "start_position_5_distance": 0,
+    "start_position_5_how_often": 0,
+    "response_time": "2026-08-30T18:36:27.01Z",
+    "response_payload": "3b011a0000fa0021000000000000000000000000000000000000000000"
+   }
+  },
+  "124": {
+   "request": {
+    "monday_timer_1_start_time_hour": 9,
+    "monday_timer_1_start_time_minute": 0,
+    "monday_timer_1_length_minutes": 210,
+    "monday_timer_1_timer_mode": 1,
+    "monday_timer_2_start_time_hour": 0,
+    "monday_timer_2_start_time_minute": 0,
+    "monday_timer_2_length_minutes": 0,
+    "monday_timer_2_timer_mode": 0,
+    "tuesday_timer_1_start_time_hour": 9,
+    "tuesday_timer_1_start_time_minute": 0,
+    "tuesday_timer_1_length_minutes": 210,
+    "tuesday_timer_1_timer_mode": 1,
+    "tuesday_timer_2_start_time_hour": 0,
+    "tuesday_timer_2_start_time_minute": 0,
+    "tuesday_timer_2_length_minutes": 0,
+    "tuesday_timer_2_timer_mode": 0,
+    "wednesday_timer_1_start_time_hour": 9,
+    "wednesday_timer_1_start_time_minute": 0,
+    "wednesday_timer_1_length_minutes": 210,
+    "wednesday_timer_1_timer_mode": 1,
+    "wednesday_timer_2_start_time_hour": 0,
+    "wednesday_timer_2_start_time_minute": 0,
+    "wednesday_timer_2_length_minutes": 0,
+    "wednesday_timer_2_timer_mode": 0,
+    "thursday_timer_1_start_time_hour": 9,
+    "thursday_timer_1_start_time_minute": 0,
+    "thursday_timer_1_length_minutes": 210,
+    "thursday_timer_1_timer_mode": 1,
+    "thursday_timer_2_start_time_hour": 0,
+    "thursday_timer_2_start_time_minute": 0,
+    "thursday_timer_2_length_minutes": 0,
+    "thursday_timer_2_timer_mode": 0,
+    "friday_timer_1_start_time_hour": 9,
+    "friday_timer_1_start_time_minute": 0,
+    "friday_timer_1_length_minutes": 210,
+    "friday_timer_1_timer_mode": 1,
+    "friday_timer_2_start_time_hour": 0,
+    "friday_timer_2_start_time_minute": 0,
+    "friday_timer_2_length_minutes": 0,
+    "friday_timer_2_timer_mode": 0,
+    "saturday_timer_1_start_time_hour": 0,
+    "saturday_timer_1_start_time_minute": 0,
+    "saturday_timer_1_length_minutes": 0,
+    "saturday_timer_1_timer_mode": 0,
+    "saturday_timer_2_start_time_hour": 0,
+    "saturday_timer_2_start_time_minute": 0,
+    "saturday_timer_2_length_minutes": 0,
+    "saturday_timer_2_timer_mode": 0,
+    "sunday_timer_1_start_time_hour": 0,
+    "sunday_timer_1_start_time_minute": 0,
+    "sunday_timer_1_length_minutes": 0,
+    "sunday_timer_1_timer_mode": 0,
+    "sunday_timer_2_start_time_hour": 0,
+    "sunday_timer_2_start_time_minute": 0,
+    "sunday_timer_2_length_minutes": 0,
+    "sunday_timer_2_timer_mode": 0,
+    "request_time": "2026-10-09T10:19:36.264Z",
+    "request_payload": "4001460900d2000100000000000900d2000100000000000900d2000100000000000900d2000100000000000900d2000100000000000000000000000000000000000000000000000000"
+   },
+   "response": {
+    "response_time": "2026-10-09T10:19:37.706Z",
+    "response_payload": "41010100"
+   }
+  },
+  "125": {
+   "request": {
+    "request_time": "2026-10-13T12:45:09.274Z",
+    "request_payload": "420100"
+   },
+   "response": {
+    "monday_timer_1_start_time_hour": 9,
+    "monday_timer_1_start_time_minute": 0,
+    "monday_timer_1_length_minutes": 210,
+    "monday_timer_1_timer_mode": 1,
+    "monday_timer_2_start_time_hour": 0,
+    "monday_timer_2_start_time_minute": 0,
+    "monday_timer_2_length_minutes": 0,
+    "monday_timer_2_timer_mode": 0,
+    "tuesday_timer_1_start_time_hour": 9,
+    "tuesday_timer_1_start_time_minute": 0,
+    "tuesday_timer_1_length_minutes": 210,
+    "tuesday_timer_1_timer_mode": 1,
+    "tuesday_timer_2_start_time_hour": 0,
+    "tuesday_timer_2_start_time_minute": 0,
+    "tuesday_timer_2_length_minutes": 0,
+    "tuesday_timer_2_timer_mode": 0,
+    "wednesday_timer_1_start_time_hour": 9,
+    "wednesday_timer_1_start_time_minute": 0,
+    "wednesday_timer_1_length_minutes": 210,
+    "wednesday_timer_1_timer_mode": 1,
+    "wednesday_timer_2_start_time_hour": 0,
+    "wednesday_timer_2_start_time_minute": 0,
+    "wednesday_timer_2_length_minutes": 0,
+    "wednesday_timer_2_timer_mode": 0,
+    "thursday_timer_1_start_time_hour": 9,
+    "thursday_timer_1_start_time_minute": 0,
+    "thursday_timer_1_length_minutes": 210,
+    "thursday_timer_1_timer_mode": 1,
+    "thursday_timer_2_start_time_hour": 0,
+    "thursday_timer_2_start_time_minute": 0,
+    "thursday_timer_2_length_minutes": 0,
+    "thursday_timer_2_timer_mode": 0,
+    "friday_timer_1_start_time_hour": 9,
+    "friday_timer_1_start_time_minute": 0,
+    "friday_timer_1_length_minutes": 210,
+    "friday_timer_1_timer_mode": 1,
+    "friday_timer_2_start_time_hour": 0,
+    "friday_timer_2_start_time_minute": 0,
+    "friday_timer_2_length_minutes": 0,
+    "friday_timer_2_timer_mode": 0,
+    "saturday_timer_1_start_time_hour": 0,
+    "saturday_timer_1_start_time_minute": 0,
+    "saturday_timer_1_length_minutes": 0,
+    "saturday_timer_1_timer_mode": 0,
+    "saturday_timer_2_start_time_hour": 0,
+    "saturday_timer_2_start_time_minute": 0,
+    "saturday_timer_2_length_minutes": 0,
+    "saturday_timer_2_timer_mode": 0,
+    "sunday_timer_1_start_time_hour": 0,
+    "sunday_timer_1_start_time_minute": 0,
+    "sunday_timer_1_length_minutes": 0,
+    "sunday_timer_1_timer_mode": 0,
+    "sunday_timer_2_start_time_hour": 0,
+    "sunday_timer_2_start_time_minute": 0,
+    "sunday_timer_2_length_minutes": 0,
+    "sunday_timer_2_timer_mode": 0,
+    "response_time": "2026-10-13T12:45:10.945Z",
+    "response_payload": "430147000900d2000100000000000900d2000100000000000900d2000100000000000900d2000100000000000900d2000100000000000000000000000000000000000000000000000000"
+   }
+  },
+  "8": {
+   "request": {
+    "request_time": "2026-10-12T21:17:21.551Z",
+    "request_payload": "0c00021f0c"
+   },
+   "response": {
+    "security_level": 0,
+    "response_time": "2026-10-12T21:17:23.210Z",
+    "response_payload": "0d0003000000"
+   }
+  },
+  "60": {
+   "request": {
+    "start_position_how": 0,
+    "start_position_distance": 19,
+    "start_position_how_often": 33,
+    "request_time": "2022-11-17T17:24:55.341Z",
+    "request_payload": "9400050013002100"
+   },
+   "response": {
+    "start_position_1_how": 0,
+    "start_position_1_distance": 48,
+    "start_position_1_how_often": 33,
+    "start_position_2_how": 0,
+    "start_position_2_distance": 1,
+    "start_position_2_how_often": 34,
+    "start_position_3_how": 0,
+    "start_position_3_distance": 19,
+    "start_position_3_how_often": 33,
+    "start_position_4_distance": 0,
+    "start_position_4_how": 0,
+    "start_position_5_how": 0,
+    "start_position_4_how_often": 0,
+    "start_position_5_how_often": 0,
+    "start_position_5_distance": 0,
+    "response_time": "2022-11-17T17:24:56.475Z",
+    "response_payload": "95001a0000300021000001002200001300210000000000000000000000"
+   }
+  },
+  "65": {
+   "request": {
+    "delay_time_boundary_wire": 5,
+    "request_time": "2026-08-27T15:33:34.825Z",
+    "request_payload": "a2000105"
+   },
+   "response": {
+    "response_time": "2026-08-27T15:33:35.986Z",
+    "response_payload": "a3000100"
+   }
+  },
+  "66": {
+   "request": {
+    "request_time": "2026-08-30T18:36:37.560Z",
+    "request_payload": "a40000"
+   },
+   "response": {
+    "delay_time_boundary_wire": 5,
+    "response_time": "2026-08-30T18:36:38.569Z",
+    "response_payload": "a500020005"
+   }
+  },
+  "67": {
+   "request": {
+    "delay_time_guide_wire_1": 255,
+    "request_time": "2024-08-18T12:14:06.767Z",
+    "request_payload": "a60001ff"
+   },
+   "response": {
+    "response_time": "2024-08-18T12:14:07.714Z",
+    "response_payload": "a7000100"
+   }
+  },
+  "68": {
+   "request": {
+    "request_time": "2026-08-30T18:36:38.759Z",
+    "request_payload": "a80000"
+   },
+   "response": {
+    "delay_time_guide_wire_1": 0,
+    "response_time": "2026-08-30T18:36:39.488Z",
+    "response_payload": "a900020000"
+   }
+  },
+  "25": {
+   "request": {
+    "request_time": "2022-06-23T07:59:04.809Z",
+    "request_payload": "440000"
+   },
+   "response": {
+    "device_group_no": 100,
+    "sub_device_no": 2,
+    "variant_no": 1,
+    "major_part_of_sw_version": 6,
+    "minor_part_of_sw_version": 53,
+    "build_no": 1652892721,
+    "response_time": "2022-06-23T07:59:05.622Z",
+    "response_payload": "45000b0064000201063531248562"
+   }
+  },
+  "26": {
+   "request": {
+    "request_time": "2022-06-23T07:59:06.22Z",
+    "request_payload": "460000"
+   },
+   "response": {
+    "device_group_no": 100,
+    "sub_device_no": 3,
+    "variant_no": 1,
+    "major_part_of_sw_version": 1,
+    "minor_part_of_sw_version": 0,
+    "build_no": 1,
+    "response_time": "2022-06-23T07:59:06.786Z",
+    "response_payload": "47000b0064000301010001000000"
+   }
+  },
+  "130": {
+   "request": {
+    "request_time": "2026-10-13T12:45:11.128Z",
+    "request_payload": "4c0100"
+   },
+   "response": {
+    "time_minute": 0,
+    "override_option": 0,
+    "response_time": "2026-10-13T12:45:11.962Z",
+    "response_payload": "4d010400000000"
+   }
+  },
+  "132": 0,
+  "137": {
+   "request": {
+    "park_time": 240,
+    "park_reason": 1,
+    "request_time": "2025-03-14T07:10:13.782Z",
+    "request_payload": "8c0104f0000100"
+   },
+   "response": {
+    "response_time": "2025-03-14T07:10:14.365Z",
+    "response_payload": "8d010100"
+   }
+  },
+  "31": {
+   "request": {
+    "request_time": "2026-10-09T18:06:50.727Z",
+    "request_payload": "500000"
+   },
+   "response": {
+    "mower_main_state": 9,
+    "mower_sub_state": 0,
+    "next_start": 4294967295,
+    "battery_status": 95,
+    "status_flags": 19,
+    "wireless_connection_status": 1,
+    "signal_quality": 58,
+    "source_for_next_start": 0,
+    "notification_to_backend": 0,
+    "response_time": "2026-10-09T18:06:51.567Z",
+    "response_payload": "510010000900ffffffff5f1300013a000000cb"
+   }
+  },
+  "32": {
+   "request": {
+    "mower_main_state": 2,
+    "next_start": 1791961200,
+    "battery_status": 99,
+    "source_for_next_start": 2,
+    "notification_to_backend": 0,
+    "request_time": "2026-10-14T03:28:03.781Z",
+    "request_payload": "52000a027028cf6a63020000d0"
+   },
+   "response": {
+    "response_time": "2026-10-14T03:28:03.781Z",
+    "response_payload": "53000100"
+   }
+  },
+  "33": {
+   "request": {
+    "current_mower_main_state": 9,
+    "event_id": 13,
+    "timestamp_for_error": 1791568428,
+    "previous_mower_main_state": 9,
+    "mower_sub_state": 0,
+    "pitch_angle": 216,
+    "roll_angle": 1,
+    "event_specific_data_1": 270451,
+    "event_specific_data_2": 3999748,
+    "notification_to_backend": 0,
+    "request_time": "2026-10-10T07:29:20.263Z",
+    "request_payload": "560016090d002c2ac96a0900d8017320040004083d000000cb"
+   },
+   "response": {
+    "response_time": "2026-10-10T07:29:20.263Z",
+    "response_payload": "57000100"
+   }
+  },
+  "34": {
+   "request": {
+    "hdop": "0.5",
+    "request_time": "2026-10-14T03:28:03.781Z",
+    "request_payload": "5a0009ba90221f84b5660405",
+    "latitude": 52.0,
+    "longitude": 8.0
+   },
+   "response": {
+    "response_time": "2026-10-14T03:28:03.781Z",
+    "response_payload": "5b000100"
+   }
+  },
+  "79": {
+   "request": {
+    "enable_start_position_1": 1,
+    "request_time": "2022-11-17T17:24:37.207Z",
+    "request_payload": "be000101"
+   },
+   "response": {
+    "response_time": "2022-11-17T17:24:38.677Z",
+    "response_payload": "bf000100"
+   }
+  },
+  "80": {
+   "request": {
+    "request_time": "2026-08-30T18:36:27.261Z",
+    "request_payload": "c00000"
+   },
+   "response": {
+    "enable_start_position_1": 1,
+    "response_time": "2026-08-30T18:36:27.964Z",
+    "response_payload": "c100020001"
+   }
+  },
+  "online": true,
+  "81": {
+   "request": {
+    "enable_start_position_2": 1,
+    "request_time": "2022-11-17T17:23:34.480Z",
+    "request_payload": "c2000101"
+   },
+   "response": {
+    "response_time": "2022-11-17T17:23:35.215Z",
+    "response_payload": "c3000100"
+   }
+  },
+  "82": {
+   "request": {
+    "request_time": "2026-08-30T18:36:28.119Z",
+    "request_payload": "c40000"
+   },
+   "response": {
+    "enable_start_position_2": 0,
+    "response_time": "2026-08-30T18:36:28.783Z",
+    "response_payload": "c500020000"
+   }
+  },
+  "83": {
+   "request": {
+    "enable_start_position_3": 1,
+    "request_time": "2022-11-17T17:24:56.975Z",
+    "request_payload": "c6000101"
+   },
+   "response": {
+    "response_time": "2022-11-17T17:24:57.611Z",
+    "response_payload": "c7000100"
+   }
+  },
+  "84": {
+   "request": {
+    "request_time": "2026-08-30T18:36:29.66Z",
+    "request_payload": "c80000"
+   },
+   "response": {
+    "enable_start_position_3": 0,
+    "response_time": "2026-08-30T18:36:29.823Z",
+    "response_payload": "c900020000"
+   }
+  },
+  "86": {
+   "request": {
+    "request_time": "2026-08-30T18:36:30.83Z",
+    "request_payload": "cc0000"
+   },
+   "response": {
+    "enable_start_position_4": 0,
+    "response_time": "2026-08-30T18:36:31.39Z",
+    "response_payload": "cd00020000"
+   }
+  }
+ }
+}

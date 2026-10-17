@@ -242,6 +242,8 @@ class GreenworksMower:
     charging_time: int | None = None
     # Maehzeit der Messer seit dem letzten Zuruecksetzen in der App (Sekunden)
     blade_time: int | None = None
+    # Seit der letzten echten Statistik mitgezaehlte Maehzeit (Sekunden)
+    counted_cutting: int = 0
 
     latitude: float | None = None
     longitude: float | None = None
@@ -606,4 +608,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.2.11
+# Version 0.2.12
