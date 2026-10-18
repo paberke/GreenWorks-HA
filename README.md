@@ -81,7 +81,7 @@ Außerdem:
 - Einrichtung über die Oberfläche mit E-Mail und Passwort der Greenworks-App
 - Bei falschem Passwort eine verständliche Meldung statt Absturz. Lehnt die Cloud die Anmeldung aus einem anderen Grund ab, versucht Home Assistant es später erneut, statt nach einem neuen Passwort zu fragen
 - Die Werte werden jede Minute aktualisiert. Unter Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren** lassen sich das Abfrage-Intervall (30–600 Sekunden) und die Zeit einstellen, wie lange bei Aussetzern die letzten Werte stehen bleiben (1–60 Minuten)
-- Wenn die Greenworks-Cloud kurz nicht erreichbar ist, bleiben die letzten Werte stehen und Home Assistant versucht es jede Minute erneut. Erst nach etwa 5 Minuten ohne Verbindung wird alles als *nicht verfügbar* angezeigt
+- Wenn die Greenworks-Cloud kurz nicht erreichbar ist, bleiben die letzten Werte stehen und Home Assistant versucht es bei der nächsten Abfrage erneut. Erst nach 5 Minuten ohne Verbindung (einstellbar, siehe oben) wird alles als *nicht verfügbar* angezeigt
 - Meldet der Mäher nach seiner letzten Statusmeldung einen Fehler, zeigen **Status** und **Mäher** den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*)
 - Deutsch und Englisch – Home Assistant wählt automatisch die eingestellte Sprache, auch für die Fehlertexte
 
@@ -110,7 +110,7 @@ Außerdem:
 ## Versionen
 
 - **0.2.13** *(im Test)* – Einstellungen: beide Werte sind jetzt Eingabefelder mit Einheit (vorher ein Schieberegler ohne Zahl)
-- **0.2.12** – **Mähzeit gesamt** und **Messer-Laufzeit** laufen beim Mähen live mit (gezählter Anteil im Attribut *Davon gezählt*); neuer Knopf **Konfigurieren** für Abfrage-Intervall und Überbrückungszeit; automatische Tests laufen jetzt auf GitHub mit
+- **0.2.12** *(im Test)* – **Mähzeit gesamt** und **Messer-Laufzeit** laufen beim Mähen live mit (gezählter Anteil im Attribut *Davon gezählt*); neuer Knopf **Konfigurieren** für Abfrage-Intervall und Überbrückungszeit; automatische Tests laufen jetzt auf GitHub mit
 - **0.2.11** – Läuft wieder mit älteren Home-Assistant-Versionen ab 2025.1 (vorher startete die Integration auf 2025.1 und 2025.2 nicht)
 - **0.2.10** *(im Test)* – Ist der Mäher offline, zeigt **Status** *Offline* (mit Attribut *Letzter Zustand*) und **Mäher** *nicht verfügbar*
 - **0.2.9** *(im Test)* – Status zeigt bei einem neueren Fehler den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*); kurze Verbindungsaussetzer (bis ca. 5 Minuten) werden überbrückt, statt alles auf *nicht verfügbar* zu setzen
@@ -211,7 +211,7 @@ Also:
 - Setup via the UI with the email and password of the Greenworks app
 - A clear message for a wrong password instead of a crash. If the cloud rejects the login for another reason, Home Assistant retries later instead of asking for a new password
 - Values are updated every minute. Under Settings → Devices & services → Greenworks → **Configure** you can set the update interval (30–600 seconds) and how long the last values are kept during connection drops (1–60 minutes)
-- If the Greenworks cloud is briefly unreachable, the last values are kept and Home Assistant retries every minute. Only after about 5 minutes without a connection are the entities shown as *unavailable*
+- If the Greenworks cloud is briefly unreachable, the last values are kept and Home Assistant retries at the next update. Only after 5 minutes without a connection (configurable, see above) are the entities shown as *unavailable*
 - If the mower reports an error after its last status message, **Status** and **Mower** show the state from the error message (e.g. *Error* instead of *Searching station*)
 - English and German – Home Assistant automatically uses your language, including the error texts
 
