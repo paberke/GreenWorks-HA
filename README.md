@@ -124,6 +124,11 @@ Außerdem:
 - **0.2.1** – Texte aus der App-Fehlerliste als *mögliche Bedeutung* am Sensor **Letzter Fehlercode**
 - **0.2.0** – Verbindung zur Greenworks-Cloud neu geschrieben: läuft wieder mit der aktuellen Cloud und auch in der Winterpause, alle Mäher eines Kontos in einem Eintrag, neue Sensoren, deutsche Übersetzung
 
+## Mitwirkende
+
+- **[Patrick (paberke)](https://github.com/paberke)** – Idee, Tests am echten Optimow 10, Entscheidungen zum Funktionsumfang, Kontakt mit Greenworks
+- **Claude (KI-Assistent von Anthropic)** – Programmierung, automatische Tests, Dokumentation
+
 ## Danksagung
 
 Entstanden als Fork von [Boes24/GreenWorks-HA](https://github.com/Boes24/GreenWorks-HA). Der Code wurde inzwischen vollständig neu geschrieben; die Adresse der Greenworks-Cloud und der Anmeldeweg stammen ursprünglich aus [Boes24/GreenWorks-Core](https://github.com/Boes24/GreenWorks-Core). Danke an Boes24 für den Anstoß.
@@ -236,6 +241,11 @@ Also:
 **What can I do?** If it bothers you: disable the integration while you use the app – *Settings → Devices & services → Greenworks → ⋮ → Disable*. Enable it again afterwards.
 
 The version history is in the German section above ("Versionen").
+
+## Contributors
+
+- **[Patrick (paberke)](https://github.com/paberke)** – idea, testing with a real Optimow 10, feature decisions, contact with Greenworks
+- **Claude (AI assistant by Anthropic)** – programming, automated tests, documentation
 
 ## Credits
 
