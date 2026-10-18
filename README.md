@@ -244,7 +244,7 @@ The version history is in the German section above ("Versionen").
 
 ## Contributors
 
-- **[Patrick (paberke)](https://github.com/paberke)** – idea, testing with a real Optimow 10, feature decisions, contact with Greenworks
+- **[Patrick (paberke)](https://github.com/paberke)** – idea, testing with a real Optimow 10, feature decisions, contact with Greenworks Kontakt mit Greenworks, Betreuung des Projekts
 - **Claude (AI assistant by Anthropic)** – programming, automated tests, documentation
 
 ## Credits
