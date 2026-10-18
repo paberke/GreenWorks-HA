@@ -141,6 +141,18 @@ async def test_options_flow(hass, aioclient_mock):
     assert entry.runtime_data._outage_grace == timedelta(minutes=10)
 
 
+async def test_options_box_fields(hass, aioclient_mock):
+    """Beide Felder sind Eingabefelder mit Einheit (kein Schieberegler)."""
+    entry = await _setup(hass, aioclient_mock)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    for key, unit in ((CONF_SCAN_INTERVAL, "s"), (CONF_OUTAGE_GRACE, "min")):
+        sel = result["data_schema"].schema[next(k for k in result["data_schema"].schema if k == key)]
+        assert sel.config["mode"] == "box" and sel.config["unit_of_measurement"] == unit
+    result = await hass.config_entries.options.async_configure(
+        result["flow_id"], {CONF_SCAN_INTERVAL: 90.0, CONF_OUTAGE_GRACE: 3.0})
+    assert entry.options == {CONF_SCAN_INTERVAL: 90, CONF_OUTAGE_GRACE: 3}   # ganze Zahlen
+
+
 async def test_options_range(hass, aioclient_mock):
     import pytest
     import voluptuous as vol

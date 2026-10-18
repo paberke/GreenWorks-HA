@@ -411,8 +411,8 @@
         "title": "Settings",
         "description": "How often Home Assistant asks the Greenworks cloud, and how long the last values are kept during short connection drops.",
         "data": {
-          "scan_interval": "Update interval (seconds, 30–600)",
-          "outage_grace": "Keep last values during drops (minutes, 1–60)"
+          "scan_interval": "Update interval (30–600 seconds)",
+          "outage_grace": "Keep last values during drops (1–60 minutes)"
         }
       }
     }

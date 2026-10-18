@@ -17,6 +17,11 @@ from homeassistant.config_entries import (
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, CONF_SCAN_INTERVAL
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from homeassistant.helpers.selector import (
+    NumberSelector,
+    NumberSelectorConfig,
+    NumberSelectorMode,
+)
 
 from .api import (
     GreenworksAuthError,
@@ -124,6 +129,19 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
         )
 
 
+def _number(minimum: int, maximum: int, unit: str) -> NumberSelector:
+    """Zahlenfeld zum Eintippen (statt Schieberegler), mit Einheit."""
+    return NumberSelector(
+        NumberSelectorConfig(
+            min=minimum,
+            max=maximum,
+            step=1,
+            mode=NumberSelectorMode.BOX,
+            unit_of_measurement=unit,
+        )
+    )
+
+
 class GreenworksOptionsFlow(OptionsFlow):
     """Einstellungen der Integration (Knopf "Konfigurieren")."""
 
@@ -131,21 +149,23 @@ class GreenworksOptionsFlow(OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         if user_input is not None:
-            return self.async_create_entry(data=user_input)
+            return self.async_create_entry(
+                data={key: int(value) for key, value in user_input.items()}
+            )
         options = self.config_entry.options
         schema = vol.Schema(
             {
                 vol.Required(
                     CONF_SCAN_INTERVAL,
                     default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
-                ): vol.All(vol.Coerce(int), vol.Range(*SCAN_INTERVAL_RANGE)),
+                ): _number(*SCAN_INTERVAL_RANGE, "s"),
                 vol.Required(
                     CONF_OUTAGE_GRACE,
                     default=options.get(CONF_OUTAGE_GRACE, DEFAULT_OUTAGE_GRACE),
-                ): vol.All(vol.Coerce(int), vol.Range(*OUTAGE_GRACE_RANGE)),
+                ): _number(*OUTAGE_GRACE_RANGE, "min"),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)
 
 
-# Version 0.2.12
+# Version 0.2.13

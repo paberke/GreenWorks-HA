@@ -109,7 +109,8 @@ Außerdem:
 
 ## Versionen
 
-- **0.2.12** *(im Test)* – **Mähzeit gesamt** und **Messer-Laufzeit** laufen beim Mähen live mit (gezählter Anteil im Attribut *Davon gezählt*); neuer Knopf **Konfigurieren** für Abfrage-Intervall und Überbrückungszeit; automatische Tests laufen jetzt auf GitHub mit
+- **0.2.13** *(im Test)* – Einstellungen: beide Werte sind jetzt Eingabefelder mit Einheit (vorher ein Schieberegler ohne Zahl)
+- **0.2.12** – **Mähzeit gesamt** und **Messer-Laufzeit** laufen beim Mähen live mit (gezählter Anteil im Attribut *Davon gezählt*); neuer Knopf **Konfigurieren** für Abfrage-Intervall und Überbrückungszeit; automatische Tests laufen jetzt auf GitHub mit
 - **0.2.11** – Läuft wieder mit älteren Home-Assistant-Versionen ab 2025.1 (vorher startete die Integration auf 2025.1 und 2025.2 nicht)
 - **0.2.10** *(im Test)* – Ist der Mäher offline, zeigt **Status** *Offline* (mit Attribut *Letzter Zustand*) und **Mäher** *nicht verfügbar*
 - **0.2.9** *(im Test)* – Status zeigt bei einem neueren Fehler den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*); kurze Verbindungsaussetzer (bis ca. 5 Minuten) werden überbrückt, statt alles auf *nicht verfügbar* zu setzen
