@@ -30,7 +30,10 @@ from .api import (
     GreenworksLoginRejected,
 )
 from .const import (
+    BLADE_LIMIT_RANGE,
+    CONF_BLADE_LIMIT,
     CONF_OUTAGE_GRACE,
+    DEFAULT_BLADE_LIMIT,
     DEFAULT_OUTAGE_GRACE,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
@@ -163,9 +166,13 @@ class GreenworksOptionsFlow(OptionsFlow):
                     CONF_OUTAGE_GRACE,
                     default=options.get(CONF_OUTAGE_GRACE, DEFAULT_OUTAGE_GRACE),
                 ): _number(*OUTAGE_GRACE_RANGE, "min"),
+                vol.Required(
+                    CONF_BLADE_LIMIT,
+                    default=options.get(CONF_BLADE_LIMIT, DEFAULT_BLADE_LIMIT),
+                ): _number(*BLADE_LIMIT_RANGE, "h"),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)
 
 
-# Version 0.2.13
+# Version 0.2.14

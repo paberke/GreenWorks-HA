@@ -1,0 +1,9 @@
+{
+  "entity": {
+    "binary_sensor": {
+      "blade_change_due": {
+        "default": "mdi:saw-blade"
+      }
+    }
+  }
+}

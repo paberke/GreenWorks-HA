@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.2.13"
+VERSION: Final = "0.2.14"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -21,6 +21,9 @@ DEFAULT_SCAN_INTERVAL: Final = 60  # Sekunden
 DEFAULT_OUTAGE_GRACE: Final = 5  # Minuten
 SCAN_INTERVAL_RANGE: Final = (30, 600)
 OUTAGE_GRACE_RANGE: Final = (1, 60)
+CONF_BLADE_LIMIT: Final = "blade_limit"  # Stunden, 0 = Erinnerung aus
+DEFAULT_BLADE_LIMIT: Final = 150
+BLADE_LIMIT_RANGE: Final = (0, 1000)
 
 # Zustaende, in denen die Maehzeit mitgezaehlt wird (Maehen, Nebenflaeche)
 COUNTED_STATES: Final = frozenset({4, 12})
@@ -104,4 +107,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.2.13
+# Version 0.2.14

@@ -397,6 +397,21 @@
       },
       "frost_sensor": {
         "name": "Frost protection"
+      },
+      "blade_change_due": {
+        "name": "Blade change due",
+        "state": {
+          "on": "Due",
+          "off": "Not due"
+        },
+        "state_attributes": {
+          "limit": {
+            "name": "Limit (h)"
+          },
+          "remaining": {
+            "name": "Remaining (h)"
+          }
+        }
       }
     },
     "device_tracker": {
@@ -409,10 +424,11 @@
     "step": {
       "init": {
         "title": "Settings",
-        "description": "How often Home Assistant asks the Greenworks cloud, and how long the last values are kept during short connection drops.",
+        "description": "How often Home Assistant asks the Greenworks cloud, how long the last values are kept during short connection drops, and after how many mowing hours a blade change is due.",
         "data": {
           "scan_interval": "Update interval (30–600 seconds)",
-          "outage_grace": "Keep last values during drops (1–60 minutes)"
+          "outage_grace": "Keep last values during drops (1–60 minutes)",
+          "blade_limit": "Blade change after (0 = off, 0–1000 hours)"
         }
       }
     }

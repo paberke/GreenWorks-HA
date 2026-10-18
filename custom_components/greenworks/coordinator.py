@@ -117,4 +117,4 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         return mowers
 
 
-# Version 0.2.13
+# Version 0.2.14

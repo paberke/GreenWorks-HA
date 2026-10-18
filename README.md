@@ -42,6 +42,7 @@ Diese Werte wurden mit einem echten Optimow 10 in Home Assistant geprüft:
 | **Letzte Statusmeldung** | Wann der Mäher zuletzt Daten gemeldet hat |
 | **Mähzeit gesamt** ⓘ / **Laufzeit gesamt** / **Ladezeit gesamt** | Gesamtstunden seit Inbetriebnahme. Die Mähzeit läuft beim Mähen live mit (siehe Hinweis unten) |
 | **Messer-Laufzeit** ⓘ | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App – gleiche Rechnung wie die App, läuft beim Mähen live mit |
+| **Messerwechsel fällig** ⓘ | *Fällig*, sobald die Messer-Laufzeit die eingestellte Grenze erreicht (Standard 150 h, unter **Konfigurieren** änderbar, 0 = aus). Nach dem Zurücksetzen der Messerzeit in der App wieder *Nicht fällig*. Greenworks nennt kein festes Intervall; allgemein empfohlen wird ein Wechsel alle 6–10 Wochen Mähbetrieb oder wenn das Gras ausgefranst aussieht |
 | **Mähplan** ⓘ | Wochenplan als Kurzform, z. B. *Mo–Fr 09:00–12:30*; die Zeiten je Tag als Attribute |
 | **Fehlerverlauf** | Attribut *Verlauf* an **Letzte Fehlermeldung**: die Meldungen aus der Fehlerliste der App mit Datum und Klartext |
 | **Software** ⓘ | Softwarestand des Mähers, dazu Mähwerk und Ladestation als Attribute (Diagnose) |
@@ -71,6 +72,7 @@ Einige Anzeigen haben weitere Angaben. So findest du sie: Anzeige antippen → o
 | **Abstand beim Drahtfolgen** | *Leitdraht 1*, *Leitdraht 2*, *Aktualisiert* |
 | **Startpunkte** | *Punkt 1* bis *Punkt 5* (Draht, Entfernung, Anteil der Starts), *Ladestation* (Anteil der Starts direkt an der Station), *Aktualisiert* |
 | **Überfahrweite** | *Aktualisiert* |
+| **Messerwechsel fällig** | *Grenze (h)*, *Verbleibend (h)* – wie viele Mähstunden bis zum Wechsel bleiben |
 | **Mähzeit gesamt**, **Messer-Laufzeit** | *Davon gezählt* – seit der letzten echten Statistik selbst mitgezählte Mähstunden, *Letzte echte Statistik* – wann der Mäher zuletzt echte Werte geschickt hat |
 | **Mäher** | *status* (genauer Zustand), *status_code*, *park_reason_code*, *sub_status_code* – die Rohwerte des Mähers, praktisch für Automationen |
 
@@ -80,7 +82,7 @@ Außerdem:
 
 - Einrichtung über die Oberfläche mit E-Mail und Passwort der Greenworks-App
 - Bei falschem Passwort eine verständliche Meldung statt Absturz. Lehnt die Cloud die Anmeldung aus einem anderen Grund ab, versucht Home Assistant es später erneut, statt nach einem neuen Passwort zu fragen
-- Die Werte werden jede Minute aktualisiert. Unter Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren** lassen sich das Abfrage-Intervall (30–600 Sekunden) und die Zeit einstellen, wie lange bei Aussetzern die letzten Werte stehen bleiben (1–60 Minuten)
+- Die Werte werden jede Minute aktualisiert. Unter Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren** lassen sich das Abfrage-Intervall (30–600 Sekunden), die Zeit, wie lange bei Aussetzern die letzten Werte stehen bleiben (1–60 Minuten), und die Grenze für den Messerwechsel (Standard 150 h, 0 = aus) einstellen
 - Wenn die Greenworks-Cloud kurz nicht erreichbar ist, bleiben die letzten Werte stehen und Home Assistant versucht es bei der nächsten Abfrage erneut. Erst nach 5 Minuten ohne Verbindung (einstellbar, siehe oben) wird alles als *nicht verfügbar* angezeigt
 - Meldet der Mäher nach seiner letzten Statusmeldung einen Fehler, zeigen **Status** und **Mäher** den Zustand aus der Fehlermeldung (z. B. *Fehler* statt *Sucht Station*)
 - Deutsch und Englisch – Home Assistant wählt automatisch die eingestellte Sprache, auch für die Fehlertexte
@@ -109,6 +111,7 @@ Außerdem:
 
 ## Versionen
 
+- **0.2.14** *(im Test)* – Neuer Sensor **Messerwechsel fällig** mit einstellbarer Grenze (Standard 150 h, 0 = aus) unter **Konfigurieren**
 - **0.2.13** *(im Test)* – Einstellungen: beide Werte sind jetzt Eingabefelder mit Einheit (vorher ein Schieberegler ohne Zahl)
 - **0.2.12** *(im Test)* – **Mähzeit gesamt** und **Messer-Laufzeit** laufen beim Mähen live mit (gezählter Anteil im Attribut *Davon gezählt*); neuer Knopf **Konfigurieren** für Abfrage-Intervall und Überbrückungszeit; automatische Tests laufen jetzt auf GitHub mit
 - **0.2.11** – Läuft wieder mit älteren Home-Assistant-Versionen ab 2025.1 (vorher startete die Integration auf 2025.1 und 2025.2 nicht)
@@ -177,6 +180,7 @@ Checked with a real Optimow 10 in Home Assistant:
 | **Last status report** | When the mower last reported data |
 | **Total cutting time** ⓘ / **Total running time** / **Total charging time** | Total hours since first use. Cutting time keeps counting live while mowing (see note below) |
 | **Blade time** ⓘ | Mowing hours since the blade time was last reset in the app – same calculation as the app, keeps counting live while mowing |
+| **Blade change due** ⓘ | *Due* once the blade time reaches the configured limit (default 150 h, change it under **Configure**, 0 = off). Back to *Not due* after resetting the blade time in the app. Greenworks gives no fixed interval; a common recommendation is every 6–10 weeks of mowing or when the grass looks torn |
 | **Mowing schedule** ⓘ | Weekly schedule in short form, e.g. *Mon–Fri 09:00–12:30*; times per day as attributes |
 | **Error history** | *History* attribute on **Last error message**: the entries of the app's error list with date and text |
 | **Software** ⓘ | Mower software version, plus cutting unit and charging station as attributes (diagnostic) |
@@ -206,6 +210,7 @@ Some entities carry more details. To see them: tap the entity → **⋮** at the
 | **Follow wire distance** | *Guide wire 1*, *Guide wire 2*, *Updated* |
 | **Starting points** | *Point 1* to *Point 5* (wire, distance, share of starts), *Charging station* (share of starts at the station), *Updated* |
 | **Drive past wire distance** | *Updated* |
+| **Blade change due** | *Limit (h)*, *Remaining (h)* – mowing hours left until the change |
 | **Total cutting time**, **Blade time** | *Counted since last statistics* – mowing hours counted by the integration since the last real statistics, *Last real statistics* – when the mower last sent real values |
 | **Mower** | *status* (detailed state), *status_code*, *park_reason_code*, *sub_status_code* – the mower's raw values, handy for automations |
 
@@ -215,7 +220,7 @@ Also:
 
 - Setup via the UI with the email and password of the Greenworks app
 - A clear message for a wrong password instead of a crash. If the cloud rejects the login for another reason, Home Assistant retries later instead of asking for a new password
-- Values are updated every minute. Under Settings → Devices & services → Greenworks → **Configure** you can set the update interval (30–600 seconds) and how long the last values are kept during connection drops (1–60 minutes)
+- Values are updated every minute. Under Settings → Devices & services → Greenworks → **Configure** you can set the update interval (30–600 seconds), how long the last values are kept during connection drops (1–60 minutes) and the blade change limit (default 150 h, 0 = off)
 - If the Greenworks cloud is briefly unreachable, the last values are kept and Home Assistant retries at the next update. Only after 5 minutes without a connection (configurable, see above) are the entities shown as *unavailable*
 - If the mower reports an error after its last status message, **Status** and **Mower** show the state from the error message (e.g. *Error* instead of *Searching station*)
 - English and German – Home Assistant automatically uses your language, including the error texts

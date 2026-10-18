@@ -136,7 +136,7 @@ async def test_options_flow(hass, aioclient_mock):
         result["flow_id"], {CONF_SCAN_INTERVAL: 120, CONF_OUTAGE_GRACE: 10})
     assert result["type"] == "create_entry"
     await hass.async_block_till_done()
-    assert entry.options == {CONF_SCAN_INTERVAL: 120, CONF_OUTAGE_GRACE: 10}
+    assert entry.options == {CONF_SCAN_INTERVAL: 120, CONF_OUTAGE_GRACE: 10, "blade_limit": 150}
     assert entry.runtime_data.update_interval == timedelta(seconds=120)      # neu geladen
     assert entry.runtime_data._outage_grace == timedelta(minutes=10)
 
@@ -150,7 +150,7 @@ async def test_options_box_fields(hass, aioclient_mock):
         assert sel.config["mode"] == "box" and sel.config["unit_of_measurement"] == unit
     result = await hass.config_entries.options.async_configure(
         result["flow_id"], {CONF_SCAN_INTERVAL: 90.0, CONF_OUTAGE_GRACE: 3.0})
-    assert entry.options == {CONF_SCAN_INTERVAL: 90, CONF_OUTAGE_GRACE: 3}   # ganze Zahlen
+    assert entry.options == {CONF_SCAN_INTERVAL: 90, CONF_OUTAGE_GRACE: 3, "blade_limit": 150}   # ganze Zahlen
 
 
 async def test_options_range(hass, aioclient_mock):

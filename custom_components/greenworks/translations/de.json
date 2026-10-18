@@ -397,6 +397,21 @@
       },
       "frost_sensor": {
         "name": "Frostschutz"
+      },
+      "blade_change_due": {
+        "name": "Messerwechsel fällig",
+        "state": {
+          "on": "Fällig",
+          "off": "Nicht fällig"
+        },
+        "state_attributes": {
+          "limit": {
+            "name": "Grenze (h)"
+          },
+          "remaining": {
+            "name": "Verbleibend (h)"
+          }
+        }
       }
     },
     "device_tracker": {
@@ -409,10 +424,11 @@
     "step": {
       "init": {
         "title": "Einstellungen",
-        "description": "Wie oft Home Assistant bei der Greenworks-Cloud nachfragt und wie lange bei kurzen Verbindungsaussetzern die letzten Werte stehen bleiben.",
+        "description": "Wie oft Home Assistant bei der Greenworks-Cloud nachfragt, wie lange bei kurzen Verbindungsaussetzern die letzten Werte stehen bleiben und nach wie vielen Mähstunden ein Messerwechsel fällig ist.",
         "data": {
           "scan_interval": "Abfrage-Intervall (30–600 Sekunden)",
-          "outage_grace": "Letzte Werte bei Aussetzern behalten (1–60 Minuten)"
+          "outage_grace": "Letzte Werte bei Aussetzern behalten (1–60 Minuten)",
+          "blade_limit": "Messerwechsel nach (0 = aus, 0–1000 Stunden)"
         }
       }
     }
