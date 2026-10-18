@@ -126,7 +126,7 @@ Außerdem:
 
 ## Mitwirkende
 
-- **[Patrick (paberke)](https://github.com/paberke)** – Idee, Tests am echten Optimow 10, Entscheidungen zum Funktionsumfang, Kontakt mit Greenworks
+- **[Patrick (paberke)](https://github.com/paberke)** – Idee, Tests am echten Optimow 10, Entscheidungen zum Funktionsumfang, Kontakt mit Greenworks, Betreuung des Projekts
 - **Claude (KI-Assistent von Anthropic)** – Programmierung, automatische Tests, Dokumentation
 
 ## Danksagung
@@ -244,7 +244,7 @@ The version history is in the German section above ("Versionen").
 
 ## Contributors
 
-- **[Patrick (paberke)](https://github.com/paberke)** – idea, testing with a real Optimow 10, feature decisions, contact with Greenworks Kontakt mit Greenworks, Betreuung des Projekts
+- **[Patrick (paberke)](https://github.com/paberke)** – idea, testing with a real Optimow 10, feature decisions, contact with Greenworks, project maintenance
 - **Claude (AI assistant by Anthropic)** – programming, automated tests, documentation
 
 ## Credits
