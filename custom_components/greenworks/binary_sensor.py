@@ -65,6 +65,7 @@ BINARY_SENSORS: tuple[GreenworksBinaryDescription, ...] = (
     ),
     GreenworksBinaryDescription(
         key="charging",
+        translation_key="charging",
         device_class=BinarySensorDeviceClass.BATTERY_CHARGING,
         value_fn=lambda m: None
         if m.state_code is None

@@ -1,0 +1,57 @@
+name: Bug report / Fehler melden
+description: Something does not work as expected / Etwas funktioniert nicht wie erwartet
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! Please fill in the fields below. English or German is fine.
+        Danke für die Meldung! Bitte die Felder ausfüllen – Deutsch oder Englisch ist beides in Ordnung.
+  - type: input
+    id: model
+    attributes:
+      label: Mower model / Mähermodell
+      placeholder: "e.g. Greenworks Optimow 10, Cramer RM1000"
+    validations:
+      required: true
+  - type: dropdown
+    id: app
+    attributes:
+      label: App you use for the mower / App für den Mäher
+      options:
+        - Greenworks app
+        - Cramer app
+        - Cramer fleet (fleet.cramertools.com) – not supported
+        - Other / Andere
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Versions / Versionen
+      description: Integration version and Home Assistant version / Version der Integration und von Home Assistant
+      placeholder: "e.g. 0.3.0, Home Assistant 2026.10.2"
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened? / Was ist passiert?
+      description: What did you expect, what did you see instead? / Was hast du erwartet, was ist stattdessen passiert?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Log / Protokoll
+      description: Lines from Settings → System → Logs that mention greenworks / Zeilen aus Einstellungen → System → Protokolle mit „greenworks“
+      render: text
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostics / Diagnosedaten
+      description: |
+        Settings → Devices & services → Greenworks → ⋮ → Download diagnostics, then drag the file here.
+        Passwords, email, serial number, position and SIM number are removed automatically.
+        Einstellungen → Geräte & Dienste → Greenworks → ⋮ → Diagnose herunterladen, dann die Datei hierher ziehen.
+        Passwort, E-Mail, Seriennummer, Position und SIM-Nummer werden automatisch entfernt.

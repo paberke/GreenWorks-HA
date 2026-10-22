@@ -577,9 +577,15 @@ class GreenworksClient:
                 timeout=TIMEOUT,
             ) as resp:
                 status = resp.status
-                data = await resp.json(content_type=None)
-        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
+                try:
+                    data = await resp.json(content_type=None)
+                except ValueError:
+                    # z. B. leere Antwort bei 401: trotzdem neu anmelden koennen
+                    data = None
+        except (aiohttp.ClientError, asyncio.TimeoutError) as err:
             raise GreenworksError(f"Anfrage {path} fehlgeschlagen: {err}") from err
+        if status == 200 and data is None:
+            raise GreenworksError(f"Anfrage {path}: Antwort ist kein JSON")
 
         if status in (401, 403) and _retry:
             _LOGGER.debug("Token abgelehnt (HTTP %s), melde neu an", status)

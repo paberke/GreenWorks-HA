@@ -1,0 +1,56 @@
+blueprint:
+  name: Greenworks – notification on mower error
+  description: >-
+    Sends a push notification to your phone as soon as the Greenworks mower reports
+    a new error (e.g. stuck, lifted, too steep). Uses the "Error" event of the
+    Greenworks integration (https://github.com/paberke/GreenWorks-HA).
+    Sendet eine Push-Benachrichtigung aufs Handy, sobald der Greenworks-Mäher einen
+    neuen Fehler meldet (z. B. steckt fest, angehoben, zu steil).
+  domain: automation
+  source_url: https://github.com/paberke/GreenWorks-HA/blob/main/blueprints/automation/greenworks/error_notification.yaml
+  homeassistant:
+    min_version: 2024.10.0
+  input:
+    error_event:
+      name: Error event / Fehler-Ereignis
+      description: The "Error" event of your mower, e.g. event.rasenrobo_fehler
+      selector:
+        entity:
+          filter:
+            - integration: greenworks
+              domain: event
+    notify_device:
+      name: Phone / Handy
+      description: Phone with the Home Assistant app that gets the notification
+      selector:
+        device:
+          filter:
+            - integration: mobile_app
+    title:
+      name: Title / Titel
+      default: "Mower / Rasenmäher"
+      selector:
+        text: {}
+
+triggers:
+  - trigger: state
+    entity_id: !input error_event
+
+conditions:
+  # nur echte neue Fehler, nicht beim Start oder wenn die Entität kurz weg war
+  - condition: template
+    value_template: >-
+      {{ trigger.from_state is not none
+         and trigger.from_state.state != 'unavailable'
+         and trigger.to_state.state not in ['unavailable', 'unknown'] }}
+
+actions:
+  - domain: mobile_app
+    type: notify
+    device_id: !input notify_device
+    title: !input title
+    message: >-
+      {{ state_attr(trigger.entity_id, 'text') }}
+      ({{ state_attr(trigger.entity_id, 'code') }})
+
+mode: queued
