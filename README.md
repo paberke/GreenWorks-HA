@@ -140,7 +140,7 @@ Both notices disappear by themselves as soon as everything works again. If the p
 
 ## Notification on errors
 
-[![Import blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fpaberke%2FGreenWorks-HA%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Fgreenworks%2Ferror_notification.yaml)
+[![Import blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fpaberke%2FGreenWorks-HA%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Fgreenworks%2Fgreenworks_error_notification.yaml)
 
 The blueprint sends a push notification to your phone (Home Assistant app) for every new error of the mower, e.g. *"Too high inclination (13)"*. Import it with the button, then create an automation from it: choose the **Error** event of your mower and your phone.
 

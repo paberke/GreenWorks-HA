@@ -7,7 +7,7 @@ blueprint:
     Sendet eine Push-Benachrichtigung aufs Handy, sobald der Greenworks-Mäher einen
     neuen Fehler meldet (z. B. steckt fest, angehoben, zu steil).
   domain: automation
-  source_url: https://github.com/paberke/GreenWorks-HA/blob/main/blueprints/automation/greenworks/error_notification.yaml
+  source_url: https://github.com/paberke/GreenWorks-HA/blob/main/blueprints/automation/greenworks/greenworks_error_notification.yaml
   homeassistant:
     min_version: 2024.10.0
   input:

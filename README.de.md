@@ -140,7 +140,7 @@ Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Pas
 
 ## Benachrichtigung bei Fehlern
 
-[![Blueprint importieren](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fpaberke%2FGreenWorks-HA%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Fgreenworks%2Ferror_notification.yaml)
+[![Blueprint importieren](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fpaberke%2FGreenWorks-HA%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Fgreenworks%2Fgreenworks_error_notification.yaml)
 
 Der Blueprint schickt bei jedem neuen Fehler des Mähers eine Push-Benachrichtigung aufs Handy (Home-Assistant-App), z. B. *„Zu starke Neigung (13)“*. Mit dem Knopf importieren, dann daraus eine Automation erstellen: das Ereignis **Fehler** deines Mähers und dein Handy auswählen.
 
