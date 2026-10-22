@@ -40,9 +40,10 @@ def cloud(aioclient_mock, *, online=True, datapoints=None, firmware=None):
     # Geraetekennung und volle Version fuer die Update-Pruefung
     dps["25"] = json.dumps({"request": {}, "response": {
         "device_group_no": 100, "sub_device_no": 2, "variant_no": 1}})
-    dps["117"] = json.dumps({"request": {
-        "mower_main_application_major_sw_version": 6, "mower_main_application_minor_sw_version": 65,
-        "mower_main_application_build_no": 1775739325}})
+    if datapoints is None:
+        dps["117"] = json.dumps({"request": {
+            "mower_main_application_major_sw_version": 6, "mower_main_application_minor_sw_version": 65,
+            "mower_main_application_build_no": 1775739325}})
     aioclient_mock.get(f"{BASE_URL}product/{PID}/v_device/{DID}", json=dps)
     if firmware is not None:
         aioclient_mock.post(FW_URL, json=firmware)
@@ -341,3 +342,15 @@ async def test_remove_entry_cleans_issues(hass, aioclient_mock):
     await hass.config_entries.async_remove(entry.entry_id)
     await hass.async_block_till_done()
     assert ir.async_get(hass).async_get_issue(DOMAIN, f"mower_offline_{DID}") is None
+
+
+async def test_software_reported_time(hass, aioclient_mock):
+    """Software-Sensor: Zeitpunkt, zu dem der Maeher die Version selbst gemeldet hat."""
+    dps = copy.deepcopy(DATAPOINTS)
+    dps["117"] = json.dumps({"request": {
+        "mower_main_application_major_sw_version": 6, "mower_main_application_minor_sw_version": 65,
+        "request_time": "2026-10-13T17:53:17.706Z"}})
+    await _setup(hass, aioclient_mock, datapoints=dps)
+    st = hass.states.get(eid(hass, "sensor", "software"))
+    assert st.state == "6.65"
+    assert st.attributes["updated"].startswith("2026-10-13T17:53:17")

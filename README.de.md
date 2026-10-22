@@ -90,7 +90,7 @@ Entität antippen → **⋮** → **Details** → **Attribute**. In Automationen
 | **Letzter Fehlercode** | *Bedeutung* – der Fehler als Klartext |
 | **Letzte Fehlermeldung** | *Klartext*, *Verlauf* (Fehlerliste der App mit Datum), *Verlauf aktualisiert* |
 | **Mähplan** | *Montag* bis *Sonntag* mit den Mähzeiten, *Aktualisiert* |
-| **Software** | *Mähwerk*, *Ladestation* |
+| **Software** | *Mähwerk*, *Ladestation*, *Vom Mäher gemeldet* (wann der Mäher seinen Softwarestand zuletzt selbst geschickt hat) |
 | **Abstand beim Drahtfolgen** | *Leitdraht 1*, *Leitdraht 2*, *Aktualisiert* |
 | **Startpunkte** | *Punkt 1* bis *Punkt 5* (Draht, Entfernung, Anteil der Starts), *Ladestation*, *Aktualisiert* |
 | **Messerwechsel fällig** | *Grenze (h)*, *Verbleibend (h)* |
@@ -179,6 +179,7 @@ cards:
 - **Keine Steuerung:** nur Auslesen. Starten, Parken oder Einstellungen ändern ist über Home Assistant nicht möglich und auch nicht geplant.
 - **Statistik nur beim Öffnen der App aktuell:** Mäh-, Lauf- und Ladezeit schickt der Mäher nur, wenn in der App die Statistik geöffnet wird. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher *mäht*, und schlägt sie auf den letzten echten Wert auf (Attribut *Davon gezählt*). Kommt eine neue echte Statistik, gilt wieder diese.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie, wenn du in der App die jeweilige Seite öffnest (Attribut *Aktualisiert*).
+- **Softwarestand kann von der App abweichen:** Der Sensor **Software** zeigt die Version, die der Mäher selbst regelmäßig meldet. Die App zeigt auf ihrer Seite *Software* teils einen **alten, gespeicherten Stand** (bei unserem Optimow 10 die 6.53 von 2022, obwohl er längst 6.65 hat). Wann der Mäher den Wert zuletzt geschickt hat, steht im Attribut *Vom Mäher gemeldet*.
 - **Letzte Fehlermeldung kann von der Fehlerliste der App abweichen:** Home Assistant zeigt das zuletzt gemeldete Ereignis. Das ist manchmal eine kurze Warnung, die die App nicht auflistet.
 
 ## Du wirst öfter aus der Greenworks-App abgemeldet

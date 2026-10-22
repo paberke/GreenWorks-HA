@@ -344,6 +344,9 @@
           },
           "charging_station": {
             "name": "Charging station"
+          },
+          "updated": {
+            "name": "Reported by the mower"
           }
         }
       },

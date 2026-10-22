@@ -344,6 +344,9 @@
           },
           "charging_station": {
             "name": "Ladestation"
+          },
+          "updated": {
+            "name": "Vom Mäher gemeldet"
           }
         }
       },

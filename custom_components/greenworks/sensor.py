@@ -229,6 +229,8 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         attr_fn=lambda m, lang: {
             "cutting_unit": m.sw_cutting,
             "charging_station": m.sw_charging_station,
+            # Vom Maeher selbst gemeldet - die App zeigt teils einen alten Stand
+            "updated": _iso(m.firmware_time),
         },
     ),
     GreenworksSensorDescription(

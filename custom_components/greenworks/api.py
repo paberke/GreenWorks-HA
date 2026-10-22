@@ -263,6 +263,8 @@ class GreenworksMower:
     sw_charging_station: str | None = None
     # Volle Version (z. B. "6.65.1775739325") und Geraetekennung fuer die Update-Pruefung
     firmware_full: str | None = None
+    # Wann der Maeher seinen Softwarestand zuletzt selbst gemeldet hat
+    firmware_time: datetime | None = None
     device_type: str | None = None
 
     # Nur in Home Assistant: Winterpause eingeschaltet, offline seit
@@ -380,6 +382,7 @@ def build_mower(
         mower.firmware = f"{major}.{minor}"
         build = fw.get("mower_main_application_build_no")
         mower.firmware_full = f"{major}.{minor}.{build}" if build is not None else mower.firmware
+        mower.firmware_time = _dp_time(datapoints.get(DP_FIRMWARE), "request_time", "response_time")
 
     # --- Geraetekennung (Gruppe.Untergeraet.Variante) aus Datenpunkt 25 -------
     ident = _flatten_datapoint(datapoints.get(DP_DEVICE_INFO))

@@ -90,7 +90,7 @@ Tap an entity → **⋮** → **Details** → **Attributes**. In automations and
 | **Last error code** | *Meaning* – the error as plain text |
 | **Last error message** | *Text*, *History* (the app's error list with dates), *History updated* |
 | **Mowing schedule** | *Monday* to *Sunday* with the mowing times, *Updated* |
-| **Software** | *Cutting unit*, *Charging station* |
+| **Software** | *Cutting unit*, *Charging station*, *Reported by the mower* (when the mower last sent its software version itself) |
 | **Follow wire distance** | *Guide wire 1*, *Guide wire 2*, *Updated* |
 | **Starting points** | *Point 1* to *Point 5* (wire, distance, share of starts), *Charging station*, *Updated* |
 | **Blade change due** | *Limit (h)*, *Remaining (h)* |
@@ -179,6 +179,7 @@ cards:
 - **No control:** read-only. Starting, parking or changing settings is not possible from Home Assistant and not planned.
 - **Statistics only update when the app asks for them:** the mower sends cutting, running and charging time only when the statistics are opened in the app. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower is *mowing* and adds them to the last real value (attribute *Counted since last statistics*). When new real statistics arrive, they take over again.
 - **Schedule, error history and settings are only as current as the app:** the cloud updates them when you open the respective page in the app (attribute *Updated*).
+- **Software version may differ from the app:** the **Software** sensor shows the version the mower reports itself regularly. The app's *Software* page sometimes shows an **old, stored value** (on our Optimow 10 version 6.53 from 2022, although it has long been running 6.65). The attribute *Reported by the mower* shows when the mower last sent it.
 - **Last error message may differ from the app's error list:** Home Assistant shows the most recently reported event, which is sometimes a short warning the app does not list.
 
 ## You will often be logged out of the Greenworks app
