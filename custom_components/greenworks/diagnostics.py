@@ -55,13 +55,6 @@ async def async_get_config_entry_diagnostics(
     return {
         "entry": async_redact_data(dict(entry.data), TO_REDACT),
         "options": dict(entry.options),
-        "firmware_check": {
-            "checked": coordinator.firmware_checked.isoformat()
-            if coordinator.firmware_checked
-            else None,
-            "error": coordinator.firmware_error,
-            "result": {str(k): v for k, v in coordinator.firmware_info.items()},
-        },
         "mowers": {
             str(dev_id): _redact_mower(asdict(mower))
             for dev_id, mower in (coordinator.data or {}).items()
@@ -69,4 +62,4 @@ async def async_get_config_entry_diagnostics(
     }
 
 
-# Version 0.3.0
+# Version 0.3.1

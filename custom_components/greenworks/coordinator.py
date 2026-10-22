@@ -75,10 +75,6 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         self._store: Store[dict[str, Any]] = Store(hass, 1, f"{DOMAIN}.counters.{entry.entry_id}")
         self._counters: dict[str, dict[str, Any]] = {}
         self._last_success: datetime | None = None
-        # Ergebnis der Software-Update-Pruefung je Maeher (None = nicht verfuegbar)
-        self.firmware_info: dict[int, dict[str, Any] | None] = {}
-        self.firmware_checked: datetime | None = None
-        self.firmware_error: str | None = None
 
     async def async_load_counters(self) -> None:
         """Gespeicherte Zaehler laden (vor der ersten Abfrage)."""
@@ -200,21 +196,6 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
             else:
                 ir.async_delete_issue(self.hass, DOMAIN, issue_id)
 
-    # --- Software-Update-Pruefung ------------------------------------------------
-
-    async def async_check_firmware(self, *_: Any) -> None:
-        """Wie die App beim Greenworks-Update-Server nachfragen (nur lesen)."""
-        self.firmware_checked = dt_util.utcnow()
-        self.firmware_error = None
-        for dev_id, mower in (self.data or {}).items():
-            try:
-                self.firmware_info[dev_id] = await self.client.async_check_firmware(mower)
-            except Exception as err:  # noqa: BLE001 - darf die Integration nie stoeren
-                _LOGGER.debug("Software-Update-Pruefung fehlgeschlagen: %s", err)
-                self.firmware_error = str(err)
-                self.firmware_info[dev_id] = None
-        self.async_update_listeners()
-
     # --- Abfrage ---------------------------------------------------------------
 
     async def _async_update_data(self) -> dict[int, GreenworksMower]:
@@ -252,4 +233,4 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         return mowers
 
 
-# Version 0.3.0
+# Version 0.3.1

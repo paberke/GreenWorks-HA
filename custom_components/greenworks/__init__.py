@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 import logging
 
 from homeassistant.const import CONF_EMAIL, CONF_PASSWORD, Platform
@@ -10,7 +9,6 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers import issue_registry as ir
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
-from homeassistant.helpers.event import async_track_time_interval
 
 from .api import GreenworksClient
 from .const import (
@@ -18,8 +16,7 @@ from .const import (
     DEFAULT_GROUPS_EXISTING,
     DOMAIN,
     ENTITY_GROUPS,
-    FIRMWARE_CHECK_INTERVAL,
-    GROUP_DIAGNOSTICS,
+    REMOVED_ENTITIES,
 )
 from .coordinator import (
     GreenworksConfigEntry,
@@ -37,7 +34,6 @@ PLATFORMS: list[Platform] = [
     Platform.LAWN_MOWER,
     Platform.SENSOR,
     Platform.SWITCH,
-    Platform.UPDATE,
 ]
 
 
@@ -62,6 +58,10 @@ def _async_sync_groups(hass: HomeAssistant, entry: GreenworksConfigEntry) -> Non
     registry = er.async_get(hass)
     for entity in er.async_entries_for_config_entry(registry, entry.entry_id):
         _, _, key = entity.unique_id.partition("_")
+        if key in REMOVED_ENTITIES:
+            # in 0.3.0 angelegt, ab 0.3.1 entfernt (Software-Update-Anzeige)
+            registry.async_remove(entity.entity_id)
+            continue
         group = ENTITY_GROUPS.get(key)
         if group is None:
             continue
@@ -86,18 +86,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -
     await coordinator.async_config_entry_first_refresh()
     entry.runtime_data = coordinator
     _async_sync_groups(hass, entry)
-
-    # Software-Update-Pruefung nur, wenn die Gruppe "Diagnose" an ist
-    if GROUP_DIAGNOSTICS in enabled_groups(entry):
-        try:
-            await asyncio.wait_for(coordinator.async_check_firmware(), timeout=25)
-        except TimeoutError:
-            _LOGGER.debug("Software-Update-Pruefung dauerte zu lange")
-        entry.async_on_unload(
-            async_track_time_interval(
-                hass, coordinator.async_check_firmware, FIRMWARE_CHECK_INTERVAL
-            )
-        )
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
@@ -124,4 +112,4 @@ async def async_remove_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) 
             ir.async_delete_issue(hass, DOMAIN, issue_id)
 
 
-# Version 0.3.0
+# Version 0.3.1

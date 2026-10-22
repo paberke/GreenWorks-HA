@@ -227,4 +227,4 @@ class GreenworksOptionsFlow(OptionsFlow):
         return self.async_show_form(step_id="init", data_schema=schema)
 
 
-# Version 0.3.0
+# Version 0.3.1

@@ -17,16 +17,12 @@ from custom_components.greenworks.const import (
     CONF_GROUPS,
     CONF_OFFLINE_HOURS,
     DOMAIN,
-    FIRMWARE_URL,
 )
 
 from .test_greenworks import DATAPOINTS, DID, PID, PROPERTIES, UID, mock_cloud
 
-FW_URL = f"{FIRMWARE_URL}api/Update/v2/DeviceSwUpdateLink/RLM2/100.2.1/6.65.1775739325"
-
-
-def cloud(aioclient_mock, *, online=True, datapoints=None, firmware=None):
-    """Cloud nachstellen; firmware=None -> Update-Server antwortet nicht."""
+def cloud(aioclient_mock, *, online=True, datapoints=None):
+    """Cloud nachstellen."""
     aioclient_mock.clear_requests()
     mock_cloud(aioclient_mock)
     aioclient_mock.clear_requests()
@@ -37,16 +33,7 @@ def cloud(aioclient_mock, *, online=True, datapoints=None, firmware=None):
     aioclient_mock.get(f"{BASE_URL}product/{PID}/device/{DID}/property", json=PROPERTIES)
     dps = copy.deepcopy(datapoints or DATAPOINTS)
     dps["online"] = online
-    # Geraetekennung und volle Version fuer die Update-Pruefung
-    dps["25"] = json.dumps({"request": {}, "response": {
-        "device_group_no": 100, "sub_device_no": 2, "variant_no": 1}})
-    if datapoints is None:
-        dps["117"] = json.dumps({"request": {
-            "mower_main_application_major_sw_version": 6, "mower_main_application_minor_sw_version": 65,
-            "mower_main_application_build_no": 1775739325}})
     aioclient_mock.get(f"{BASE_URL}product/{PID}/v_device/{DID}", json=dps)
-    if firmware is not None:
-        aioclient_mock.post(FW_URL, json=firmware)
 
 
 def eid(hass, domain, key):
@@ -302,35 +289,21 @@ async def test_calendar_events(hass, aioclient_mock):
     assert events[1]["end"].startswith("2026-10-20")
 
 
-# --- Software-Update -------------------------------------------------------------------
+# --- Software-Update-Anzeige (0.3.0) wieder entfernt -----------------------------------
 
-async def test_firmware_update_available(hass, aioclient_mock):
-    await _setup(hass, aioclient_mock, firmware={
-        "isNeedUpdate": True, "targetVersion": "6.70.1790000000", "currentVersion": "6.65.1775739325"})
-    st = hass.states.get(eid(hass, "update", "firmware_update"))
-    assert st.state == "on"
-    assert st.attributes["installed_version"] == "6.65.1775739325"
-    assert st.attributes["latest_version"] == "6.70.1790000000"
-    assert st.attributes["release_summary"]
-
-
-async def test_firmware_up_to_date(hass, aioclient_mock):
-    await _setup(hass, aioclient_mock, firmware={"isNeedUpdate": False})
-    assert hass.states.get(eid(hass, "update", "firmware_update")).state == "off"
-
-
-async def test_firmware_server_not_answering(hass, aioclient_mock):
-    """Antwortet der Update-Server nicht, gibt es einfach keinen Update-Eintrag."""
-    entry = await _setup(hass, aioclient_mock)
-    assert entry.state is ConfigEntryState.LOADED
+async def test_old_update_entity_is_removed(hass, aioclient_mock):
+    """Aus 0.3.0 uebrig gebliebener Update-Eintrag wird beim Start entfernt."""
+    entry = MockConfigEntry(domain=DOMAIN, unique_id=str(UID), minor_version=2,
+                            options={CONF_GROUPS: ["diagnostics"]},
+                            data={CONF_EMAIL: "t@e.de", CONF_PASSWORD: "x"})
+    entry.add_to_hass(hass)
+    reg = er.async_get(hass)
+    reg.async_get_or_create("update", DOMAIN, f"{DID}_firmware_update", config_entry=entry)
+    cloud(aioclient_mock)
+    assert await hass.config_entries.async_setup(entry.entry_id)
+    await hass.async_block_till_done()
     assert eid(hass, "update", "firmware_update") is None
-
-
-async def test_firmware_only_with_diagnostics_group(hass, aioclient_mock):
-    await _setup(hass, aioclient_mock, firmware={"isNeedUpdate": False},
-                 options={CONF_GROUPS: []}, minor_version=2)
     assert not any(c[1].host == "gfuapi.globetools.systems" for c in aioclient_mock.mock_calls)
-    assert eid(hass, "update", "firmware_update") is None
 
 
 async def test_remove_entry_cleans_issues(hass, aioclient_mock):

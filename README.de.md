@@ -69,7 +69,7 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 | **Fehler ausführlich** | Letzter Fehlercode, Letzter Fehler (Zeitpunkt), Letzte Fehlermeldung (Klartext, mit der Fehlerliste der App als Attribut), Schwere Fehler |
 | **Statistik** | Mähzeit gesamt, Laufzeit gesamt, Ladezeit gesamt, Statistik-Stand, Letzte Statusmeldung |
 | **Einstellungen aus der App** | Mähplan (z. B. *Mo–Fr 09:00–12:30*), Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regenschutz, Frostschutz – nur Anzeige |
-| **Diagnose** | Software (mit Mähwerk und Ladestation), Signalqualität, Mäher-Software-Update |
+| **Diagnose** | Software (mit Mähwerk und Ladestation), Signalqualität |
 | **Kalender** | Der Mähplan als Kalendertermine („Mähen“) |
 | **Position** | Der Mäher auf der Karte (GPS) |
 
@@ -144,10 +144,6 @@ Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Pas
 
 Der Blueprint schickt bei jedem neuen Fehler des Mähers eine Push-Benachrichtigung aufs Handy (Home-Assistant-App), z. B. *„Zu starke Neigung (13)“*. Mit dem Knopf importieren, dann daraus eine Automation erstellen: das Ereignis **Fehler** deines Mähers und dein Handy auswählen.
 
-## Mäher-Software-Update
-
-*Noch in der Erprobung.* In der Gruppe **Diagnose** fragt die Integration einmal am Tag beim Update-Server von Greenworks nach – dieselbe Frage, die auch die App auf ihrer Seite *Software* stellt. Gibt es neue Software, steht unter Einstellungen *Mäher-Software: Update verfügbar*. **Installiert wird über die Greenworks-App**; Home Assistant hat keinen Installieren-Knopf. Antwortet der Update-Server nicht, gibt es einfach keinen Update-Eintrag.
-
 <details>
 <summary><b>Beispiel für eine Dashboard-Karte</b></summary>
 
@@ -179,6 +175,7 @@ cards:
 - **Keine Steuerung:** nur Auslesen. Starten, Parken oder Einstellungen ändern ist über Home Assistant nicht möglich und auch nicht geplant.
 - **Statistik nur beim Öffnen der App aktuell:** Mäh-, Lauf- und Ladezeit schickt der Mäher nur, wenn in der App die Statistik geöffnet wird. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher *mäht*, und schlägt sie auf den letzten echten Wert auf (Attribut *Davon gezählt*). Kommt eine neue echte Statistik, gilt wieder diese.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie, wenn du in der App die jeweilige Seite öffnest (Attribut *Aktualisiert*).
+- **Keine Anzeige für Software-Updates:** Ob es neue Mäher-Software gibt, zeigt nur die Greenworks-App (Seite *Software*). Ihr Update-Server beantwortet keine Anfragen von außerhalb der App.
 - **Softwarestand kann von der App abweichen:** Der Sensor **Software** zeigt die Version, die der Mäher selbst regelmäßig meldet. Die App zeigt auf ihrer Seite *Software* teils einen **alten, gespeicherten Stand** (bei unserem Optimow 10 die 6.53 von 2022, obwohl er längst 6.65 hat). Wann der Mäher den Wert zuletzt geschickt hat, steht im Attribut *Vom Mäher gemeldet*.
 - **Letzte Fehlermeldung kann von der Fehlerliste der App abweichen:** Home Assistant zeigt das zuletzt gemeldete Ereignis. Das ist manchmal eine kurze Warnung, die die App nicht auflistet.
 

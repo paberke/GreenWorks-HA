@@ -170,4 +170,4 @@ class GreenworksBinarySensor(GreenworksEntity, BinarySensorEntity):
         return {"reason": problem_reason(mower, self.hass.config.language)}
 
 
-# Version 0.3.0
+# Version 0.3.1

@@ -19,7 +19,6 @@ import aiohttp
 from .const import (
     BASE_URL,
     CORP_ID,
-    DP_DEVICE_INFO,
     DP_DRIVE_PAST_WIRE,
     DP_ERROR_HISTORY,
     DP_FIRMWARE,
@@ -27,8 +26,6 @@ from .const import (
     DP_SCHEDULE_WRITE,
     DP_START_POINTS,
     DP_WIRE_CORRIDOR,
-    APPLICATION_KEY,
-    FIRMWARE_URL,
     DP_LAST_ERROR,
     DP_POSITION,
     DP_STATISTICS,
@@ -261,11 +258,8 @@ class GreenworksMower:
     # Softwarestaende weiterer Bauteile
     sw_cutting: str | None = None
     sw_charging_station: str | None = None
-    # Volle Version (z. B. "6.65.1775739325") und Geraetekennung fuer die Update-Pruefung
-    firmware_full: str | None = None
     # Wann der Maeher seinen Softwarestand zuletzt selbst gemeldet hat
     firmware_time: datetime | None = None
-    device_type: str | None = None
 
     # Nur in Home Assistant: Winterpause eingeschaltet, offline seit
     winter_pause: bool = False
@@ -380,15 +374,8 @@ def build_mower(
     minor = fw.get("mower_main_application_minor_sw_version")
     if major is not None and minor is not None:
         mower.firmware = f"{major}.{minor}"
-        build = fw.get("mower_main_application_build_no")
-        mower.firmware_full = f"{major}.{minor}.{build}" if build is not None else mower.firmware
         mower.firmware_time = _dp_time(datapoints.get(DP_FIRMWARE), "request_time", "response_time")
 
-    # --- Geraetekennung (Gruppe.Untergeraet.Variante) aus Datenpunkt 25 -------
-    ident = _flatten_datapoint(datapoints.get(DP_DEVICE_INFO))
-    parts = [ident.get(k) for k in ("device_group_no", "sub_device_no", "variant_no")]
-    if all(p is not None for p in parts):
-        mower.device_type = ".".join(str(p) for p in parts)
 
     # --- Softwarestaende von Maehwerk und Ladestation ---------------------
     for attr, prefix in (("sw_cutting", "mower_cutting"), ("sw_charging_station", "mower_cs")):
@@ -611,55 +598,6 @@ class GreenworksClient:
         devices = data.get("list") if isinstance(data, dict) else None
         return devices if isinstance(devices, list) else []
 
-    async def async_check_firmware(self, mower: GreenworksMower) -> dict[str, Any]:
-        """Beim Update-Server von Greenworks fragen, ob es neue Maeher-Software gibt.
-
-        Gleiche Anfrage wie die App auf ihrer Seite "Software". Es wird nur gelesen,
-        am Maeher aendert sich dadurch nichts.
-        """
-        if not mower.device_type or not mower.firmware_full:
-            raise GreenworksError("Geraetekennung oder Softwarestand unbekannt")
-        await self._async_ensure_token()
-        url = (
-            f"{FIRMWARE_URL}api/Update/v2/DeviceSwUpdateLink/RLM2/"
-            f"{mower.device_type}/{mower.firmware_full}"
-        )
-        body = {
-            "brand": "Greenworks",
-            "deviceIdentifyCode": mower.serial or "",
-            "model": mower.model or "",
-            "region": "eu",
-        }
-        headers = {
-            "ApplicationKey": APPLICATION_KEY,
-            "Brand": "Greenworks",
-            "Access-Token": self._access_token or "",
-            "Xlink-Access-Token": self._access_token or "",
-            "Content-Type": "application/json",
-        }
-        if self.user_id is not None:
-            headers["Xlink-User-Id"] = str(self.user_id)
-        try:
-            async with self._session.post(
-                url, json=body, headers=headers, timeout=TIMEOUT
-            ) as resp:
-                status = resp.status
-                data = await resp.json(content_type=None)
-        except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
-            raise GreenworksError(f"Update-Pruefung nicht moeglich: {err}") from err
-        if status != 200 or not isinstance(data, dict):
-            raise GreenworksError(f"Update-Pruefung: HTTP {status}")
-        # Feldnamen wie in der App; manche Server schreiben sie anders gross
-        lower = {str(k).lower(): v for k, v in data.items()}
-        if "isneedupdate" not in lower:
-            raise GreenworksError(f"Update-Pruefung: unbekannte Antwort {sorted(data)}")
-        return {
-            "need_update": bool(lower.get("isneedupdate")),
-            "current_version": lower.get("currentversion"),
-            "target_version": lower.get("targetversion") or lower.get("downloadversion"),
-            "name": lower.get("name"),
-        }
-
     async def async_get_mowers(self) -> dict[int, GreenworksMower]:
         """Alle Maeher des Kontos mit aktuellen Daten abrufen."""
         result: dict[int, GreenworksMower] = {}
@@ -684,4 +622,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.3.0
+# Version 0.3.1

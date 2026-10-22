@@ -6,14 +6,10 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.3.0"
+VERSION: Final = "0.3.1"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
-# Update-Server der App (nur lesend: "gibt es neue Software?")
-FIRMWARE_URL: Final = "https://gfuapi.globetools.systems/"
-APPLICATION_KEY: Final = "e4bc1f9c-6f1d-4349-b070-917a06dd05d8"
-FIRMWARE_CHECK_INTERVAL: Final = timedelta(hours=24)
 
 UPDATE_INTERVAL: Final = timedelta(seconds=60)
 # So lange werden bei Verbindungsproblemen die letzten Werte weiter angezeigt
@@ -96,11 +92,13 @@ ENTITY_GROUPS: Final[dict[str, str]] = {
     # Diagnose
     "software": GROUP_DIAGNOSTICS,
     "signal_quality": GROUP_DIAGNOSTICS,
-    "firmware_update": GROUP_DIAGNOSTICS,
     # Kalender und Position
     "calendar": GROUP_CALENDAR,
     "position": GROUP_POSITION,
 }
+
+# Entitaeten, die es nicht mehr gibt (werden beim Start aus der Registry entfernt)
+REMOVED_ENTITIES: Final = frozenset({"firmware_update"})
 
 # Hauptzustaende, die als Problem gelten (Fehler, schwerer Fehler, Alarm)
 PROBLEM_STATES: Final = frozenset({8, 9, 11})
@@ -118,7 +116,6 @@ DP_LAST_ERROR: Final = "33"
 DP_POSITION: Final = "34"
 DP_STATISTICS: Final = "48"
 DP_FIRMWARE: Final = "117"
-DP_DEVICE_INFO: Final = "25"
 DP_ERROR_HISTORY: Final = "52"
 DP_SCHEDULE_WRITE: Final = "124"
 DP_SCHEDULE_READ: Final = "125"
@@ -189,4 +186,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.3.0
+# Version 0.3.1

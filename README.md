@@ -69,7 +69,7 @@ The **standard entities** are always created. Everything else is grouped and can
 | **Detailed errors** | Last error code, Last error (time), Last error message (plain text, with the app's error history as attribute), Fatal errors |
 | **Statistics** | Total cutting time, Total running time, Total charging time, Statistics as of, Last status report |
 | **Settings from the app** | Mowing schedule (e.g. *Mon–Fri 09:00–12:30*), Drive past wire distance, Follow wire distance, Starting points, Rain protection, Frost protection – display only |
-| **Diagnostics** | Software (with cutting unit and charging station), Signal quality, Mower software update |
+| **Diagnostics** | Software (with cutting unit and charging station), Signal quality |
 | **Calendar** | The mowing schedule as calendar events ("Mowing") |
 | **Position** | The mower on the map (GPS) |
 
@@ -144,10 +144,6 @@ Both notices disappear by themselves as soon as everything works again. If the p
 
 The blueprint sends a push notification to your phone (Home Assistant app) for every new error of the mower, e.g. *"Too high inclination (13)"*. Import it with the button, then create an automation from it: choose the **Error** event of your mower and your phone.
 
-## Mower software update
-
-*Experimental.* In the **Diagnostics** group, the integration asks the Greenworks update server once a day – the same question the app asks on its *Software* page. If there is new software, Settings shows *Mower software: update available*. **Install it with the Greenworks app**; Home Assistant has no install button. If the update server does not answer, there is simply no update entity.
-
 <details>
 <summary><b>Example dashboard card</b></summary>
 
@@ -179,6 +175,7 @@ cards:
 - **No control:** read-only. Starting, parking or changing settings is not possible from Home Assistant and not planned.
 - **Statistics only update when the app asks for them:** the mower sends cutting, running and charging time only when the statistics are opened in the app. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower is *mowing* and adds them to the last real value (attribute *Counted since last statistics*). When new real statistics arrive, they take over again.
 - **Schedule, error history and settings are only as current as the app:** the cloud updates them when you open the respective page in the app (attribute *Updated*).
+- **No software update notice:** whether there is new mower software is only shown by the Greenworks app (page *Software*). Its update server does not answer requests from outside the app.
 - **Software version may differ from the app:** the **Software** sensor shows the version the mower reports itself regularly. The app's *Software* page sometimes shows an **old, stored value** (on our Optimow 10 version 6.53 from 2022, although it has long been running 6.65). The attribute *Reported by the mower* shows when the mower last sent it.
 - **Last error message may differ from the app's error list:** Home Assistant shows the most recently reported event, which is sometimes a short warning the app does not list.
 

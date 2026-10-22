@@ -471,11 +471,6 @@
       "calendar": {
         "name": "Mowing schedule"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Mower software"
-      }
     }
   },
   "options": {
@@ -499,7 +494,7 @@
         "errors_detailed": "Detailed errors (error code, last error, error message with history, fatal errors)",
         "statistics": "Statistics (mowing, running and charging time, statistics date, last status message)",
         "app_settings": "Settings from the app (schedule, drive past wire, wire distance, start points, rain and frost guard)",
-        "diagnostics": "Diagnostics (software, signal quality, software update)",
+        "diagnostics": "Diagnostics (software, signal quality)",
         "calendar": "Calendar (mowing schedule as calendar events)",
         "position": "Position (mower on the map)"
       }

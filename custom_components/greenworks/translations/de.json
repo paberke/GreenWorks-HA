@@ -471,11 +471,6 @@
       "calendar": {
         "name": "Mähplan"
       }
-    },
-    "update": {
-      "firmware_update": {
-        "name": "Mäher-Software"
-      }
     }
   },
   "options": {
@@ -499,7 +494,7 @@
         "errors_detailed": "Fehler ausführlich (Fehlercode, letzter Fehler, Fehlermeldung mit Verlauf, schwere Fehler)",
         "statistics": "Statistik (Mäh-, Lauf- und Ladezeit, Statistik-Stand, letzte Statusmeldung)",
         "app_settings": "Einstellungen aus der App (Mähplan, Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regen- und Frostschutz)",
-        "diagnostics": "Diagnose (Software, Signalqualität, Software-Update)",
+        "diagnostics": "Diagnose (Software, Signalqualität)",
         "calendar": "Kalender (Mähplan als Kalendertermine)",
         "position": "Position (Mäher auf der Karte)"
       }
