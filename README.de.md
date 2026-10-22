@@ -56,7 +56,7 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 | **Nächster Start** / **Mähende** | Wann der Mäher das nächste Mal losfährt / wann das aktuelle Mähfenster endet |
 | **Online** | Ob der Mäher mit der Cloud verbunden ist |
 | **Problem** | *Problem* oder *OK*. Das Attribut *Grund* sagt, warum, z. B. *Zu starke Neigung (Fehler 13)*, *Offline* oder *Winterpause* |
-| **Fehler** (Ereignis) | Löst bei jedem neuen Fehler einmal aus, mit Code, Text und Uhrzeit – ideal für Benachrichtigungen ([Blueprint](#benachrichtigung-bei-fehlern)) |
+| **Fehler** (Ereignis) | Löst bei jedem neuen Fehler einmal aus, mit Code, Text und Uhrzeit – ideal für Automationen mit Benachrichtigung |
 | **Winterpause** (Schalter) | Siehe [Winterpause](#winterpause) |
 | **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App (gleiche Rechnung wie die App) |
 | **Messerwechsel fällig** | *Fällig*, sobald die Messer-Laufzeit die Grenze erreicht (Standard 150 h) |
@@ -137,12 +137,6 @@ Unter Einstellungen → System → **Reparaturen** erscheint ein Hinweis, wenn
 - die **Greenworks-Cloud** so lange nicht erreichbar ist.
 
 Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Passwort nicht mehr angenommen, fragt Home Assistant wie gewohnt danach (*Neu authentifizieren*).
-
-## Benachrichtigung bei Fehlern
-
-[![Blueprint importieren](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fpaberke%2FGreenWorks-HA%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Fgreenworks%2Fgreenworks_error_notification.yaml)
-
-Der Blueprint schickt bei jedem neuen Fehler des Mähers eine Push-Benachrichtigung aufs Handy (Home-Assistant-App), z. B. *„Zu starke Neigung (13)“*. Mit dem Knopf importieren, dann daraus eine Automation erstellen: das Ereignis **Fehler** deines Mähers und dein Handy auswählen.
 
 <details>
 <summary><b>Beispiel für eine Dashboard-Karte</b></summary>

@@ -56,7 +56,7 @@ The **standard entities** are always created. Everything else is grouped and can
 | **Next start** / **Mowing end** | When the mower starts next / when the current mowing window ends |
 | **Online** | Whether the mower is connected to the cloud |
 | **Problem** | *Problem* or *OK*. The attribute *Reason* says why, e.g. *Too high inclination (error 13)*, *Offline* or *Winter pause* |
-| **Error** (event) | Fires once for every new error, with code, text and time – ideal for notifications ([blueprint](#notification-on-errors)) |
+| **Error** (event) | Fires once for every new error, with code, text and time – ideal for notification automations |
 | **Winter pause** (switch) | See [Winter pause](#winter-pause) |
 | **Blade time** | Mowing hours since the blade time was last reset in the app (same as the app) |
 | **Blade change due** | *Due* when the blade time reaches the limit (default 150 h) |
@@ -137,12 +137,6 @@ Under Settings → System → **Repairs** a notice appears when
 - the **Greenworks cloud** has not been reachable for that long.
 
 Both notices disappear by themselves as soon as everything works again. If the password is no longer accepted, Home Assistant asks for it again as usual (*Re-authenticate*).
-
-## Notification on errors
-
-[![Import blueprint](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https%3A%2F%2Fgithub.com%2Fpaberke%2FGreenWorks-HA%2Fblob%2Fmain%2Fblueprints%2Fautomation%2Fgreenworks%2Fgreenworks_error_notification.yaml)
-
-The blueprint sends a push notification to your phone (Home Assistant app) for every new error of the mower, e.g. *"Too high inclination (13)"*. Import it with the button, then create an automation from it: choose the **Error** event of your mower and your phone.
 
 <details>
 <summary><b>Example dashboard card</b></summary>
