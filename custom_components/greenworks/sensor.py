@@ -22,12 +22,15 @@ from .const import (
     MOWING_STATES,
     STATUS_OFFLINE,
     STATUS_OPTIONS,
+    STATUS_WINTER_PAUSE,
     error_key,
     status_key,
 )
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 from .error_texts import error_text
+
+PARALLEL_UPDATES = 0
 
 
 def _hours(seconds: int | None) -> float | None:
@@ -164,8 +167,8 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         translation_key="status",
         device_class=SensorDeviceClass.ENUM,
         options=STATUS_OPTIONS,
-        # Maeher offline -> "Offline"; der Zustand davor steht im Attribut
-        value_fn=lambda m: STATUS_OFFLINE
+        # Maeher offline -> "Offline" (bzw. "Winterpause"); der Zustand davor steht im Attribut
+        value_fn=lambda m: (STATUS_WINTER_PAUSE if m.winter_pause else STATUS_OFFLINE)
         if m.online is False
         else status_key(m.state_code, m.park_reason),
         attr_fn=lambda m, lang: {"last_status": status_key(m.state_code, m.park_reason)}
@@ -364,4 +367,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.2.14
+# Version 0.3.0

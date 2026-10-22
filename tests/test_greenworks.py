@@ -64,6 +64,9 @@ async def test_config_flow_ok(hass, aioclient_mock):
     assert result["type"] == "form"
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], {CONF_EMAIL: "test@example.de", CONF_PASSWORD: "geheim"})
+    # Schritt 2: Gruppen (ab 0.3.0)
+    assert result["type"] == "form" and result["step_id"] == "groups", result
+    result = await hass.config_entries.flow.async_configure(result["flow_id"], {})
     assert result["type"] == "create_entry", result
     await hass.async_block_till_done()
     entry = hass.config_entries.async_entries(DOMAIN)[0]

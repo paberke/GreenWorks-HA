@@ -33,6 +33,9 @@ ACTIVITY_MAP: dict[int, LawnMowerActivity] = {
 }
 
 
+PARALLEL_UPDATES = 0
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: GreenworksConfigEntry,
@@ -79,4 +82,4 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         }
 
 
-# Version 0.2.14
+# Version 0.3.0

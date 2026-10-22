@@ -15,9 +15,40 @@ from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 
 from .api import GreenworksMower
-from .const import CONF_BLADE_LIMIT, DEFAULT_BLADE_LIMIT
+from .const import CONF_BLADE_LIMIT, DEFAULT_BLADE_LIMIT, PROBLEM_STATES, status_key
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
+from .error_texts import error_text
+
+PARALLEL_UPDATES = 0
+
+_REASONS = {
+    "de": {"offline": "Offline", "winter_pause": "Winterpause", "error": "Fehler", "fatal": "Schwerer Fehler", "alarm": "Alarm"},
+    "en": {"offline": "Offline", "winter_pause": "Winter pause", "error": "Error", "fatal": "Fatal error", "alarm": "Alarm"},
+}
+
+
+def _has_problem(m: GreenworksMower) -> bool | None:
+    """Problem = offline (ausser in der Winterpause) oder Fehler/Alarm."""
+    if m.online is False:
+        return not m.winter_pause
+    if m.state_code is None:
+        return None
+    return m.state_code in PROBLEM_STATES
+
+
+def problem_reason(m: GreenworksMower, lang: str | None) -> str | None:
+    """Kurzer Grund fuer den Problem-Sensor, z. B. 'Zu starke Neigung (Fehler 13)'."""
+    de = (lang or "").startswith("de")
+    texts = _REASONS["de" if de else "en"]
+    if m.online is False:
+        return texts["winter_pause"] if m.winter_pause else texts["offline"]
+    if m.state_code not in PROBLEM_STATES:
+        return texts["winter_pause"] if m.winter_pause else None
+    code = m.last_error_code
+    if code:
+        return f"{error_text(code, lang)} ({'Fehler' if de else 'error'} {code})"
+    return texts[{8: "error", 9: "fatal", 11: "alarm"}[m.state_code]]
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -26,6 +57,19 @@ class GreenworksBinaryDescription(BinarySensorEntityDescription):
 
 
 BINARY_SENSORS: tuple[GreenworksBinaryDescription, ...] = (
+    GreenworksBinaryDescription(
+        key="problem",
+        translation_key="problem",
+        device_class=BinarySensorDeviceClass.PROBLEM,
+        value_fn=_has_problem,
+    ),
+    GreenworksBinaryDescription(
+        key="charging",
+        device_class=BinarySensorDeviceClass.BATTERY_CHARGING,
+        value_fn=lambda m: None
+        if m.state_code is None
+        else m.online is not False and status_key(m.state_code, m.park_reason) == "charging",
+    ),
     GreenworksBinaryDescription(
         key="online",
         translation_key="online",
@@ -117,5 +161,12 @@ class GreenworksBinarySensor(GreenworksEntity, BinarySensorEntity):
         mower = self.mower
         return None if mower is None else self.entity_description.value_fn(mower)
 
+    @property
+    def extra_state_attributes(self) -> dict[str, Any] | None:
+        mower = self.mower
+        if mower is None or self.entity_description.key != "problem":
+            return None
+        return {"reason": problem_reason(mower, self.hass.config.language)}
 
-# Version 0.2.14
+
+# Version 0.3.0

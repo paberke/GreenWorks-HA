@@ -15,6 +15,13 @@
         "data": {
           "password": "Password"
         }
+      },
+      "groups": {
+        "title": "What should be shown?",
+        "description": "The standard entities are always created: mower, status, battery, next start, mowing end, online, problem, charging, error event, winter pause, blade runtime and blade change due. Tick what you want to see in addition. You can change this later with “Configure”; switched-off entities are only disabled, not deleted.",
+        "data": {
+          "groups": "Additional entities"
+        }
       }
     },
     "error": {
@@ -54,7 +61,8 @@
           "parked_by_frost_guard": "Parked by frost guard",
           "energy_saving": "Energy-saving mode",
           "unknown": "Unknown",
-          "offline": "Offline"
+          "offline": "Offline",
+          "winter_pause": "Winter pause"
         },
         "state_attributes": {
           "last_status": {
@@ -412,11 +420,55 @@
             "name": "Remaining (h)"
           }
         }
+      },
+      "problem": {
+        "name": "Problem",
+        "state_attributes": {
+          "reason": {
+            "name": "Reason"
+          }
+        }
       }
     },
     "device_tracker": {
       "position": {
         "name": "Position"
+      }
+    },
+    "switch": {
+      "winter_pause": {
+        "name": "Winter pause"
+      }
+    },
+    "event": {
+      "error": {
+        "name": "Error",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "error": "New error"
+            }
+          },
+          "code": {
+            "name": "Error code"
+          },
+          "text": {
+            "name": "Text"
+          },
+          "time": {
+            "name": "Time"
+          }
+        }
+      }
+    },
+    "calendar": {
+      "calendar": {
+        "name": "Mowing schedule"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Mower software"
       }
     }
   },
@@ -424,13 +476,45 @@
     "step": {
       "init": {
         "title": "Settings",
-        "description": "How often Home Assistant asks the Greenworks cloud, how long the last values are kept during short connection drops, and after how many mowing hours a blade change is due.",
+        "description": "Which entities are shown and how the integration works. Switched-off entities are disabled, not deleted, so their entity IDs stay the same.",
         "data": {
+          "groups": "Additional entities",
           "scan_interval": "Update interval (30–600 seconds)",
           "outage_grace": "Keep last values during drops (1–60 minutes)",
-          "blade_limit": "Blade change after (0 = off, 0–1000 hours)"
+          "blade_limit": "Blade change after (0 = off, 0–1000 hours)",
+          "offline_hours": "Repair notice when offline for (0 = off, 0–72 hours)"
         }
       }
+    }
+  },
+  "selector": {
+    "groups": {
+      "options": {
+        "errors_detailed": "Detailed errors (error code, last error, error message with history, fatal errors)",
+        "statistics": "Statistics (mowing, running and charging time, statistics date, last status message)",
+        "app_settings": "Settings from the app (schedule, drive past wire, wire distance, start points, rain and frost guard)",
+        "diagnostics": "Diagnostics (software, signal quality, software update)",
+        "calendar": "Calendar (mowing schedule as calendar events)",
+        "position": "Position (mower on the map)"
+      }
+    }
+  },
+  "issues": {
+    "mower_offline": {
+      "title": "{name} is offline",
+      "description": "The mower {name} has been offline for more than {hours} hour(s). Check the mower (switched on? stuck? mobile signal?). The notice disappears by itself as soon as the mower is back online. In winter, switch on “Winter pause” to suppress this notice."
+    },
+    "cloud_unreachable": {
+      "title": "Greenworks cloud not reachable",
+      "description": "The Greenworks cloud has not been reachable for more than {hours} hour(s). Check your internet connection. The notice disappears by itself as soon as the cloud answers again."
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "The Greenworks cloud rejected the password. Please re-authenticate."
+    },
+    "cloud_unreachable": {
+      "message": "Greenworks cloud not reachable: {error}"
     }
   }
 }

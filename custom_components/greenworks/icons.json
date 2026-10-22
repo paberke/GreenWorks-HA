@@ -3,6 +3,27 @@
     "binary_sensor": {
       "blade_change_due": {
         "default": "mdi:saw-blade"
+      },
+      "problem": {
+        "default": "mdi:robot-mower-outline"
+      }
+    },
+    "switch": {
+      "winter_pause": {
+        "default": "mdi:snowflake",
+        "state": {
+          "off": "mdi:snowflake-off"
+        }
+      }
+    },
+    "event": {
+      "error": {
+        "default": "mdi:alert-circle-outline"
+      }
+    },
+    "calendar": {
+      "calendar": {
+        "default": "mdi:calendar-clock"
       }
     }
   }

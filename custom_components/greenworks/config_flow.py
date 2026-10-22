@@ -21,6 +21,9 @@ from homeassistant.helpers.selector import (
     NumberSelector,
     NumberSelectorConfig,
     NumberSelectorMode,
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
 )
 
 from .api import (
@@ -32,11 +35,18 @@ from .api import (
 from .const import (
     BLADE_LIMIT_RANGE,
     CONF_BLADE_LIMIT,
+    CONF_GROUPS,
+    CONF_OFFLINE_HOURS,
     CONF_OUTAGE_GRACE,
     DEFAULT_BLADE_LIMIT,
+    DEFAULT_GROUPS_EXISTING,
+    DEFAULT_GROUPS_NEW,
+    DEFAULT_OFFLINE_HOURS,
     DEFAULT_OUTAGE_GRACE,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    OFFLINE_HOURS_RANGE,
+    OPTIONAL_GROUPS,
     OUTAGE_GRACE_RANGE,
     SCAN_INTERVAL_RANGE,
 )
@@ -52,6 +62,12 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
     """Konfigurationsablauf fuer Greenworks."""
 
     VERSION = 1
+    # 1.2: Gruppen in den Optionen (ab 0.3.0)
+    MINOR_VERSION = 2
+
+    def __init__(self) -> None:
+        self._data: dict[str, Any] = {}
+        self._title = ""
 
     @staticmethod
     @callback
@@ -96,15 +112,29 @@ class GreenworksConfigFlow(ConfigFlow, domain=DOMAIN):
             if not errors:
                 await self.async_set_unique_id(str(user_id))
                 self._abort_if_unique_id_configured()
-                return self.async_create_entry(
-                    title=f"Greenworks ({email})",
-                    data={CONF_EMAIL: email, CONF_PASSWORD: user_input[CONF_PASSWORD]},
-                )
+                self._title = f"Greenworks ({email})"
+                self._data = {CONF_EMAIL: email, CONF_PASSWORD: user_input[CONF_PASSWORD]}
+                return await self.async_step_groups()
         return self.async_show_form(
             step_id="user",
             data_schema=self.add_suggested_values_to_schema(USER_SCHEMA, user_input),
             errors=errors,
         )
+
+    async def async_step_groups(
+        self, user_input: dict[str, Any] | None = None
+    ) -> ConfigFlowResult:
+        """Schritt 2: Was soll angezeigt werden? (Standard ist immer dabei)"""
+        if user_input is not None:
+            return self.async_create_entry(
+                title=self._title,
+                data=self._data,
+                options={CONF_GROUPS: list(user_input.get(CONF_GROUPS, []))},
+            )
+        schema = vol.Schema(
+            {vol.Optional(CONF_GROUPS, default=list(DEFAULT_GROUPS_NEW)): _groups_selector()}
+        )
+        return self.async_show_form(step_id="groups", data_schema=schema)
 
     async def async_step_reauth(
         self, entry_data: Mapping[str, Any]
@@ -145,6 +175,18 @@ def _number(minimum: int, maximum: int, unit: str) -> NumberSelector:
     )
 
 
+def _groups_selector() -> SelectSelector:
+    """Auswahl der Gruppen als Liste mit Haken."""
+    return SelectSelector(
+        SelectSelectorConfig(
+            options=list(OPTIONAL_GROUPS),
+            multiple=True,
+            mode=SelectSelectorMode.LIST,
+            translation_key="groups",
+        )
+    )
+
+
 class GreenworksOptionsFlow(OptionsFlow):
     """Einstellungen der Integration (Knopf "Konfigurieren")."""
 
@@ -152,12 +194,18 @@ class GreenworksOptionsFlow(OptionsFlow):
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         if user_input is not None:
-            return self.async_create_entry(
-                data={key: int(value) for key, value in user_input.items()}
-            )
+            data: dict[str, Any] = {
+                key: int(value) for key, value in user_input.items() if key != CONF_GROUPS
+            }
+            data[CONF_GROUPS] = list(user_input.get(CONF_GROUPS, []))
+            return self.async_create_entry(data=data)
         options = self.config_entry.options
         schema = vol.Schema(
             {
+                vol.Optional(
+                    CONF_GROUPS,
+                    default=list(options.get(CONF_GROUPS, DEFAULT_GROUPS_EXISTING)),
+                ): _groups_selector(),
                 vol.Required(
                     CONF_SCAN_INTERVAL,
                     default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
@@ -170,9 +218,13 @@ class GreenworksOptionsFlow(OptionsFlow):
                     CONF_BLADE_LIMIT,
                     default=options.get(CONF_BLADE_LIMIT, DEFAULT_BLADE_LIMIT),
                 ): _number(*BLADE_LIMIT_RANGE, "h"),
+                vol.Required(
+                    CONF_OFFLINE_HOURS,
+                    default=options.get(CONF_OFFLINE_HOURS, DEFAULT_OFFLINE_HOURS),
+                ): _number(*OFFLINE_HOURS_RANGE, "h"),
             }
         )
         return self.async_show_form(step_id="init", data_schema=schema)
 
 
-# Version 0.2.14
+# Version 0.3.0

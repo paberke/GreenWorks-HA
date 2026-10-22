@@ -9,6 +9,9 @@ from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 
 
+PARALLEL_UPDATES = 0
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: GreenworksConfigEntry,
@@ -24,7 +27,6 @@ class GreenworksTracker(GreenworksEntity, TrackerEntity):
     """Position des Maehers fuer die Karte."""
 
     _attr_translation_key = "position"
-    _attr_entity_registry_enabled_default = False
     _attr_source_type = SourceType.GPS
 
     def __init__(self, coordinator: GreenworksCoordinator, device_id: int) -> None:
@@ -46,4 +48,4 @@ class GreenworksTracker(GreenworksEntity, TrackerEntity):
         return (mower.gps_accuracy if mower else None) or 0
 
 
-# Version 0.2.14
+# Version 0.3.0

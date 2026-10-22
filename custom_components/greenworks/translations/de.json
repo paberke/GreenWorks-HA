@@ -15,6 +15,13 @@
         "data": {
           "password": "Passwort"
         }
+      },
+      "groups": {
+        "title": "Was möchtest du anzeigen?",
+        "description": "Die Standard-Entitäten werden immer angelegt: Mäher, Status, Batterie, Nächster Start, Mähende, Online, Problem, Lädt, Fehler-Ereignis, Winterpause, Messer-Laufzeit und Messerwechsel fällig. Hake an, was du zusätzlich sehen möchtest. Das kannst du später unter „Konfigurieren“ ändern; ausgeschaltete Entitäten werden nur deaktiviert, nicht gelöscht.",
+        "data": {
+          "groups": "Zusätzliche Entitäten"
+        }
       }
     },
     "error": {
@@ -54,7 +61,8 @@
           "parked_by_frost_guard": "Vom Frostschutz geparkt",
           "energy_saving": "Energiesparmodus",
           "unknown": "Unbekannt",
-          "offline": "Offline"
+          "offline": "Offline",
+          "winter_pause": "Winterpause"
         },
         "state_attributes": {
           "last_status": {
@@ -412,11 +420,55 @@
             "name": "Verbleibend (h)"
           }
         }
+      },
+      "problem": {
+        "name": "Problem",
+        "state_attributes": {
+          "reason": {
+            "name": "Grund"
+          }
+        }
       }
     },
     "device_tracker": {
       "position": {
         "name": "Position"
+      }
+    },
+    "switch": {
+      "winter_pause": {
+        "name": "Winterpause"
+      }
+    },
+    "event": {
+      "error": {
+        "name": "Fehler",
+        "state_attributes": {
+          "event_type": {
+            "state": {
+              "error": "Neuer Fehler"
+            }
+          },
+          "code": {
+            "name": "Fehlercode"
+          },
+          "text": {
+            "name": "Text"
+          },
+          "time": {
+            "name": "Uhrzeit"
+          }
+        }
+      }
+    },
+    "calendar": {
+      "calendar": {
+        "name": "Mähplan"
+      }
+    },
+    "update": {
+      "firmware_update": {
+        "name": "Mäher-Software"
       }
     }
   },
@@ -424,13 +476,45 @@
     "step": {
       "init": {
         "title": "Einstellungen",
-        "description": "Wie oft Home Assistant bei der Greenworks-Cloud nachfragt, wie lange bei kurzen Verbindungsaussetzern die letzten Werte stehen bleiben und nach wie vielen Mähstunden ein Messerwechsel fällig ist.",
+        "description": "Welche Entitäten angezeigt werden und wie die Integration arbeitet. Ausgeschaltete Entitäten werden deaktiviert, nicht gelöscht – ihre Entity-IDs bleiben gleich.",
         "data": {
+          "groups": "Zusätzliche Entitäten",
           "scan_interval": "Abfrage-Intervall (30–600 Sekunden)",
           "outage_grace": "Letzte Werte bei Aussetzern behalten (1–60 Minuten)",
-          "blade_limit": "Messerwechsel nach (0 = aus, 0–1000 Stunden)"
+          "blade_limit": "Messerwechsel nach (0 = aus, 0–1000 Stunden)",
+          "offline_hours": "Hinweis unter Reparaturen, wenn offline seit (0 = aus, 0–72 Stunden)"
         }
       }
+    }
+  },
+  "selector": {
+    "groups": {
+      "options": {
+        "errors_detailed": "Fehler ausführlich (Fehlercode, letzter Fehler, Fehlermeldung mit Verlauf, schwere Fehler)",
+        "statistics": "Statistik (Mäh-, Lauf- und Ladezeit, Statistik-Stand, letzte Statusmeldung)",
+        "app_settings": "Einstellungen aus der App (Mähplan, Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regen- und Frostschutz)",
+        "diagnostics": "Diagnose (Software, Signalqualität, Software-Update)",
+        "calendar": "Kalender (Mähplan als Kalendertermine)",
+        "position": "Position (Mäher auf der Karte)"
+      }
+    }
+  },
+  "issues": {
+    "mower_offline": {
+      "title": "{name} ist offline",
+      "description": "Der Mäher {name} ist seit mehr als {hours} Stunde(n) offline. Bitte den Mäher prüfen (eingeschaltet? festgefahren? Mobilfunkempfang?). Der Hinweis verschwindet von selbst, sobald der Mäher wieder online ist. Im Winter „Winterpause“ einschalten, dann erscheint dieser Hinweis nicht."
+    },
+    "cloud_unreachable": {
+      "title": "Greenworks-Cloud nicht erreichbar",
+      "description": "Die Greenworks-Cloud ist seit mehr als {hours} Stunde(n) nicht erreichbar. Bitte die Internetverbindung prüfen. Der Hinweis verschwindet von selbst, sobald die Cloud wieder antwortet."
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "Die Greenworks-Cloud hat das Passwort abgelehnt. Bitte neu anmelden."
+    },
+    "cloud_unreachable": {
+      "message": "Greenworks-Cloud nicht erreichbar: {error}"
     }
   }
 }

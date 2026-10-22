@@ -13,8 +13,8 @@ except ImportError:  # aeltere Versionen
     )
 
 from .api import GreenworksMower
-from .const import DOMAIN
-from .coordinator import GreenworksCoordinator
+from .const import DOMAIN, ENTITY_GROUPS, GROUP_STANDARD
+from .coordinator import GreenworksCoordinator, enabled_groups
 
 
 class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
@@ -26,6 +26,11 @@ class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
         super().__init__(coordinator)
         self._device_id = device_id
         self._attr_unique_id = f"{device_id}_{key}"
+        # Neue Entitaeten nur aktivieren, wenn ihre Gruppe eingeschaltet ist
+        group = ENTITY_GROUPS.get(key, GROUP_STANDARD)
+        self._attr_entity_registry_enabled_default = group in enabled_groups(
+            coordinator.config_entry
+        )
         mower = self.mower
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, str(device_id))},
@@ -45,4 +50,4 @@ class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
         return super().available and self.mower is not None
 
 
-# Version 0.2.14
+# Version 0.3.0

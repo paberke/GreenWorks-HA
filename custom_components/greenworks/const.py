@@ -6,10 +6,14 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.2.14"
+VERSION: Final = "0.3.0"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
+# Update-Server der App (nur lesend: "gibt es neue Software?")
+FIRMWARE_URL: Final = "https://gfuapi.globetools.systems/"
+APPLICATION_KEY: Final = "e4bc1f9c-6f1d-4349-b070-917a06dd05d8"
+FIRMWARE_CHECK_INTERVAL: Final = timedelta(hours=24)
 
 UPDATE_INTERVAL: Final = timedelta(seconds=60)
 # So lange werden bei Verbindungsproblemen die letzten Werte weiter angezeigt
@@ -24,6 +28,82 @@ OUTAGE_GRACE_RANGE: Final = (1, 60)
 CONF_BLADE_LIMIT: Final = "blade_limit"  # Stunden, 0 = Erinnerung aus
 DEFAULT_BLADE_LIMIT: Final = 150
 BLADE_LIMIT_RANGE: Final = (0, 1000)
+CONF_OFFLINE_HOURS: Final = "offline_hours"  # Stunden, 0 = Hinweis aus
+DEFAULT_OFFLINE_HOURS: Final = 1
+OFFLINE_HOURS_RANGE: Final = (0, 72)
+
+# Gruppen von Entitaeten, die man ein- und ausschalten kann (Standard ist immer an)
+CONF_GROUPS: Final = "groups"
+GROUP_STANDARD: Final = "standard"
+GROUP_ERRORS: Final = "errors_detailed"
+GROUP_STATISTICS: Final = "statistics"
+GROUP_APP_SETTINGS: Final = "app_settings"
+GROUP_DIAGNOSTICS: Final = "diagnostics"
+GROUP_CALENDAR: Final = "calendar"
+GROUP_POSITION: Final = "position"
+OPTIONAL_GROUPS: Final = (
+    GROUP_ERRORS,
+    GROUP_STATISTICS,
+    GROUP_APP_SETTINGS,
+    GROUP_DIAGNOSTICS,
+    GROUP_CALENDAR,
+    GROUP_POSITION,
+)
+# Neue Einrichtung: nur Standard
+DEFAULT_GROUPS_NEW: Final[list[str]] = []
+# Bestehende Einrichtung (vor 0.3.0): alles wie bisher, Kalender neu und aus,
+# Position war schon immer standardmaessig aus
+DEFAULT_GROUPS_EXISTING: Final[list[str]] = [
+    GROUP_ERRORS,
+    GROUP_STATISTICS,
+    GROUP_APP_SETTINGS,
+    GROUP_DIAGNOSTICS,
+]
+
+# Welche Entitaet (Schluessel in der unique_id) gehoert zu welcher Gruppe
+ENTITY_GROUPS: Final[dict[str, str]] = {
+    # Standard
+    "mower": GROUP_STANDARD,
+    "status": GROUP_STANDARD,
+    "battery": GROUP_STANDARD,
+    "next_start": GROUP_STANDARD,
+    "mowing_end": GROUP_STANDARD,
+    "online": GROUP_STANDARD,
+    "problem": GROUP_STANDARD,
+    "charging": GROUP_STANDARD,
+    "error": GROUP_STANDARD,
+    "winter_pause": GROUP_STANDARD,
+    "blade_time": GROUP_STANDARD,
+    "blade_change_due": GROUP_STANDARD,
+    # Fehler ausfuehrlich
+    "last_error": GROUP_ERRORS,
+    "last_error_text": GROUP_ERRORS,
+    "last_error_time": GROUP_ERRORS,
+    "fatal_errors": GROUP_ERRORS,
+    # Statistik
+    "cutting_time": GROUP_STATISTICS,
+    "running_time": GROUP_STATISTICS,
+    "charging_time": GROUP_STATISTICS,
+    "statistics_time": GROUP_STATISTICS,
+    "status_time": GROUP_STATISTICS,
+    # Einstellungen aus der App
+    "schedule": GROUP_APP_SETTINGS,
+    "drive_past_wire": GROUP_APP_SETTINGS,
+    "wire_distance": GROUP_APP_SETTINGS,
+    "start_points": GROUP_APP_SETTINGS,
+    "rain_sensor": GROUP_APP_SETTINGS,
+    "frost_sensor": GROUP_APP_SETTINGS,
+    # Diagnose
+    "software": GROUP_DIAGNOSTICS,
+    "signal_quality": GROUP_DIAGNOSTICS,
+    "firmware_update": GROUP_DIAGNOSTICS,
+    # Kalender und Position
+    "calendar": GROUP_CALENDAR,
+    "position": GROUP_POSITION,
+}
+
+# Hauptzustaende, die als Problem gelten (Fehler, schwerer Fehler, Alarm)
+PROBLEM_STATES: Final = frozenset({8, 9, 11})
 
 # Zustaende, in denen die Maehzeit mitgezaehlt wird (Maehen, Nebenflaeche)
 COUNTED_STATES: Final = frozenset({4, 12})
@@ -38,6 +118,7 @@ DP_LAST_ERROR: Final = "33"
 DP_POSITION: Final = "34"
 DP_STATISTICS: Final = "48"
 DP_FIRMWARE: Final = "117"
+DP_DEVICE_INFO: Final = "25"
 DP_ERROR_HISTORY: Final = "52"
 DP_SCHEDULE_WRITE: Final = "124"
 DP_SCHEDULE_READ: Final = "125"
@@ -74,13 +155,14 @@ PARK_REASONS: Final[dict[int, str]] = {
     7: "energy_saving",
 }
 
-# Eigener Zustand, wenn der Maeher nicht mit der Cloud verbunden ist
+# Eigene Zustaende: Maeher nicht mit der Cloud verbunden / Winterpause eingeschaltet
 STATUS_OFFLINE: Final = "offline"
+STATUS_WINTER_PAUSE: Final = "winter_pause"
 
 LAST_STATUS_OPTIONS: Final = sorted(
     {*MOWER_STATES.values(), *PARK_REASONS.values(), "unknown"}
 )
-STATUS_OPTIONS: Final = sorted({*LAST_STATUS_OPTIONS, STATUS_OFFLINE})
+STATUS_OPTIONS: Final = sorted({*LAST_STATUS_OPTIONS, STATUS_OFFLINE, STATUS_WINTER_PAUSE})
 
 
 def status_key(state: int | None, park_reason: int | None) -> str | None:
@@ -107,4 +189,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.2.14
+# Version 0.3.0
