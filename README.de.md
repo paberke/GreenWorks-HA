@@ -1,5 +1,12 @@
 # Greenworks für Home Assistant
 
+[![Release](https://img.shields.io/github/v/release/paberke/GreenWorks-HA)](https://github.com/paberke/GreenWorks-HA/releases)
+[![Tests](https://github.com/paberke/GreenWorks-HA/actions/workflows/tests.yaml/badge.svg)](https://github.com/paberke/GreenWorks-HA/actions/workflows/tests.yaml)
+[![HACS](https://github.com/paberke/GreenWorks-HA/actions/workflows/validate.yaml/badge.svg)](https://github.com/paberke/GreenWorks-HA/actions/workflows/validate.yaml)
+[![Hassfest](https://github.com/paberke/GreenWorks-HA/actions/workflows/hassfest.yaml/badge.svg)](https://github.com/paberke/GreenWorks-HA/actions/workflows/hassfest.yaml)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz)
+![Home Assistant 2025.1+](https://img.shields.io/badge/Home%20Assistant-2025.1%2B-blue.svg)
+
 [🇬🇧 English version](README.md) · **Deutsch**
 
 > [!WARNING]
