@@ -10,6 +10,8 @@
 
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. Starting, parking and changing settings still only work in the Greenworks app.
 
+**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Error codes](ERRORS.md) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+
 ## Tested mowers
 
 | Mower | Tested by |
