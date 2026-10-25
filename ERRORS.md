@@ -57,7 +57,7 @@ All 69 error codes the mower can report. The integration shows them in **Last er
 | 46 | Battery communication problem | Check that the battery sits firmly. If it persists, contact Greenworks support. |
 | 47 | Battery empty | Carry the mower to the charging station and let it charge. If it happens often, check the way back to the station. |
 | 48 | Battery temperature too high | Let the mower cool down in the shade. Avoid mowing in strong midday heat. |
-| 49 | Battery temperature too low | Too cold for the battery. Wait until it gets warmer; in winter use the winter pause. |
+| 49 | Battery temperature too low | Too cold for the battery. Wait until it gets warmer. In winter, store the mower indoors, dry and frost-free. |
 | 50 | Battery over-voltage | Restart the mower. If the error comes back, contact Greenworks support. |
 | 51 | Battery over-current | Restart the mower. If the error comes back, contact Greenworks support. |
 | 52 | Mower has no drive | Switch off the mower and check the wheel for grass, mud or objects. Clean it and restart. If it persists, contact Greenworks support. |
@@ -77,4 +77,4 @@ All 69 error codes the mower can report. The integration shows them in **Last er
 | 66 | Cutting motor brake defect | Restart the mower. If the error comes back, contact Greenworks support. |
 | 67 | Too low charging current | Clean the charging contacts on the mower and the station and check the power supply. |
 | 68 | Charging system defect in mower | Restart the mower. If the error comes back, contact Greenworks support. |
-| 69 | Week timer enabled, but clock is not set | Open the app once so the mower's clock is set again; check date and time in the settings. |
+| 69 | Week timer enabled, but clock is not set | Open the Schedule page in the app and confirm "Incorrect time" with OK. The mower then gets the correct time from your phone. |
