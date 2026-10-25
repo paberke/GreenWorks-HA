@@ -75,6 +75,8 @@ async def test_device_data(hass, aioclient_mock):
     dps["21"] = json.dumps({"request": {"request_time": "2026-07-18T09:36:23Z"}, "response": {
         "mower_pn": 310012355, "mower_revision": 1, "mower_production_time": 1551324710}})
     await _setup(hass, aioclient_mock, datapoints=dps)
-    device = dr.async_get(hass).async_get_device(identifiers={(DOMAIN, str(DID))})
+    device = next(
+        d for d in dr.async_get(hass).devices.values() if (DOMAIN, str(DID)) in d.identifiers
+    )
     assert device.model_id == "310012355"
     assert device.hw_version == "Rev. 1 (2019-02)"
