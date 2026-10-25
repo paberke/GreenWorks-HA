@@ -17,7 +17,7 @@
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Starten, Parken und Einstellungen ändern geht weiterhin nur in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-mäher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschränkungen) · [Abmelden aus der App](#du-wirst-öfter-aus-der-greenworks-app-abgemeldet) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-mäher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschränkungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#du-wirst-öfter-aus-der-greenworks-app-abgemeldet) · [Entfernen](#entfernen)
 
 ## Getestete Mäher
 
@@ -184,6 +184,16 @@ cards:
 - **Keine Anzeige für Software-Updates:** Ob es neue Mäher-Software gibt, zeigt nur die Greenworks-App (Seite *Software*). Ihr Update-Server beantwortet keine Anfragen von außerhalb der App.
 - **Softwarestand kann von der App abweichen:** Der Sensor **Software** zeigt die Version, die der Mäher selbst regelmäßig meldet. Die App zeigt auf ihrer Seite *Software* teils einen **alten, gespeicherten Stand** (bei unserem Optimow 10 die 6.53 von 2022, obwohl er längst 6.65 hat). Wann der Mäher den Wert zuletzt geschickt hat, steht im Attribut *Vom Mäher gemeldet*.
 - **Letzte Fehlermeldung kann von der Fehlerliste der App abweichen:** Home Assistant zeigt das zuletzt gemeldete Ereignis. Das ist manchmal eine kurze Warnung, die die App nicht auflistet.
+
+## Uhrzeit nach der Zeitumstellung
+
+Der Mäher hat eine eigene Uhr mit einer **festen Zeitzone**. Die Umstellung zwischen Sommer- und Winterzeit macht er **nicht selbst** – die Zeitzone stellt nur die Greenworks-App. Das betrifft nur Länder mit Sommerzeit (z. B. EU, Großbritannien, große Teile der USA, Kanadas und Australiens); die Termine sind je nach Land verschieden.
+
+**Was dann passiert:** Nach der Zeitumstellung rechnet der Mäher seinen Mähplan noch in der alten Zeit. Nach der Umstellung auf Winterzeit fährt er dadurch **eine Stunde zu früh** los, nach der Umstellung auf Sommerzeit eine Stunde zu spät. Home Assistant zeigt das so an, wie der Mäher es meldet, z. B. *Nach Zeitplan geparkt bis Mo. 08:00* statt 09:00. Die Integration rechnet dabei richtig.
+
+**So behebst du es:** Öffne in der Greenworks-App die Seite **Zeitplan**. Die App meldet dann *„Fehlerhafte Uhrzeit“* und fragt, ob sie die Zeit vom Handy übernehmen soll – mit **OK** bestätigen. Kurz danach zeigt auch Home Assistant wieder die richtige Zeit. Der Mäher muss dafür online sein.
+
+Damit du es nicht vergisst: [Beispiel-Automation, die dich am Tag der Zeitumstellung erinnert](BEISPIELE.md#erinnerung-bei-der-zeitumstellung).
 
 ## Du wirst öfter aus der Greenworks-App abgemeldet
 

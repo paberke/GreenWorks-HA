@@ -17,7 +17,7 @@
 
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. Starting, parking and changing settings still only work in the Greenworks app.
 
-**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Error codes](ERRORS.md) · [Examples](EXAMPLES.md) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Error codes](ERRORS.md) · [Examples](EXAMPLES.md) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
 
 ## Tested mowers
 
@@ -184,6 +184,16 @@ cards:
 - **No software update notice:** whether there is new mower software is only shown by the Greenworks app (page *Software*). Its update server does not answer requests from outside the app.
 - **Software version may differ from the app:** the **Software** sensor shows the version the mower reports itself regularly. The app's *Software* page sometimes shows an **old, stored value** (on our Optimow 10 version 6.53 from 2022, although it has long been running 6.65). The attribute *Reported by the mower* shows when the mower last sent it.
 - **Last error message may differ from the app's error list:** Home Assistant shows the most recently reported event, which is sometimes a short warning the app does not list.
+
+## Clock after daylight saving time changes
+
+The mower has its own clock with a **fixed time zone**. It does **not** switch between summer and winter time by itself – only the Greenworks app sets its time zone. This only matters in countries with daylight saving time (e.g. the EU, the UK, most of the US, Canada and Australia); the dates differ by country.
+
+**What happens:** after the clocks change, the mower still calculates its schedule in the old time. When the clocks go back it therefore starts **one hour early**, when they go forward one hour late. Home Assistant shows what the mower reports, e.g. *Parked by schedule until Mon 08:00* instead of 09:00. The integration's calculation is correct.
+
+**How to fix it:** open the **Schedule** page in the Greenworks app. The app reports *"Incorrect time"* and asks whether to take over the time from your phone – confirm with **OK**. Shortly afterwards Home Assistant shows the correct time again. The mower has to be online for this.
+
+So you don't forget: [example automation that reminds you on the day the clocks change](EXAMPLES.md#reminder-when-the-clocks-change).
 
 ## You will often be logged out of the Greenworks app
 

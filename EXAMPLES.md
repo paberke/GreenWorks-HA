@@ -8,7 +8,7 @@ Ready-to-copy examples. Replace **`rasenrobo`** with the name of your mower and 
 
 **Trying a template:** *Developer tools → Template*.
 
-**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Reading values](#reading-values)
+**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Clock change](#reminder-when-the-clocks-change) · [Reading values](#reading-values)
 
 ## Notification on a new error
 
@@ -104,6 +104,33 @@ actions:
           - action: switch.turn_off
             target:
               entity_id: switch.rasenrobo_winter_pause
+mode: single
+```
+
+## Reminder when the clocks change
+
+The mower does not switch its clock to summer or winter time by itself (see [README](README.md#clock-after-daylight-saving-time-changes)). This automation reminds you at 10:00 on the day the clocks change to set the time in the app – not during the winter pause. It detects the change by itself, whatever your country and date. In countries without daylight saving time it never fires.
+
+```yaml
+alias: Mower – set clock after time change
+description: Reminder on the day the clocks change to set the mower's time in the app
+triggers:
+  - trigger: time
+    at: "10:00:00"
+conditions:
+  - condition: template
+    value_template: >-
+      {{ now().utcoffset() != (now() - timedelta(days=1)).utcoffset() }}
+  - condition: state
+    entity_id: switch.rasenrobo_winter_pause
+    state: "off"
+actions:
+  - action: notify.mobile_app_your_phone
+    data:
+      title: Lawn mower
+      message: >-
+        The clocks changed today. Please open the Schedule page in the
+        Greenworks app and confirm "Incorrect time" with OK.
 mode: single
 ```
 

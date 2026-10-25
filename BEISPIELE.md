@@ -8,7 +8,7 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Vorlagen ausprobieren:** *Entwicklerwerkzeuge → Template*.
 
-**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fällig) · [Mäher hat ein Problem](#mäher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Werte abfragen](#werte-abfragen)
+**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fällig) · [Mäher hat ein Problem](#mäher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
 
@@ -104,6 +104,33 @@ actions:
           - action: switch.turn_off
             target:
               entity_id: switch.rasenrobo_winterpause
+mode: single
+```
+
+## Erinnerung bei der Zeitumstellung
+
+Der Mäher stellt seine Uhr nicht selbst auf Sommer- oder Winterzeit um (siehe [Readme](README.de.md#uhrzeit-nach-der-zeitumstellung)). Diese Automation erinnert dich am Tag der Zeitumstellung um 10 Uhr daran, die Uhr in der App zu stellen – nicht in der Winterpause. Sie erkennt die Zeitumstellung selbst, egal in welchem Land und an welchem Datum. In Ländern ohne Zeitumstellung meldet sie sich nie.
+
+```yaml
+alias: Rasenmäher – Uhr nach Zeitumstellung stellen
+description: Erinnerung am Tag der Zeitumstellung, die Uhr des Mähers in der App zu stellen
+triggers:
+  - trigger: time
+    at: "10:00:00"
+conditions:
+  - condition: template
+    value_template: >-
+      {{ now().utcoffset() != (now() - timedelta(days=1)).utcoffset() }}
+  - condition: state
+    entity_id: switch.rasenrobo_winterpause
+    state: "off"
+actions:
+  - action: notify.mobile_app_dein_handy
+    data:
+      title: Rasenmäher
+      message: >-
+        Heute war Zeitumstellung. Bitte in der Greenworks-App die Seite
+        Zeitplan öffnen und bei „Fehlerhafte Uhrzeit“ OK drücken.
 mode: single
 ```
 
