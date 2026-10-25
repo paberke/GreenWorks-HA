@@ -10,7 +10,7 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Lieber mit einer KI bauen?** Fertige Prompts: [PROMPTS.de.md](PROMPTS.de.md).
 
-**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
+**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Dashboard-Karte](#dashboard-karte) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
 
@@ -239,6 +239,31 @@ actions:
         Heute war Zeitumstellung. Bitte in der Greenworks-App die Seite
         Zeitplan öffnen und bei „Fehlerhafte Uhrzeit“ OK drücken.
 mode: single
+```
+
+## Dashboard-Karte
+
+Eine Übersichtskarte mit Mäher, Statustext, Status, Batterie, Problem und nächstem Start. Nutzt nur Standard-Karten von Home Assistant. Einfügen: *Dashboard → Bearbeiten → Karte hinzufügen → Manuell*.
+
+```yaml
+type: vertical-stack
+cards:
+  - type: tile
+    entity: lawn_mower.rasenrobo
+  - type: markdown
+    content: "{{ states('sensor.rasenrobo_statustext') }}"
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: tile
+        entity: sensor.rasenrobo_status
+      - type: tile
+        entity: sensor.rasenrobo_batterie
+      - type: tile
+        entity: binary_sensor.rasenrobo_problem
+      - type: tile
+        entity: sensor.rasenrobo_nachster_start
 ```
 
 ## Werte abfragen

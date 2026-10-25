@@ -17,7 +17,9 @@
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Starten, Parken und Einstellungen ändern geht weiterhin nur in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [KI-Prompts](PROMPTS.de.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
+
+**Zum Nachschlagen:** 📋 [Fehlercodes](ERRORS.de.md) · 🛠️ [Beispiele: Automationen und Dashboard](BEISPIELE.md) · 🤖 [KI-Prompts](PROMPTS.de.md)
 
 <a id="getestete-maher"></a>
 
@@ -154,31 +156,7 @@ Unter Einstellungen → System → **Reparaturen** erscheint ein Hinweis, wenn
 
 Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Passwort nicht mehr angenommen, fragt Home Assistant wie gewohnt danach (*Neu authentifizieren*).
 
-<details>
-<summary><b>Beispiel für eine Dashboard-Karte</b></summary>
-
-`rasenrobo` durch den Namen deines Mähers ersetzen. Die Entity-IDs richten sich nach dem Gerätenamen und der Sprache von Home Assistant.
-
-```yaml
-type: vertical-stack
-cards:
-  - type: tile
-    entity: lawn_mower.rasenrobo
-  - type: grid
-    columns: 2
-    square: false
-    cards:
-      - type: tile
-        entity: sensor.rasenrobo_status
-      - type: tile
-        entity: sensor.rasenrobo_batterie
-      - type: tile
-        entity: binary_sensor.rasenrobo_problem
-      - type: tile
-        entity: sensor.rasenrobo_nachster_start
-```
-
-</details>
+**Dashboard:** [Beispiel für eine Dashboard-Karte](BEISPIELE.md#dashboard-karte)
 
 <a id="einschrankungen"></a>
 

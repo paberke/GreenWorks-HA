@@ -10,7 +10,7 @@ Ready-to-copy examples. Replace **`rasenrobo`** with the name of your mower and 
 
 **Rather build it with an AI?** Ready-made prompts: [PROMPTS.md](PROMPTS.md).
 
-**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Reading values](#reading-values)
+**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Dashboard card](#dashboard-card) · [Reading values](#reading-values)
 
 ## Notification on a new error
 
@@ -235,6 +235,31 @@ actions:
         The clocks changed today. Please open the Schedule page in the
         Greenworks app and confirm "Incorrect time" with OK.
 mode: single
+```
+
+## Dashboard card
+
+An overview card with mower, status text, status, battery, problem and next start. Uses only standard Home Assistant cards. Adding it: *Dashboard → Edit → Add card → Manual*.
+
+```yaml
+type: vertical-stack
+cards:
+  - type: tile
+    entity: lawn_mower.rasenrobo
+  - type: markdown
+    content: "{{ states('sensor.rasenrobo_status_text') }}"
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: tile
+        entity: sensor.rasenrobo_status
+      - type: tile
+        entity: sensor.rasenrobo_battery
+      - type: tile
+        entity: binary_sensor.rasenrobo_problem
+      - type: tile
+        entity: sensor.rasenrobo_next_start
 ```
 
 ## Reading values

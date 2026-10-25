@@ -17,7 +17,9 @@
 
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. Starting, parking and changing settings still only work in the Greenworks app.
 
-**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Error codes](ERRORS.md) · [Examples](EXAMPLES.md) · [AI prompts](PROMPTS.md) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+
+**More:** 📋 [Error codes](ERRORS.md) · 🛠️ [Examples: automations and dashboard](EXAMPLES.md) · 🤖 [AI prompts](PROMPTS.md)
 
 ## Tested mowers
 
@@ -152,31 +154,7 @@ Under Settings → System → **Repairs** a notice appears when
 
 Both notices disappear by themselves as soon as everything works again. If the password is no longer accepted, Home Assistant asks for it again as usual (*Re-authenticate*).
 
-<details>
-<summary><b>Example dashboard card</b></summary>
-
-Replace `rasenrobo` with the name of your mower (the entity IDs follow the name of the device and your language).
-
-```yaml
-type: vertical-stack
-cards:
-  - type: tile
-    entity: lawn_mower.rasenrobo
-  - type: grid
-    columns: 2
-    square: false
-    cards:
-      - type: tile
-        entity: sensor.rasenrobo_status
-      - type: tile
-        entity: sensor.rasenrobo_battery
-      - type: tile
-        entity: binary_sensor.rasenrobo_problem
-      - type: tile
-        entity: sensor.rasenrobo_next_start
-```
-
-</details>
+**Dashboard:** [example dashboard card](EXAMPLES.md#dashboard-card)
 
 ## Limitations
 
