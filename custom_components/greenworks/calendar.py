@@ -72,4 +72,4 @@ class GreenworksScheduleCalendar(GreenworksEntity, CalendarEntity):
         return self._events(start_date, end_date)
 
 
-# Version 0.4.0
+# Version 0.4.1

@@ -65,7 +65,7 @@ The **standard entities** are always created. Everything else is grouped and can
 | **Charging** | On while the mower is charging |
 | **Next start** / **Mowing end** | When the mower starts next / when the current mowing window ends |
 | **Online** | Whether the mower is connected to the cloud |
-| **Problem** | *Problem* or *OK*. The attribute *Reason* says why, e.g. *Too high inclination (error 13)*, *Offline* or *Winter pause* |
+| **Problem** | *Problem* or *No problem*. The attribute *Reason* says why, e.g. *Too high inclination (error 13)*, *Offline* or *Winter pause* |
 | **Error** (event) | Fires once for every new error, with code, text and time – ideal for notification automations |
 | **Winter pause** (switch) | See [Winter pause](#winter-pause) |
 | **Blade time** | Mowing hours since the blade time was last reset in the app (same as the app) |
@@ -136,7 +136,7 @@ In winter the mower is switched off and therefore offline. Without the winter pa
 Switch on **Winter pause** (a switch on the mower's device page):
 
 - no offline notice under *Repairs*
-- **Problem** shows *OK*, reason *Winter pause*
+- **Problem** shows *No problem*, reason *Winter pause*
 - **Status** shows *Winter pause* instead of *Offline*
 
 The switch only changes what Home Assistant shows – **nothing is changed on the mower**. Tip: an automation can switch it on and off by date, e.g. on 1 November and 15 March – [ready-made example](EXAMPLES.md#winter-pause-by-date).

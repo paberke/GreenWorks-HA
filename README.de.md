@@ -65,7 +65,7 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 | **Lädt** | An, solange der Mäher lädt |
 | **Nächster Start** / **Mähende** | Wann der Mäher das nächste Mal losfährt / wann das aktuelle Mähfenster endet |
 | **Online** | Ob der Mäher mit der Cloud verbunden ist |
-| **Problem** | *Problem* oder *OK*. Das Attribut *Grund* sagt, warum, z. B. *Zu starke Neigung (Fehler 13)*, *Offline* oder *Winterpause* |
+| **Problem** | *Problem* oder *Kein Problem*. Das Attribut *Grund* sagt, warum, z. B. *Zu starke Neigung (Fehler 13)*, *Offline* oder *Winterpause* |
 | **Fehler** (Ereignis) | Löst bei jedem neuen Fehler einmal aus, mit Code, Text und Uhrzeit – ideal für Automationen mit Benachrichtigung |
 | **Winterpause** (Schalter) | Siehe [Winterpause](#winterpause) |
 | **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App (gleiche Rechnung wie die App) |
@@ -136,7 +136,7 @@ Im Winter ist der Mäher ausgeschaltet und damit offline. Ohne Winterpause käme
 Schalte **Winterpause** ein (ein Schalter auf der Geräteseite des Mähers):
 
 - kein Offline-Hinweis unter *Reparaturen*
-- **Problem** zeigt *OK*, Grund *Winterpause*
+- **Problem** zeigt *Kein Problem*, Grund *Winterpause*
 - **Status** zeigt *Winterpause* statt *Offline*
 
 Der Schalter ändert nur die Anzeige in Home Assistant – **am Mäher wird nichts verändert**. Tipp: Eine Automation kann ihn nach Datum ein- und ausschalten, z. B. am 1. November und am 15. März – [fertiges Beispiel](BEISPIELE.md#winterpause-nach-datum).

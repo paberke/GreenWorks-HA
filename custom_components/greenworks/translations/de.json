@@ -433,6 +433,10 @@
           "reason": {
             "name": "Grund"
           }
+        },
+        "state": {
+          "off": "Kein Problem",
+          "on": "Problem"
         }
       },
       "charging": {
@@ -486,7 +490,7 @@
     "step": {
       "init": {
         "title": "Einstellungen",
-        "description": "Welche Entitäten angezeigt werden und wie die Integration arbeitet. Ausgeschaltete Entitäten werden deaktiviert, nicht gelöscht – ihre Entity-IDs bleiben gleich. Tipp für den Winter: den Schalter „Winterpause“ auf der Geräteseite des Mähers einschalten – dann gibt es keine Offline-Hinweise und Problem bleibt auf OK. Am Mäher wird dabei nichts verändert.",
+        "description": "Welche Entitäten angezeigt werden und wie die Integration arbeitet. Ausgeschaltete Entitäten werden deaktiviert, nicht gelöscht – ihre Entity-IDs bleiben gleich. Tipp für den Winter: den Schalter „Winterpause“ auf der Geräteseite des Mähers einschalten – dann gibt es keine Offline-Hinweise und Problem zeigt „Kein Problem“. Am Mäher wird dabei nichts verändert.",
         "data": {
           "groups": "Zusätzliche Entitäten",
           "scan_interval": "Abfrage-Intervall (30–600 Sekunden)",

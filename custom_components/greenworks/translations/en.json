@@ -433,6 +433,10 @@
           "reason": {
             "name": "Reason"
           }
+        },
+        "state": {
+          "off": "No problem",
+          "on": "Problem"
         }
       },
       "charging": {
@@ -486,7 +490,7 @@
     "step": {
       "init": {
         "title": "Settings",
-        "description": "Which entities are shown and how the integration works. Switched-off entities are disabled, not deleted, so their entity IDs stay the same. Tip for winter: switch on the “Winter pause” switch on the mower's device page – then there are no offline notices and Problem stays OK. Nothing is changed on the mower.",
+        "description": "Which entities are shown and how the integration works. Switched-off entities are disabled, not deleted, so their entity IDs stay the same. Tip for winter: switch on the “Winter pause” switch on the mower's device page – then there are no offline notices and Problem shows “No problem”. Nothing is changed on the mower.",
         "data": {
           "groups": "Additional entities",
           "scan_interval": "Update interval (30–600 seconds)",
