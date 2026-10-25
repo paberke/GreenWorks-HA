@@ -17,7 +17,7 @@
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Starten, Parken und Einstellungen ändern geht weiterhin nur in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-mäher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschränkungen) · [Abmelden aus der App](#du-wirst-öfter-aus-der-greenworks-app-abgemeldet) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-mäher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschränkungen) · [Abmelden aus der App](#du-wirst-öfter-aus-der-greenworks-app-abgemeldet) · [Entfernen](#entfernen)
 
 ## Getestete Mäher
 
@@ -139,7 +139,7 @@ Schalte **Winterpause** ein (ein Schalter auf der Geräteseite des Mähers):
 - **Problem** zeigt *OK*, Grund *Winterpause*
 - **Status** zeigt *Winterpause* statt *Offline*
 
-Der Schalter ändert nur die Anzeige in Home Assistant – **am Mäher wird nichts verändert**. Tipp: Eine Automation kann ihn nach Datum ein- und ausschalten, z. B. am 1. November und am 15. März.
+Der Schalter ändert nur die Anzeige in Home Assistant – **am Mäher wird nichts verändert**. Tipp: Eine Automation kann ihn nach Datum ein- und ausschalten, z. B. am 1. November und am 15. März – [fertiges Beispiel](BEISPIELE.md#winterpause-nach-datum).
 
 ## Hinweise unter Reparaturen
 

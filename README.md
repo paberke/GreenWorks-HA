@@ -17,7 +17,7 @@
 
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. Starting, parking and changing settings still only work in the Greenworks app.
 
-**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Error codes](ERRORS.md) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Error codes](ERRORS.md) · [Examples](EXAMPLES.md) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
 
 ## Tested mowers
 
@@ -139,7 +139,7 @@ Switch on **Winter pause** (a switch on the mower's device page):
 - **Problem** shows *OK*, reason *Winter pause*
 - **Status** shows *Winter pause* instead of *Offline*
 
-The switch only changes what Home Assistant shows – **nothing is changed on the mower**. Tip: an automation can switch it on and off by date, e.g. on 1 November and 15 March.
+The switch only changes what Home Assistant shows – **nothing is changed on the mower**. Tip: an automation can switch it on and off by date, e.g. on 1 November and 15 March – [ready-made example](EXAMPLES.md#winter-pause-by-date).
 
 ## Notices under Repairs
 
