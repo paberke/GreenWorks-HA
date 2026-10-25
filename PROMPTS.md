@@ -7,7 +7,10 @@ You'd rather have an AI build your automations (e.g. Claude, ChatGPT or Assist i
 > [!NOTE]
 > Written by Claude (AI), not by Greenworks. The AI can be wrong – check its suggestion before you save it.
 
-**How to use:** first paste the **context block** into the chat and replace `rasenrobo` with the name of your mower. Then one of the prompts below. You find the exact entity IDs under *Settings → Devices & services → Greenworks → your mower*.
+**How to use:** first paste the **context block** into the chat, then one of the prompts below.
+
+- **AI with access to Home Assistant** (e.g. Assist or an AI connected to Home Assistant): paste the context block as it is. The AI finds your mower and your phone by itself and asks you to confirm them.
+- **AI without access** (e.g. ChatGPT or Claude in the browser): replace `rasenrobo` in the context block with the name of your mower. You find the exact entity IDs under *Settings → Devices & services → Greenworks → your mower*. The AI will then ask for your phone.
 
 **Contents:** [Context block](#context-block) · [Error notification](#error-notification) · [Weekly summary](#weekly-summary) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#clock-change) · [Blade change](#blade-change) · [Dashboard card](#dashboard-card) · [Check an automation](#check-an-automation) · [Privacy](#privacy)
 
@@ -18,7 +21,10 @@ I use the Home Assistant integration "Greenworks" (HACS, github.com/paberke/Gree
 for my Greenworks robotic mower. Important:
 - The integration is READ-ONLY. There are no commands to start, park or change settings.
   Don't suggest actions on the mower, only notifications, helpers and displays.
-- My mower is called "rasenrobo", Home Assistant is in English. Entities (use only these):
+- If you have access to my Home Assistant: look up the entities of the "greenworks" integration
+  and my phone's notify service yourself and let me confirm them before you build anything.
+  Otherwise: ask me for my notify service. Example entities (mower "rasenrobo", Home Assistant
+  in English; my names may differ):
   lawn_mower.rasenrobo (attributes: status, status_code, park_reason_code, sub_status_code)
   sensor.rasenrobo_status (values include: mowing, charging, parked_by_schedule, parked_by_user,
     parked_by_rain_guard, parked_by_frost_guard, searching_station, error, fatal_error, alarm,
@@ -41,15 +47,15 @@ device_id and nothing in configuration.yaml.
 ## Error notification
 
 ```text
-Create an automation that sends me a message to notify.mobile_app_MY_PHONE for every new
-error of the mower, with error text and code. Use the event event.rasenrobo_error.
+Create an automation that sends a message to my phone for every new error of the mower,
+with error text and code. Use the mower's error event.
 ```
 
 ## Weekly summary
 
 ```text
 Collect every error of the mower in a to-do list and send me a summary of the week on Sundays
-at 18:00 to notify.mobile_app_MY_PHONE. Then clear the list. Tell me which to-do list helper
+at 18:00 to my phone. Then clear the list. Tell me which to-do list helper
 I have to create first.
 ```
 
@@ -57,7 +63,7 @@ I have to create first.
 
 ```text
 From mid-October, remind me on Saturdays to winterise the mower if frost is forecast
-(weather entity: weather.MY_WEATHER). Switch on the winter pause when the mower has been
+(use my weather entity). Switch on the winter pause when the mower has been
 offline for 24 hours in winter, and off again as soon as it is online – with a message to
 confirm the time in the app and check the charging contacts.
 ```
@@ -73,7 +79,7 @@ The automation should detect the change by itself, without fixed dates.
 ## Blade change
 
 ```text
-Send me a message as soon as binary_sensor.rasenrobo_blade_change_due turns on, with the
+Send a message to my phone as soon as "Blade change due" turns on, with the
 current blade time. And a second message when only 10 hours are left (attribute remaining).
 ```
 

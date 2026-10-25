@@ -7,7 +7,10 @@ Du lässt dir Automationen lieber von einer KI bauen (z. B. Claude, ChatGPT oder
 > [!NOTE]
 > Geschrieben von Claude (KI), nicht von Greenworks. Die KI kann sich irren – prüfe den Vorschlag, bevor du ihn speicherst.
 
-**So geht's:** Kopiere zuerst den **Kontext-Block** in den Chat und ersetze darin `rasenrobo` durch den Namen deines Mähers. Danach einen der Prompts darunter. Die genauen Entity-IDs findest du unter *Einstellungen → Geräte & Dienste → Greenworks → dein Mäher*.
+**So geht's:** Kopiere zuerst den **Kontext-Block** in den Chat, danach einen der Prompts darunter.
+
+- **KI mit Zugriff auf Home Assistant** (z. B. Assist oder eine KI mit Home-Assistant-Anbindung): Kontext-Block einfach so einfügen. Die KI sucht deinen Mäher und dein Handy selbst und lässt sie dich bestätigen.
+- **KI ohne Zugriff** (z. B. ChatGPT oder Claude im Browser): Ersetze im Kontext-Block `rasenrobo` durch den Namen deines Mähers. Die genauen Entity-IDs findest du unter *Einstellungen → Geräte & Dienste → Greenworks → dein Mäher*. Nach deinem Handy fragt die KI dann selbst.
 
 **Inhalt:** [Kontext-Block](#kontext-block) · [Fehler melden](#fehler-melden) · [Wochenübersicht](#wochenubersicht) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#zeitumstellung) · [Messerwechsel](#messerwechsel) · [Dashboard-Karte](#dashboard-karte) · [Automation prüfen](#automation-prufen) · [Datenschutz](#datenschutz)
 
@@ -18,7 +21,10 @@ Ich nutze in Home Assistant die Integration "Greenworks" (HACS, github.com/paber
 für meinen Greenworks-Mähroboter. Wichtig:
 - Die Integration kann NUR LESEN. Es gibt keine Befehle zum Starten, Parken oder Einstellen.
   Schlage keine Aktionen am Mäher vor, nur Benachrichtigungen, Helfer und Anzeigen.
-- Mein Mäher heißt "rasenrobo", Home Assistant ist auf Deutsch. Entitäten (bitte nur diese nutzen):
+- Hast du Zugriff auf mein Home Assistant: Suche die Entitäten der Integration "greenworks" und
+  meinen notify-Dienst fürs Handy selbst und lass sie mich bestätigen, bevor du baust.
+  Sonst: Frag mich nach meinem notify-Dienst. Beispiel für die Entitäten (Mäher "rasenrobo",
+  Home Assistant auf Deutsch; bei mir können die Namen anders sein):
   lawn_mower.rasenrobo (Attribute: status, status_code, park_reason_code, sub_status_code)
   sensor.rasenrobo_status (Werte u. a.: mowing, charging, parked_by_schedule, parked_by_user,
     parked_by_rain_guard, parked_by_frost_guard, searching_station, error, fatal_error, alarm,
@@ -41,9 +47,8 @@ entity_id statt device_id und nichts in configuration.yaml.
 ## Fehler melden
 
 ```text
-Erstelle eine Automation, die mir bei jedem neuen Fehler des Mähers eine Nachricht an
-notify.mobile_app_MEIN_HANDY schickt, mit Fehlertext und Code. Nutze dafür das Ereignis
-event.rasenrobo_fehler.
+Erstelle eine Automation, die mir bei jedem neuen Fehler des Mähers eine Nachricht aufs Handy
+schickt, mit Fehlertext und Code. Nutze dafür das Fehler-Ereignis des Mähers.
 ```
 
 <a id="wochenubersicht"></a>
@@ -52,7 +57,7 @@ event.rasenrobo_fehler.
 
 ```text
 Sammle jeden Fehler des Mähers in einer To-do-Liste und schicke mir sonntags um 18 Uhr eine
-Übersicht der Woche an notify.mobile_app_MEIN_HANDY. Danach soll die Liste geleert werden.
+Übersicht der Woche aufs Handy. Danach soll die Liste geleert werden.
 Sag mir, welche To-do-Liste ich vorher als Helfer anlegen muss.
 ```
 
@@ -60,7 +65,7 @@ Sag mir, welche To-do-Liste ich vorher als Helfer anlegen muss.
 
 ```text
 Erinnere mich ab Mitte Oktober samstags, den Mäher einzuwintern, wenn Frost vorhergesagt ist
-(Wetter-Entität: weather.MEIN_WETTER). Schalte die Winterpause ein, wenn der Mäher im Winter
+(nimm meine Wetter-Entität). Schalte die Winterpause ein, wenn der Mäher im Winter
 24 Stunden offline ist, und wieder aus, sobald er online ist – mit einer Nachricht, dass ich
 in der App die Uhrzeit bestätigen und die Ladekontakte prüfen soll.
 ```
@@ -76,7 +81,7 @@ Die Automation soll die Zeitumstellung selbst erkennen, ohne feste Daten.
 ## Messerwechsel
 
 ```text
-Schick mir eine Nachricht, sobald binary_sensor.rasenrobo_messerwechsel_fallig auf an geht,
+Schick mir eine Nachricht aufs Handy, sobald "Messerwechsel fällig" auf an geht,
 mit der aktuellen Messer-Laufzeit. Und eine zweite Nachricht, wenn nur noch 10 Stunden übrig
 sind (Attribut remaining).
 ```
