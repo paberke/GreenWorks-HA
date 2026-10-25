@@ -139,7 +139,9 @@ Switch on **Winter pause** (a switch on the mower's device page):
 - **Problem** shows *No problem*, reason *Winter pause*
 - **Status** shows *Winter pause* instead of *Offline*
 
-The switch only changes what Home Assistant shows – **nothing is changed on the mower**. Tip: an automation can switch it on and off by date, e.g. on 1 November and 15 March – [ready-made example](EXAMPLES.md#winter-pause-by-date).
+The switch only changes what Home Assistant shows – **nothing is changed on the mower**. Tip: an automation can switch it on and off by date, e.g. on 1 November and 15 March – [ready-made example](EXAMPLES.md#winter-pause-by-date). Or automatically once the mower is stored, with a reminder to winterise it: [example](EXAMPLES.md#winterising-and-start-of-season).
+
+**Winterising:** Greenworks recommends **fully charging** the battery before winter storage and storing the mower **dry and frost-free** – a roof over the charging station is not enough, frost harms the battery. If possible, bring the charging station and power supply inside too; the wires stay in the ground, protect their ends against moisture. In spring, check the charging contacts for corrosion and set the [time](#clock-after-daylight-saving-time-changes) in the app.
 
 ## Notices under Repairs
 

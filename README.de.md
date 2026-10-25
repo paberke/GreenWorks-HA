@@ -139,7 +139,9 @@ Schalte **Winterpause** ein (ein Schalter auf der Geräteseite des Mähers):
 - **Problem** zeigt *Kein Problem*, Grund *Winterpause*
 - **Status** zeigt *Winterpause* statt *Offline*
 
-Der Schalter ändert nur die Anzeige in Home Assistant – **am Mäher wird nichts verändert**. Tipp: Eine Automation kann ihn nach Datum ein- und ausschalten, z. B. am 1. November und am 15. März – [fertiges Beispiel](BEISPIELE.md#winterpause-nach-datum).
+Der Schalter ändert nur die Anzeige in Home Assistant – **am Mäher wird nichts verändert**. Tipp: Eine Automation kann ihn nach Datum ein- und ausschalten, z. B. am 1. November und am 15. März – [fertiges Beispiel](BEISPIELE.md#winterpause-nach-datum). Oder automatisch, sobald der Mäher eingelagert ist, mit Erinnerung zum Einwintern: [Beispiel](BEISPIELE.md#einwintern-und-saisonstart).
+
+**Einwintern:** Greenworks empfiehlt, den Akku vor der Winterlagerung **voll zu laden** und den Mäher **trocken und frostfrei** zu lagern – ein Dach über der Ladestation reicht nicht, Frost schadet dem Akku. Ladestation und Netzteil möglichst ebenfalls reinholen; die Drähte bleiben im Boden, ihre Enden vor Feuchtigkeit schützen. Im Frühjahr die Ladekontakte auf Korrosion prüfen und die [Uhrzeit](#uhrzeit-nach-der-zeitumstellung) in der App stellen.
 
 ## Hinweise unter Reparaturen
 

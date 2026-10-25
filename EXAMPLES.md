@@ -8,7 +8,7 @@ Ready-to-copy examples. Replace **`rasenrobo`** with the name of your mower and 
 
 **Trying a template:** *Developer tools → Template*.
 
-**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Clock change](#reminder-when-the-clocks-change) · [Reading values](#reading-values)
+**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Reading values](#reading-values)
 
 ## Notification on a new error
 
@@ -105,6 +105,107 @@ actions:
             target:
               entity_id: switch.rasenrobo_winter_pause
 mode: single
+```
+
+## Winterising and start of season
+
+One automation for autumn and spring:
+
+- **Reminder:** from 15 October on Saturdays at 10:00, if frost (2 °C or less) is forecast for the next 4 days – with the battery level and the steps to winterise. Repeats every week until the winter pause is on.
+- **Winter pause on:** when the mower has been offline for 24 hours between 15 October and the end of February, i.e. it has been stored.
+- **Winter pause off:** as soon as it is back online – with the steps for the start of the season.
+
+Replace `weather.forecast_home` with your weather entity.
+
+```yaml
+alias: Mower – winterising and start of season
+description: Reminder to winterise on frost, winter pause on and off automatically
+triggers:
+  - trigger: time
+    at: "10:00:00"
+    id: reminder
+  - trigger: state
+    entity_id: binary_sensor.rasenrobo_online
+    to: "off"
+    for:
+      hours: 24
+    id: stored
+  - trigger: state
+    entity_id: binary_sensor.rasenrobo_online
+    from: "off"
+    to: "on"
+    id: season_start
+actions:
+  - choose:
+      - alias: Reminder to winterise
+        conditions:
+          - condition: trigger
+            id: reminder
+          - condition: time
+            weekday: sat
+          - condition: template
+            value_template: "{{ (now().month == 10 and now().day >= 15) or now().month in [11, 12] }}"
+          - condition: state
+            entity_id: switch.rasenrobo_winter_pause
+            state: "off"
+        sequence:
+          - action: weather.get_forecasts
+            target:
+              entity_id: weather.forecast_home
+            data:
+              type: daily
+            response_variable: forecast
+          - variables:
+              lowest: >-
+                {{ (forecast['weather.forecast_home'].forecast[0:4]
+                   | selectattr('templow', 'defined')
+                   | map(attribute='templow') | list + [99]) | min }}
+          - condition: template
+            value_template: "{{ lowest | float(99) <= 2 }}"
+          - action: notify.mobile_app_your_phone
+            data:
+              title: Winterise the mower
+              message: >-
+                Frost down to {{ lowest }} °C forecast. Battery: {{ states('sensor.rasenrobo_battery') }} %.
+                1. Fully charge the battery. 2. Clean the mower and store it dry and frost-free.
+                3. Bring in the charging station and power supply, protect the wire ends against moisture.
+                The winter pause will then switch on by itself.
+      - alias: Stored – winter pause on
+        conditions:
+          - condition: trigger
+            id: stored
+          - condition: template
+            value_template: "{{ (now().month == 10 and now().day >= 15) or now().month in [11, 12, 1, 2] }}"
+          - condition: state
+            entity_id: switch.rasenrobo_winter_pause
+            state: "off"
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.rasenrobo_winter_pause
+          - action: notify.mobile_app_your_phone
+            data:
+              title: Lawn mower
+              message: Offline for 24 hours – the winter pause is now on.
+      - alias: Start of season – winter pause off
+        conditions:
+          - condition: trigger
+            id: season_start
+          - condition: state
+            entity_id: switch.rasenrobo_winter_pause
+            state: "on"
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id: switch.rasenrobo_winter_pause
+          - action: notify.mobile_app_your_phone
+            data:
+              title: The mower is back
+              message: >-
+                Winter pause is off. 1. Open the Schedule page in the Greenworks app and
+                confirm "Incorrect time" with OK. 2. Check the charging contacts on mower
+                and station for corrosion. 3. Check the blades.
+mode: queued
 ```
 
 ## Reminder when the clocks change

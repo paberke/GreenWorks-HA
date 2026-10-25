@@ -8,7 +8,7 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Vorlagen ausprobieren:** *Entwicklerwerkzeuge → Template*.
 
-**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fällig) · [Mäher hat ein Problem](#mäher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
+**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fällig) · [Mäher hat ein Problem](#mäher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
 
@@ -105,6 +105,107 @@ actions:
             target:
               entity_id: switch.rasenrobo_winterpause
 mode: single
+```
+
+## Einwintern und Saisonstart
+
+Eine Automation für Herbst und Frühjahr:
+
+- **Erinnerung:** Ab 15. Oktober samstags um 10 Uhr, wenn in den nächsten 4 Tagen Frost (2 °C oder weniger) vorhergesagt ist – mit Akkustand und den Schritten zum Einwintern. Kommt jede Woche wieder, bis die Winterpause an ist.
+- **Winterpause an:** wenn der Mäher zwischen 15. Oktober und Ende Februar 24 Stunden offline ist, also eingelagert wurde.
+- **Winterpause aus:** sobald er wieder online ist – mit den Schritten zum Saisonstart.
+
+`weather.forecast_home` durch deine Wetter-Entität ersetzen.
+
+```yaml
+alias: Rasenmäher – Einwintern und Saisonstart
+description: Erinnerung zum Einwintern bei Frost, Winterpause automatisch ein und aus
+triggers:
+  - trigger: time
+    at: "10:00:00"
+    id: erinnerung
+  - trigger: state
+    entity_id: binary_sensor.rasenrobo_online
+    to: "off"
+    for:
+      hours: 24
+    id: eingelagert
+  - trigger: state
+    entity_id: binary_sensor.rasenrobo_online
+    from: "off"
+    to: "on"
+    id: saisonstart
+actions:
+  - choose:
+      - alias: Erinnerung zum Einwintern
+        conditions:
+          - condition: trigger
+            id: erinnerung
+          - condition: time
+            weekday: sat
+          - condition: template
+            value_template: "{{ (now().month == 10 and now().day >= 15) or now().month in [11, 12] }}"
+          - condition: state
+            entity_id: switch.rasenrobo_winterpause
+            state: "off"
+        sequence:
+          - action: weather.get_forecasts
+            target:
+              entity_id: weather.forecast_home
+            data:
+              type: daily
+            response_variable: prognose
+          - variables:
+              tiefst: >-
+                {{ (prognose['weather.forecast_home'].forecast[0:4]
+                   | selectattr('templow', 'defined')
+                   | map(attribute='templow') | list + [99]) | min }}
+          - condition: template
+            value_template: "{{ tiefst | float(99) <= 2 }}"
+          - action: notify.mobile_app_dein_handy
+            data:
+              title: Rasenmäher einwintern
+              message: >-
+                Frost bis {{ tiefst }} °C vorhergesagt. Akku: {{ states('sensor.rasenrobo_batterie') }} %.
+                1. Akku voll laden. 2. Mäher reinigen und trocken, frostfrei lagern.
+                3. Ladestation und Netzteil reinholen, Drahtenden vor Feuchtigkeit schützen.
+                Die Winterpause schaltet sich danach von selbst ein.
+      - alias: Eingelagert – Winterpause an
+        conditions:
+          - condition: trigger
+            id: eingelagert
+          - condition: template
+            value_template: "{{ (now().month == 10 and now().day >= 15) or now().month in [11, 12, 1, 2] }}"
+          - condition: state
+            entity_id: switch.rasenrobo_winterpause
+            state: "off"
+        sequence:
+          - action: switch.turn_on
+            target:
+              entity_id: switch.rasenrobo_winterpause
+          - action: notify.mobile_app_dein_handy
+            data:
+              title: Rasenmäher
+              message: Seit 24 Stunden offline – Winterpause ist jetzt an.
+      - alias: Saisonstart – Winterpause aus
+        conditions:
+          - condition: trigger
+            id: saisonstart
+          - condition: state
+            entity_id: switch.rasenrobo_winterpause
+            state: "on"
+        sequence:
+          - action: switch.turn_off
+            target:
+              entity_id: switch.rasenrobo_winterpause
+          - action: notify.mobile_app_dein_handy
+            data:
+              title: Rasenmäher ist zurück
+              message: >-
+                Winterpause ist aus. 1. In der Greenworks-App die Seite Zeitplan öffnen
+                und bei „Fehlerhafte Uhrzeit“ OK drücken. 2. Ladekontakte an Mäher und
+                Station auf Korrosion prüfen. 3. Messer prüfen.
+mode: queued
 ```
 
 ## Erinnerung bei der Zeitumstellung
