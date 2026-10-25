@@ -18,7 +18,7 @@
       },
       "groups": {
         "title": "What should be shown?",
-        "description": "The standard entities are always created: mower, status, battery, next start, mowing end, online, problem, charging, error event, winter pause, blade runtime and blade change due. Tick what you want to see in addition. You can change this later with “Configure”; switched-off entities are only disabled, not deleted.",
+        "description": "The standard entities are always created: mower, status, status text, battery, next start, mowing end, online, problem, charging, error event, winter pause, blade runtime and blade change due. Tick what you want to see in addition. You can change this later with “Configure”; switched-off entities are only disabled, not deleted.",
         "data": {
           "groups": "Additional entities"
         }
@@ -397,6 +397,9 @@
             "name": "Updated"
           }
         }
+      },
+      "status_text": {
+        "name": "Status text"
       }
     },
     "binary_sensor": {
@@ -434,6 +437,12 @@
       },
       "charging": {
         "name": "Charging"
+      },
+      "pin_protection": {
+        "name": "PIN protection"
+      },
+      "geofence": {
+        "name": "Geofence"
       }
     },
     "device_tracker": {
@@ -493,7 +502,7 @@
       "options": {
         "errors_detailed": "Detailed errors (error code, last error, error message with history, fatal errors)",
         "statistics": "Statistics (mowing, running and charging time, statistics date, last status message)",
-        "app_settings": "Settings from the app (schedule, drive past wire, wire distance, start points, rain and frost guard)",
+        "app_settings": "Settings from the app (schedule, drive past wire, wire distance, start points, rain and frost guard, PIN protection, geofence)",
         "diagnostics": "Diagnostics (software, signal quality)",
         "calendar": "Calendar (mowing schedule as calendar events)",
         "position": "Position (mower on the map)"

@@ -29,6 +29,7 @@ from .const import (
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator
 from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
 from .error_texts import error_text
+from .status_text import status_text
 
 PARALLEL_UPDATES = 0
 
@@ -174,6 +175,11 @@ SENSORS: tuple[GreenworksSensorDescription, ...] = (
         attr_fn=lambda m, lang: {"last_status": status_key(m.state_code, m.park_reason)}
         if m.online is False
         else {},
+    ),
+    GreenworksSensorDescription(
+        key="status_text",
+        translation_key="status_text",
+        value_fn=lambda m: None,  # wird sprachabhaengig in native_value gebildet
     ),
     GreenworksSensorDescription(
         key="battery",
@@ -359,6 +365,8 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
             return None
         if self.entity_description.key == "schedule":
             return _schedule_summary(mower, self.hass.config.language)
+        if self.entity_description.key == "status_text":
+            return status_text(mower, self.hass.config.language)
         return self.entity_description.value_fn(mower)
 
     @property
@@ -369,4 +377,4 @@ class GreenworksSensor(GreenworksEntity, SensorEntity):
         return self.entity_description.attr_fn(mower, self.hass.config.language)
 
 
-# Version 0.3.1
+# Version 0.4.0

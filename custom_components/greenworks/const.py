@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.3.1"
+VERSION: Final = "0.4.0"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -61,6 +61,7 @@ ENTITY_GROUPS: Final[dict[str, str]] = {
     # Standard
     "mower": GROUP_STANDARD,
     "status": GROUP_STANDARD,
+    "status_text": GROUP_STANDARD,
     "battery": GROUP_STANDARD,
     "next_start": GROUP_STANDARD,
     "mowing_end": GROUP_STANDARD,
@@ -89,6 +90,8 @@ ENTITY_GROUPS: Final[dict[str, str]] = {
     "start_points": GROUP_APP_SETTINGS,
     "rain_sensor": GROUP_APP_SETTINGS,
     "frost_sensor": GROUP_APP_SETTINGS,
+    "pin_protection": GROUP_APP_SETTINGS,
+    "geofence": GROUP_APP_SETTINGS,
     # Diagnose
     "software": GROUP_DIAGNOSTICS,
     "signal_quality": GROUP_DIAGNOSTICS,
@@ -116,6 +119,10 @@ DP_LAST_ERROR: Final = "33"
 DP_POSITION: Final = "34"
 DP_STATISTICS: Final = "48"
 DP_FIRMWARE: Final = "117"
+# Sicherheitsstufe: 7 gesetzt, 8 gelesen (Bit 1 = PIN-Schutz, Bit 8 = Geofence)
+DP_SECURITY: Final = ("7", "8")
+# Geraetedaten (Teilenummer, Revision, Produktionsdatum)
+DP_DEVICE_DATA: Final = "21"
 DP_ERROR_HISTORY: Final = "52"
 DP_SCHEDULE_WRITE: Final = "124"
 DP_SCHEDULE_READ: Final = "125"
@@ -186,4 +193,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.3.1
+# Version 0.4.0

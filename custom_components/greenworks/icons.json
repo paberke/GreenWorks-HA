@@ -6,6 +6,18 @@
       },
       "problem": {
         "default": "mdi:robot-mower-outline"
+      },
+      "pin_protection": {
+        "default": "mdi:shield-lock",
+        "state": {
+          "off": "mdi:shield-off-outline"
+        }
+      },
+      "geofence": {
+        "default": "mdi:map-marker-radius",
+        "state": {
+          "off": "mdi:map-marker-off-outline"
+        }
       }
     },
     "switch": {
@@ -24,6 +36,11 @@
     "calendar": {
       "calendar": {
         "default": "mdi:calendar-clock"
+      }
+    },
+    "sensor": {
+      "status_text": {
+        "default": "mdi:message-text-outline"
       }
     }
   }

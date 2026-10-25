@@ -17,6 +17,18 @@ from .const import DOMAIN, ENTITY_GROUPS, GROUP_STANDARD
 from .coordinator import GreenworksCoordinator, enabled_groups
 
 
+def _hw_version(mower: GreenworksMower | None) -> str | None:
+    """z. B. 'Rev. 1 (2019-02)' aus den Geraetedaten des Maehers."""
+    if mower is None or (mower.revision is None and mower.production_date is None):
+        return None
+    parts = []
+    if mower.revision is not None:
+        parts.append(f"Rev. {mower.revision}")
+    if mower.production_date is not None:
+        parts.append(f"({mower.production_date:%Y-%m})")
+    return " ".join(parts)
+
+
 class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
     """Basisklasse: ordnet die Entitaet dem Maeher-Geraet zu."""
 
@@ -38,6 +50,8 @@ class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
             model=(mower.model if mower else None) or "Robotermaeher",
             name=mower.name if mower else "Greenworks",
             serial_number=mower.serial if mower else None,
+            model_id=mower.part_number if mower else None,
+            hw_version=_hw_version(mower),
             sw_version=mower.firmware if mower else None,
         )
 
@@ -50,4 +64,4 @@ class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
         return super().available and self.mower is not None
 
 
-# Version 0.3.1
+# Version 0.4.0

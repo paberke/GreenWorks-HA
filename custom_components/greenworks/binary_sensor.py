@@ -79,6 +79,18 @@ BINARY_SENSORS: tuple[GreenworksBinaryDescription, ...] = (
         value_fn=lambda m: m.online,
     ),
     GreenworksBinaryDescription(
+        key="pin_protection",
+        translation_key="pin_protection",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: None if m.security_level is None else bool(m.security_level & 1),
+    ),
+    GreenworksBinaryDescription(
+        key="geofence",
+        translation_key="geofence",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda m: None if m.security_level is None else bool(m.security_level & 8),
+    ),
+    GreenworksBinaryDescription(
         key="rain_sensor",
         translation_key="rain_sensor",
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -170,4 +182,4 @@ class GreenworksBinarySensor(GreenworksEntity, BinarySensorEntity):
         return {"reason": problem_reason(mower, self.hass.config.language)}
 
 
-# Version 0.3.1
+# Version 0.4.0

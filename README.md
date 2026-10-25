@@ -60,6 +60,7 @@ The **standard entities** are always created. Everything else is grouped and can
 |---|---|
 | **Mower** | *Docked*, *Mowing*, *Returning* or *Error*; *unavailable* while the mower is offline |
 | **Status** | Detailed state with the app's wording, e.g. *Parked by schedule*, *Charging*, *Searching station*, *Fatal error*, *Offline* or *Winter pause* |
+| **Status text** | The status line of the app, e.g. *Parked by schedule until Mon 09:00*, *Mowing until 12:30* or *Parked by user until further notice* – handy for dashboards and notifications |
 | **Battery** | Battery level in % |
 | **Charging** | On while the mower is charging |
 | **Next start** / **Mowing end** | When the mower starts next / when the current mowing window ends |
@@ -77,12 +78,14 @@ The **standard entities** are always created. Everything else is grouped and can
 |---|---|
 | **Detailed errors** | Last error code, Last error (time), Last error message (plain text, with the app's error history as attribute), Fatal errors |
 | **Statistics** | Total cutting time, Total running time, Total charging time, Statistics as of, Last status report |
-| **Settings from the app** | Mowing schedule (e.g. *Mon–Fri 09:00–12:30*), Drive past wire distance, Follow wire distance, Starting points, Rain protection, Frost protection – display only |
+| **Settings from the app** | Mowing schedule (e.g. *Mon–Fri 09:00–12:30*), Drive past wire distance, Follow wire distance, Starting points, Rain protection, Frost protection, **PIN protection** and **Geofence** (anti-theft, as set in the app) – display only |
 | **Diagnostics** | Software (with cutting unit and charging station), Signal quality |
 | **Calendar** | The mowing schedule as calendar events ("Mowing") |
 | **Position** | The mower on the map (GPS) |
 
 Existing installations from before 0.3.0 keep all their entities; only the calendar is new and switched off.
+
+The device page also shows the mower's part number (*Model ID*) and hardware revision with production month, e.g. *Rev. 1 (2019-02)*.
 
 </details>
 

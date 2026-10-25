@@ -22,6 +22,8 @@ from .const import (
     DP_DRIVE_PAST_WIRE,
     DP_ERROR_HISTORY,
     DP_FIRMWARE,
+    DP_SECURITY,
+    DP_DEVICE_DATA,
     DP_SCHEDULE_READ,
     DP_SCHEDULE_WRITE,
     DP_START_POINTS,
@@ -261,6 +263,14 @@ class GreenworksMower:
     # Wann der Maeher seinen Softwarestand zuletzt selbst gemeldet hat
     firmware_time: datetime | None = None
 
+    # Diebstahlschutz laut Maeher (Bitmaske: 1 = PIN-Schutz, 8 = Geofence)
+    security_level: int | None = None
+    security_time: datetime | None = None
+    # Geraetedaten aus dem Maeher
+    part_number: str | None = None
+    revision: int | None = None
+    production_date: datetime | None = None
+
     # Nur in Home Assistant: Winterpause eingeschaltet, offline seit
     winter_pause: bool = False
     offline_since: datetime | None = None
@@ -451,6 +461,23 @@ def build_mower(
             points.append((n, how, dist, often))
         mower.start_points, mower.start_points_time = points, found[0]
 
+    # --- Diebstahlschutz (PIN-Schutz / Geofence) -----------------------------
+    found = _dp_newest(datapoints, DP_SECURITY, "security_level")
+    if found:
+        level = _to_int(found[1].get("security_level"))
+        if level is not None and 0 <= level <= 255:
+            mower.security_level, mower.security_time = level, found[0]
+
+    # --- Geraetedaten (Teilenummer, Revision, Produktionsdatum) --------------
+    info = _flatten_datapoint(datapoints.get(DP_DEVICE_DATA))
+    if info.get("mower_pn"):
+        mower.part_number = str(info["mower_pn"])
+    mower.revision = _to_int(info.get("mower_revision"))
+    produced = _to_int(info.get("mower_production_time"))
+    # nur plausible Daten (2015 bis heute)
+    if produced and 1420070400 <= produced <= time.time():
+        mower.production_date = datetime.fromtimestamp(produced, timezone.utc)
+
     # --- Position ----------------------------------------------------------
     pos = _flatten_datapoint(datapoints.get(DP_POSITION))
     lat, lon = _to_float(pos.get("latitude")), _to_float(pos.get("longitude"))
@@ -622,4 +649,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.3.1
+# Version 0.4.0

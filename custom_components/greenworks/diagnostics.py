@@ -62,4 +62,4 @@ async def async_get_config_entry_diagnostics(
     }
 
 
-# Version 0.3.1
+# Version 0.4.0

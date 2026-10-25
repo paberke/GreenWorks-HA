@@ -18,7 +18,7 @@
       },
       "groups": {
         "title": "Was möchtest du anzeigen?",
-        "description": "Die Standard-Entitäten werden immer angelegt: Mäher, Status, Batterie, Nächster Start, Mähende, Online, Problem, Lädt, Fehler-Ereignis, Winterpause, Messer-Laufzeit und Messerwechsel fällig. Hake an, was du zusätzlich sehen möchtest. Das kannst du später unter „Konfigurieren“ ändern; ausgeschaltete Entitäten werden nur deaktiviert, nicht gelöscht.",
+        "description": "Die Standard-Entitäten werden immer angelegt: Mäher, Status, Statustext, Batterie, Nächster Start, Mähende, Online, Problem, Lädt, Fehler-Ereignis, Winterpause, Messer-Laufzeit und Messerwechsel fällig. Hake an, was du zusätzlich sehen möchtest. Das kannst du später unter „Konfigurieren“ ändern; ausgeschaltete Entitäten werden nur deaktiviert, nicht gelöscht.",
         "data": {
           "groups": "Zusätzliche Entitäten"
         }
@@ -397,6 +397,9 @@
             "name": "Aktualisiert"
           }
         }
+      },
+      "status_text": {
+        "name": "Statustext"
       }
     },
     "binary_sensor": {
@@ -434,6 +437,12 @@
       },
       "charging": {
         "name": "Lädt"
+      },
+      "pin_protection": {
+        "name": "PIN-Schutz"
+      },
+      "geofence": {
+        "name": "Geofence"
       }
     },
     "device_tracker": {
@@ -493,7 +502,7 @@
       "options": {
         "errors_detailed": "Fehler ausführlich (Fehlercode, letzter Fehler, Fehlermeldung mit Verlauf, schwere Fehler)",
         "statistics": "Statistik (Mäh-, Lauf- und Ladezeit, Statistik-Stand, letzte Statusmeldung)",
-        "app_settings": "Einstellungen aus der App (Mähplan, Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regen- und Frostschutz)",
+        "app_settings": "Einstellungen aus der App (Mähplan, Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regen- und Frostschutz, PIN-Schutz, Geofence)",
         "diagnostics": "Diagnose (Software, Signalqualität)",
         "calendar": "Kalender (Mähplan als Kalendertermine)",
         "position": "Position (Mäher auf der Karte)"

@@ -48,4 +48,4 @@ class GreenworksWinterPauseSwitch(GreenworksEntity, SwitchEntity):
         self.coordinator.async_set_winter_pause(self._device_id, False)
 
 
-# Version 0.3.1
+# Version 0.4.0

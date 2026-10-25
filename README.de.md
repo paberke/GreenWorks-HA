@@ -60,6 +60,7 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 |---|---|
 | **Mäher** | *Angedockt*, *Mäht*, *Fährt zurück* oder *Fehler*; *nicht verfügbar*, solange der Mäher offline ist |
 | **Status** | Genauer Zustand mit den Bezeichnungen der App, z. B. *Nach Zeitplan geparkt*, *Lädt*, *Sucht Station*, *Schwerer Fehler*, *Offline* oder *Winterpause* |
+| **Statustext** | Die Statuszeile der App, z. B. *Nach Zeitplan geparkt bis Mo. 09:00*, *Mäht bis 12:30* oder *Vom Benutzer geparkt bis auf Weiteres* – praktisch für Dashboards und Benachrichtigungen |
 | **Batterie** | Akkustand in % |
 | **Lädt** | An, solange der Mäher lädt |
 | **Nächster Start** / **Mähende** | Wann der Mäher das nächste Mal losfährt / wann das aktuelle Mähfenster endet |
@@ -77,12 +78,14 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 |---|---|
 | **Fehler ausführlich** | Letzter Fehlercode, Letzter Fehler (Zeitpunkt), Letzte Fehlermeldung (Klartext, mit der Fehlerliste der App als Attribut), Schwere Fehler |
 | **Statistik** | Mähzeit gesamt, Laufzeit gesamt, Ladezeit gesamt, Statistik-Stand, Letzte Statusmeldung |
-| **Einstellungen aus der App** | Mähplan (z. B. *Mo–Fr 09:00–12:30*), Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regenschutz, Frostschutz – nur Anzeige |
+| **Einstellungen aus der App** | Mähplan (z. B. *Mo–Fr 09:00–12:30*), Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regenschutz, Frostschutz, **PIN-Schutz** und **Geofence** (Diebstahlschutz, wie in der App eingestellt) – nur Anzeige |
 | **Diagnose** | Software (mit Mähwerk und Ladestation), Signalqualität |
 | **Kalender** | Der Mähplan als Kalendertermine („Mähen“) |
 | **Position** | Der Mäher auf der Karte (GPS) |
 
 Bestehende Installationen von vor 0.3.0 behalten alle ihre Entitäten; nur der Kalender ist neu und ausgeschaltet.
+
+Auf der Geräteseite stehen außerdem die Teilenummer des Mähers (*Modell-ID*) und die Hardware-Revision mit Produktionsmonat, z. B. *Rev. 1 (2019-02)*.
 
 </details>
 
