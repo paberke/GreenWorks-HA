@@ -17,7 +17,7 @@
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Starten, Parken und Einstellungen ändern geht weiterhin nur in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [KI-Prompts](PROMPTS.de.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
 
 <a id="getestete-maher"></a>
 

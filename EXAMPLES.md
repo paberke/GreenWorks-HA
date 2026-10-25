@@ -8,6 +8,8 @@ Ready-to-copy examples. Replace **`rasenrobo`** with the name of your mower and 
 
 **Trying a template:** *Developer tools → Template*.
 
+**Rather build it with an AI?** Ready-made prompts: [PROMPTS.md](PROMPTS.md).
+
 **Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Reading values](#reading-values)
 
 ## Notification on a new error

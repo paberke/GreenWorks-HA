@@ -8,6 +8,8 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Vorlagen ausprobieren:** *Entwicklerwerkzeuge → Template*.
 
+**Lieber mit einer KI bauen?** Fertige Prompts: [PROMPTS.de.md](PROMPTS.de.md).
+
 **Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
