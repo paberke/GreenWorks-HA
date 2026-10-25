@@ -8,7 +8,7 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Vorlagen ausprobieren:** *Entwicklerwerkzeuge → Template*.
 
-**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fällig) · [Mäher hat ein Problem](#mäher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
+**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
 
@@ -35,6 +35,8 @@ actions:
 mode: queued
 ```
 
+<a id="messerwechsel-fallig"></a>
+
 ## Messerwechsel fällig
 
 Meldet sich einmal, sobald die eingestellte Grenze der Messer-Laufzeit erreicht ist (Standard 150 h).
@@ -56,6 +58,8 @@ actions:
         seit dem letzten Wechsel. Danach die Messerzeit in der App zurücksetzen.
 mode: single
 ```
+
+<a id="maher-hat-ein-problem"></a>
 
 ## Mäher hat ein Problem
 

@@ -12,12 +12,14 @@
 > [!WARNING]
 > - Diese Integration wurde von **Claude (KI-Assistent von Anthropic)** zusammen mit [Patrick (paberke)](https://github.com/paberke) geschrieben. Sie ist ein privates Hobbyprojekt und **kein** offizielles Produkt von Greenworks.
 > - Sie kann den Mäher **nur auslesen, nicht steuern** – kein Starten, Pausieren oder Zurückschicken.
-> - Du wirst in der **Greenworks-App öfter abgemeldet**, wenn Home Assistant dasselbe Konto nutzt ([Details](#du-wirst-öfter-aus-der-greenworks-app-abgemeldet)).
+> - Du wirst in der **Greenworks-App öfter abgemeldet**, wenn Home Assistant dasselbe Konto nutzt ([Details](#abmelden-aus-der-app)).
 > - **Keine Gewähr, kein Support.** Nutzung auf eigene Verantwortung – lege vorher ein Backup an.
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Starten, Parken und Einstellungen ändern geht weiterhin nur in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-mäher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschränkungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#du-wirst-öfter-aus-der-greenworks-app-abgemeldet) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Fehlercodes](ERRORS.de.md) · [Beispiele](BEISPIELE.md) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
+
+<a id="getestete-maher"></a>
 
 ## Getestete Mäher
 
@@ -106,7 +108,7 @@ Entität antippen → **⋮** → **Details** → **Attribute**. In Automationen
 | **Abstand beim Drahtfolgen** | *Leitdraht 1*, *Leitdraht 2*, *Aktualisiert* |
 | **Startpunkte** | *Punkt 1* bis *Punkt 5* (Draht, Entfernung, Anteil der Starts), *Ladestation*, *Aktualisiert* |
 | **Messerwechsel fällig** | *Grenze (h)*, *Verbleibend (h)* |
-| **Mähzeit gesamt**, **Messer-Laufzeit** | *Davon gezählt*, *Letzte echte Statistik* (siehe [Einschränkungen](#einschränkungen)) |
+| **Mähzeit gesamt**, **Messer-Laufzeit** | *Davon gezählt*, *Letzte echte Statistik* (siehe [Einschränkungen](#einschrankungen)) |
 | **Mäher** | *status*, *status_code*, *park_reason_code*, *sub_status_code* – Rohwerte für Automationen |
 
 *Aktualisiert* zeigt, wann die App den Wert zuletzt aus dem Mäher gelesen hat.
@@ -178,6 +180,8 @@ cards:
 
 </details>
 
+<a id="einschrankungen"></a>
+
 ## Einschränkungen
 
 - **Keine Steuerung:** nur Auslesen. Starten, Parken oder Einstellungen ändern ist über Home Assistant nicht möglich und auch nicht geplant.
@@ -196,6 +200,8 @@ Der Mäher hat eine eigene Uhr mit einer **festen Zeitzone**. Die Umstellung zwi
 **So behebst du es:** Öffne in der Greenworks-App die Seite **Zeitplan**. Die App meldet dann *„Fehlerhafte Uhrzeit“* und fragt, ob sie die Zeit vom Handy übernehmen soll – mit **OK** bestätigen. Kurz danach zeigt auch Home Assistant wieder die richtige Zeit. Der Mäher muss dafür online sein.
 
 Damit du es nicht vergisst: [Beispiel-Automation, die dich am Tag der Zeitumstellung erinnert](BEISPIELE.md#erinnerung-bei-der-zeitumstellung).
+
+<a id="abmelden-aus-der-app"></a>
 
 ## Du wirst öfter aus der Greenworks-App abgemeldet
 
