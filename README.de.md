@@ -34,7 +34,7 @@ Andere Greenworks-/Cramer-Mähroboter, die mit der Greenworks-App laufen, funkti
 
 ## Installation
 
-**Voraussetzung:** Home Assistant **2025.1 oder neuer**. Automatisch getestet mit 2025.2 und 2026.2.
+**Voraussetzung:** Home Assistant **2025.1 oder neuer**. Automatisch getestet mit 2025.2, 2026.2 und 2026.10.
 
 **Ab Home Assistant 2026.11 (Marketplace)** – ab 2026.11 ist HACS als **Marketplace** in Home Assistant eingebaut:
 

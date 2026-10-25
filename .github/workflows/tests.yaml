@@ -2,7 +2,11 @@ name: Tests
 
 on:
   push:
+    paths-ignore:
+      - "**.md"
   pull_request:
+    paths-ignore:
+      - "**.md"
   workflow_dispatch:
 
 jobs:
@@ -15,14 +19,20 @@ jobs:
           # aelteste unterstuetzte Version (Mindestversion laut hacs.json: 2025.1)
           - name: "Home Assistant 2025.2"
             phcc: "0.13.215"
+            python: "3.13"
           - name: "Home Assistant 2026.2"
             phcc: "0.13.316"
+            python: "3.13"
+          # aktuelle Version
+          - name: "Home Assistant 2026.10"
+            phcc: "0.13.375"
+            python: "3.14"
     name: ${{ matrix.name }}
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.13"
+          python-version: ${{ matrix.python }}
       - name: Abhaengigkeiten installieren
         run: pip install "pytest-homeassistant-custom-component==${{ matrix.phcc }}"
       - name: Tests ausfuehren

@@ -1,0 +1,28 @@
+name: Idea / Idee
+description: Suggest an improvement / Verbesserung vorschlagen
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your idea! Please note: the integration is read-only and will not control the mower.
+        Danke für deine Idee! Bitte beachten: Die Integration liest nur aus und wird den Mäher nicht steuern.
+  - type: input
+    id: model
+    attributes:
+      label: Mower model / Mähermodell
+      placeholder: "e.g. Greenworks Optimow 10, Cramer RM1000"
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like? / Was wünschst du dir?
+      description: What should Home Assistant show, and what would you use it for? / Was soll Home Assistant anzeigen, und wofür würdest du es nutzen?
+    validations:
+      required: true
+  - type: textarea
+    id: app
+    attributes:
+      label: Is it shown in the Greenworks app? / Zeigt die Greenworks-App das an?
+      description: If yes, where (page/screen)? A screenshot helps. / Wenn ja, wo (Seite)? Ein Screenshot hilft.
