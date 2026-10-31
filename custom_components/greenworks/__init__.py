@@ -23,6 +23,7 @@ from .coordinator import (
     GreenworksCoordinator,
     enabled_groups,
 )
+from .mqtt_listen import GreenworksMqttListener
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -89,6 +90,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
+
+    # Testzweig: dem MQTT-Kanal nur zuhoeren, nichts senden
+    listener = GreenworksMqttListener(hass, client, list(coordinator.data or {}))
+    await listener.async_start()
+    entry.async_on_unload(listener.async_stop)
     return True
 
 

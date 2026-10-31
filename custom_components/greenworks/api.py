@@ -512,6 +512,9 @@ class GreenworksClient:
         self._refresh_token: str | None = None
         self._expires_at: float = 0
         self.user_id: int | None = None
+        # Fuer den MQTT-Kanal (Testzweig: nur zuhoeren)
+        self.authorize: str | None = None
+        self.login_keys: list[str] = []
         self._lock = asyncio.Lock()
 
     # --- Anmeldung -------------------------------------------------------
@@ -541,6 +544,8 @@ class GreenworksClient:
 
         self._store_tokens(data)
         self.user_id = data.get("user_id")
+        self.authorize = data.get("authorize") or self.authorize
+        self.login_keys = sorted(data)
         _LOGGER.debug("Greenworks-Login erfolgreich (user_id=%s)", self.user_id)
 
     def _store_tokens(self, data: dict[str, Any]) -> None:

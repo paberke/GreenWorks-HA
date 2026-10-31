@@ -10,6 +10,6 @@
   "integration_type": "hub",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/paberke/GreenWorks-HA/issues",
-  "requirements": [],
+  "requirements": ["paho-mqtt>=2.1.0"],
   "version": "0.4.1"
 }
