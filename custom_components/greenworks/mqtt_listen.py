@@ -62,15 +62,20 @@ class GreenworksMqttListener:
         import paho.mqtt.client as mqtt  # noqa: PLC0415
 
         client_id = f"X:APP;A:4;V:1;RES:{secrets.token_hex(8)};"
-        client = mqtt.Client(
-            callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
-            client_id=client_id,
-            clean_session=True,
-        )
+        if hasattr(mqtt, "CallbackAPIVersion"):  # paho 2.x (ab HA 2025.3)
+            client = mqtt.Client(
+                callback_api_version=mqtt.CallbackAPIVersion.VERSION2,
+                client_id=client_id,
+                clean_session=True,
+            )
+            client.on_connect = self._on_connect
+            client.on_disconnect = self._on_disconnect
+        else:  # paho 1.x (HA 2025.2)
+            client = mqtt.Client(client_id=client_id, clean_session=True)
+            client.on_connect = lambda c, u, f, rc: self._on_connect(c, u, f, _Rc(rc), None)
+            client.on_disconnect = lambda c, u, rc: self._on_disconnect(c, u, None, _Rc(rc), None)
         client.tls_set_context(context)
         client.username_pw_set(*self._credentials())
-        client.on_connect = self._on_connect
-        client.on_disconnect = self._on_disconnect
         client.on_message = self._on_message
         client.reconnect_delay_set(min_delay=30, max_delay=600)
         self._mqtt = client
@@ -123,6 +128,17 @@ class GreenworksMqttListener:
         if self._mqtt is not None:
             client, self._mqtt = self._mqtt, None
             await self._hass.async_add_executor_job(_stop, client)
+
+
+class _Rc:
+    """Antwortcode von paho 1.x wie bei paho 2.x darstellen."""
+
+    def __init__(self, rc: int) -> None:
+        self.value = rc
+        self.is_failure = rc != 0
+
+    def __str__(self) -> str:
+        return str(self.value)
 
 
 def _stop(client) -> None:

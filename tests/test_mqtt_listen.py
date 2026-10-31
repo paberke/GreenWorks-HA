@@ -56,3 +56,20 @@ async def test_fehlgeschlagene_anmeldung_abonniert_nichts(hass):
     fake = MagicMock()
     listener._on_connect(fake, None, None, SimpleNamespace(is_failure=True), None)
     fake.subscribe.assert_not_called()
+
+
+async def test_alte_paho_version(hass):
+    """HA 2025.2 bringt paho 1.x ohne CallbackAPIVersion mit."""
+    listener = GreenworksMqttListener(hass, _api(), [7])
+    fake = MagicMock()
+    fake_module = SimpleNamespace(Client=MagicMock(return_value=fake))
+    with patch.dict("sys.modules", {"paho.mqtt.client": fake_module}), patch(
+        "paho.mqtt.client", fake_module, create=True
+    ):
+        await listener.async_start()
+    fake_module.Client.assert_called_once()
+    assert "callback_api_version" not in fake_module.Client.call_args.kwargs
+    fake.on_connect(fake, None, {}, 0)
+    fake.subscribe.assert_any_call("$6/7")
+    fake.on_disconnect(fake, None, 1)
+    fake.publish.assert_not_called()
