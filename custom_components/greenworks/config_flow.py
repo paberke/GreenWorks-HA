@@ -56,6 +56,12 @@ from .const import (
 
 _LOGGER = logging.getLogger(__name__)
 
+# Links auf "Getestete Maeher" in der Readme (URLs duerfen nicht in strings.json)
+TESTED_MOWERS_URL = "https://github.com/paberke/GreenWorks-HA#tested-mowers"
+TESTED_MOWERS_URL_DE = (
+    "https://github.com/paberke/GreenWorks-HA/blob/main/README.de.md#getestete-maher"
+)
+
 USER_SCHEMA = vol.Schema(
     {vol.Required(CONF_EMAIL): str, vol.Required(CONF_PASSWORD): str}
 )
@@ -240,7 +246,14 @@ class GreenworksOptionsFlow(OptionsFlow):
                 ): _number(*OFFLINE_HOURS_RANGE, "h"),
             }
         )
-        return self.async_show_form(step_id="init", data_schema=schema)
+        return self.async_show_form(
+            step_id="init",
+            data_schema=schema,
+            description_placeholders={
+                "tested_mowers_url": TESTED_MOWERS_URL,
+                "tested_mowers_url_de": TESTED_MOWERS_URL_DE,
+            },
+        )
 
 
 # Version 0.5.0
