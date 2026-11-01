@@ -113,6 +113,11 @@ async def test_number_range(hass, aioclient_mock):
     assert state.attributes["min"] == 1 and state.attributes["max"] == 24
     state = hass.states.get(eid(hass, "number", "continuous_days"))
     assert state.attributes["min"] == 1 and state.attributes["max"] == 24
+    # keine "Einstellung": stehen unter Steuerung direkt bei ihrer Taste
+    from homeassistant.helpers import entity_registry as er
+    reg = er.async_get(hass)
+    for key in ("park_hours", "continuous_days"):
+        assert reg.async_get(eid(hass, "number", key)).entity_category is None
 
 
 # --- Anzeige "Maehen ohne Unterbrechung" --------------------------------------------

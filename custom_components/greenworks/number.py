@@ -1,5 +1,7 @@
 """Zahlenfelder fuer die eigenen Zeiten der App (nur bei "Lesen und steuern").
 
+Keine "Einstellung", damit sie unter "Steuerung" direkt unter ihrer Taste stehen.
+
 Sie aendern nichts am Maeher, sondern legen nur fest, wie lange die Knoepfe
 "Parken fuer eigene Zeit" und "Maehen ohne Unterbrechung: eigene Zeit" wirken.
 """
@@ -13,7 +15,7 @@ from homeassistant.components.number import (
     NumberMode,
     RestoreNumber,
 )
-from homeassistant.const import EntityCategory, UnitOfTime
+from homeassistant.const import UnitOfTime
 from homeassistant.core import HomeAssistant
 
 from .button import CUSTOM_CONTINUOUS_DAYS, CUSTOM_PARK_HOURS, DEFAULT_CUSTOM
@@ -40,7 +42,6 @@ NUMBERS: tuple[GreenworksNumberDescription, ...] = (
         native_step=1,
         native_unit_of_measurement=UnitOfTime.HOURS,
         mode=NumberMode.BOX,
-        entity_category=EntityCategory.CONFIG,
         default=DEFAULT_CUSTOM[CUSTOM_PARK_HOURS],
     ),
     GreenworksNumberDescription(
@@ -51,7 +52,6 @@ NUMBERS: tuple[GreenworksNumberDescription, ...] = (
         native_step=1,
         native_unit_of_measurement=UnitOfTime.DAYS,
         mode=NumberMode.BOX,
-        entity_category=EntityCategory.CONFIG,
         default=DEFAULT_CUSTOM[CUSTOM_CONTINUOUS_DAYS],
     ),
 )

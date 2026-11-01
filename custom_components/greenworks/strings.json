@@ -530,10 +530,10 @@
     },
     "number": {
       "park_hours": {
-        "name": "Custom time: park"
+        "name": "Park for custom time: hours"
       },
       "continuous_days": {
-        "name": "Custom time: mow without interruption"
+        "name": "Mow without interruption: custom time, days"
       }
     }
   },

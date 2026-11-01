@@ -530,10 +530,10 @@
     },
     "number": {
       "park_hours": {
-        "name": "Eigene Zeit: Parken"
+        "name": "Parken für eigene Zeit: Stunden"
       },
       "continuous_days": {
-        "name": "Eigene Zeit: Mähen ohne Unterbrechung"
+        "name": "Mähen ohne Unterbrechung: eigene Zeit, Tage"
       }
     }
   },

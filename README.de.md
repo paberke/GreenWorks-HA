@@ -150,7 +150,7 @@ Auf der Geräteseite gibt es dieselben Auswahlen wie in der App:
 | **Parken bis auf Weiteres** / **für 2 Stunden** / **für den Rest des Tages** / **für eigene Zeit** | Dialog *Rasenmäher parken* |
 | **Mähen ohne Unterbrechung: 2 Tage** / **1 Woche** / **eigene Zeit** / **aus** | ∞ auf der Seite *Zeitplan* |
 
-- Die **eigene Zeit** stellst du in den Zahlenfeldern *Eigene Zeit: Parken* (1–24 Stunden) und *Eigene Zeit: Mähen ohne Unterbrechung* (1–24 Tage) ein, wie in der App.
+- Die **eigene Zeit** stellst du in den Zahlenfeldern *Parken für eigene Zeit: Stunden* (1–24) und *Mähen ohne Unterbrechung: eigene Zeit, Tage* (1–24) ein, wie in der App. Sie stehen direkt unter ihrer Taste.
 - **Gesperrt wie in der App:** Tasten, die im aktuellen Zustand nicht gehen, sind *nicht verfügbar*. Beispiel: Ist der Mäher *nach Zeitplan*, *durch Regen-* oder *Frostschutz* geparkt, geht nur *Parken bis auf Weiteres*. *Start* gibt es nur, wenn er pausiert oder vom Benutzer geparkt ist, *Pause* nur, wenn er unterwegs ist.
 - Für Automationen gibt es die Aktionen `greenworks.park` (`hours` 1–24, ohne Angabe: bis auf Weiteres) und `greenworks.mow_continuously` (`days` 1–24, 0 = aus). Die Mäher-Entität hat außerdem die üblichen Knöpfe Start, Pause und Zur Station.
 - Home Assistant wartet auf die **Bestätigung des Mähers**. Kommt keine (z. B. Mäher offline) oder lehnt er ab, erscheint eine Fehlermeldung.

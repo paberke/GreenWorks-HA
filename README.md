@@ -148,7 +148,7 @@ The device page offers the same choices as the app:
 | **Park until further notice** / **for 2 hours** / **for the rest of the day** / **for custom time** | Dialog *Park mower* |
 | **Mow without interruption: 2 days** / **1 week** / **custom time** / **off** | ∞ on the *Schedule* page |
 
-- Set the **custom time** in the number fields *Custom time: park* (1–24 hours) and *Custom time: mow without interruption* (1–24 days), as in the app.
+- Set the **custom time** in the number fields *Park for custom time: hours* (1–24) and *Mow without interruption: custom time, days* (1–24), as in the app. They sit right below their button.
 - **Locked like in the app:** buttons that don't work in the current state are *unavailable*. Example: while the mower is parked *by schedule*, *rain guard* or *frost guard*, only *Park until further notice* works. *Start* is only offered when the mower is paused or parked by the user, *Pause* only while it is on its way.
 - For automations there are the actions `greenworks.park` (`hours` 1–24, empty: until further notice) and `greenworks.mow_continuously` (`days` 1–24, 0 = off). The mower entity also has the usual start, pause and dock buttons.
 - Home Assistant waits for the **mower's confirmation**. If none arrives (e.g. mower offline) or the mower refuses, you get an error message.
