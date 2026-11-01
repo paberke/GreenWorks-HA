@@ -10,7 +10,7 @@ Ready-to-copy examples. Replace **`rasenrobo`** with the name of your mower and 
 
 **Rather build it with an AI?** Ready-made prompts: [PROMPTS.md](PROMPTS.md).
 
-**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Dashboard card](#dashboard-card) · [Reading values](#reading-values)
+**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Park when it rains](#park-when-it-rains) · [Dashboard card](#dashboard-card) · [Reading values](#reading-values)
 
 ## Notification on a new error
 
@@ -234,6 +234,64 @@ actions:
       message: >-
         The clocks changed today. Please open the Schedule page in the
         Greenworks app and confirm "Incorrect time" with OK.
+mode: single
+```
+
+## Park when it rains
+
+Needs **Read and control** (see [Control](README.md#control)). When your weather station reports rain, the mower drives to the station and stays there (*Park until further notice*). After one dry hour the schedule is resumed: if that is still within the mowing window it drives out again, otherwise it waits for the next slot. The mower's built-in rain sensor only notices rain once it is already wet; the weather station is faster.
+
+Create first: a **Toggle** helper (*Settings → Devices & services → Helpers → Create helper → Toggle*) named `Rasenrobo rain pause`. It remembers that the automation parked the mower, so a mower you parked yourself is not sent out again. Replace `sensor.weather_station_rain_rate` with your rain sensor (rain rate, e.g. mm/h).
+
+```yaml
+alias: Mower – park when it rains
+description: >-
+  Parks until further notice when it rains and resumes the schedule after one dry hour.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.weather_station_rain_rate
+    above: 0
+    id: rain
+  - trigger: numeric_state
+    entity_id: sensor.weather_station_rain_rate
+    below: 0.1
+    for:
+      minutes: 60
+    id: dry
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: rain
+          - condition: state
+            entity_id: input_boolean.rasenrobo_rain_pause
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.rasenrobo_online
+            state: "on"
+        sequence:
+          - action: lawn_mower.dock
+            target:
+              entity_id: lawn_mower.rasenrobo
+          - action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.rasenrobo_rain_pause
+      - conditions:
+          - condition: trigger
+            id: dry
+          - condition: state
+            entity_id: input_boolean.rasenrobo_rain_pause
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.rasenrobo_rain_pause
+          - condition: state
+            entity_id: sensor.rasenrobo_status
+            state: parked_by_user
+          - action: lawn_mower.start_mowing
+            target:
+              entity_id: lawn_mower.rasenrobo
 mode: single
 ```
 

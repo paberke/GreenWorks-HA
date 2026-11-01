@@ -10,7 +10,7 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Lieber mit einer KI bauen?** Fertige Prompts: [PROMPTS.de.md](PROMPTS.de.md).
 
-**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Dashboard-Karte](#dashboard-karte) · [Werte abfragen](#werte-abfragen)
+**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Bei Regen parken](#bei-regen-parken) · [Dashboard-Karte](#dashboard-karte) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
 
@@ -238,6 +238,66 @@ actions:
       message: >-
         Heute war Zeitumstellung. Bitte in der Greenworks-App die Seite
         Zeitplan öffnen und bei „Fehlerhafte Uhrzeit“ OK drücken.
+mode: single
+```
+
+<a id="bei-regen-parken"></a>
+
+## Bei Regen parken
+
+Braucht **Lesen und steuern** (siehe [Steuerung](README.de.md#steuerung)). Fängt es laut deiner Wetterstation an zu regnen, fährt der Mäher zur Station und bleibt dort (*Parken bis auf Weiteres*). Ist es eine Stunde trocken, wird der Zeitplan fortgesetzt: Liegt das noch im Mähfenster, fährt er wieder los, sonst wartet er auf den nächsten Termin. Der eingebaute Regensensor des Mähers merkt Regen erst, wenn er schon nass ist; die Wetterstation ist schneller.
+
+Vorher anlegen: einen Helfer **Schalter** (*Einstellungen → Geräte & Dienste → Helfer → Helfer erstellen → Schalter*) mit dem Namen `Rasenrobo Regenpause`. Er merkt sich, dass die Automation geparkt hat, damit sie einen Mäher, den du selbst geparkt hast, nicht wieder losschickt. Ersetze `sensor.wetterstation_regenrate` durch deinen Regen-Sensor (Regenrate, z. B. mm/h).
+
+```yaml
+alias: Rasenmäher – bei Regen parken
+description: >-
+  Parkt bei Regen bis auf Weiteres und setzt den Zeitplan fort, wenn es eine Stunde trocken ist.
+triggers:
+  - trigger: numeric_state
+    entity_id: sensor.wetterstation_regenrate
+    above: 0
+    id: regen
+  - trigger: numeric_state
+    entity_id: sensor.wetterstation_regenrate
+    below: 0.1
+    for:
+      minutes: 60
+    id: trocken
+actions:
+  - choose:
+      - conditions:
+          - condition: trigger
+            id: regen
+          - condition: state
+            entity_id: input_boolean.rasenrobo_regenpause
+            state: "off"
+          - condition: state
+            entity_id: binary_sensor.rasenrobo_online
+            state: "on"
+        sequence:
+          - action: lawn_mower.dock
+            target:
+              entity_id: lawn_mower.rasenrobo
+          - action: input_boolean.turn_on
+            target:
+              entity_id: input_boolean.rasenrobo_regenpause
+      - conditions:
+          - condition: trigger
+            id: trocken
+          - condition: state
+            entity_id: input_boolean.rasenrobo_regenpause
+            state: "on"
+        sequence:
+          - action: input_boolean.turn_off
+            target:
+              entity_id: input_boolean.rasenrobo_regenpause
+          - condition: state
+            entity_id: sensor.rasenrobo_status
+            state: parked_by_user
+          - action: lawn_mower.start_mowing
+            target:
+              entity_id: lawn_mower.rasenrobo
 mode: single
 ```
 

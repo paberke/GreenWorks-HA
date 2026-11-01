@@ -12,15 +12,21 @@ You'd rather have an AI build your automations (e.g. Claude, ChatGPT or Assist i
 - **AI with access to Home Assistant** (e.g. Assist or an AI connected to Home Assistant): paste the context block as it is. The AI finds your mower and your phone by itself and asks you to confirm them.
 - **AI without access** (e.g. ChatGPT or Claude in the browser): replace `rasenrobo` in the context block with the name of your mower. You find the exact entity IDs under *Settings → Devices & services → Greenworks → your mower*. The AI will then ask for your phone.
 
-**Contents:** [Context block](#context-block) · [Error notification](#error-notification) · [Weekly summary](#weekly-summary) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#clock-change) · [Blade change](#blade-change) · [Dashboard card](#dashboard-card) · [Check an automation](#check-an-automation) · [Privacy](#privacy)
+**Contents:** [Context block](#context-block) · [Error notification](#error-notification) · [Weekly summary](#weekly-summary) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#clock-change) · [Blade change](#blade-change) · [Park when it rains](#park-when-it-rains) · [Dashboard card](#dashboard-card) · [Check an automation](#check-an-automation) · [Privacy](#privacy)
 
 ## Context block
 
 ```text
 I use the Home Assistant integration "Greenworks" (HACS, github.com/paberke/GreenWorks-HA)
 for my Greenworks robotic mower. Important:
-- The integration is READ-ONLY. There are no commands to start, park or change settings.
-  Don't suggest actions on the mower, only notifications, helpers and displays.
+- Control is optional. Default is "Read only": then no actions on the mower, only
+  notifications, helpers and displays. If "Read and control" is set under Configure (ask me
+  if you can't see it), there are: lawn_mower.start_mowing (start / resume schedule),
+  lawn_mower.pause, lawn_mower.dock (park until further notice), greenworks.park (hours 1–24)
+  and greenworks.mow_continuously (days 1–24, 0 = off), plus
+  binary_sensor.rasenrobo_mow_without_interruption (attribute until). The mower's schedule and
+  settings cannot be changed. Start only works when the mower is paused or parked by the user
+  (status parked_by_user).
 - If you have access to my Home Assistant: look up the entities of the "greenworks" integration
   and my phone's notify service yourself and let me confirm them before you build anything.
   Otherwise: ask me for my notify service. Example entities (mower "rasenrobo", Home Assistant
@@ -81,6 +87,15 @@ The automation should detect the change by itself, without fixed dates.
 ```text
 Send a message to my phone as soon as "Blade change due" turns on, with the
 current blade time. And a second message when only 10 hours are left (attribute remaining).
+```
+
+## Park when it rains
+
+```text
+I have "Read and control" switched on. When my weather station reports rain, the mower should
+park until further notice. After one dry hour the schedule should be resumed, but only if the
+automation parked it itself (use a toggle helper for that and tell me how to create it).
+Look up my rain sensor or ask me for it.
 ```
 
 ## Dashboard card

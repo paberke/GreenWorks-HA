@@ -12,15 +12,21 @@ Du lässt dir Automationen lieber von einer KI bauen (z. B. Claude, ChatGPT oder
 - **KI mit Zugriff auf Home Assistant** (z. B. Assist oder eine KI mit Home-Assistant-Anbindung): Kontext-Block einfach so einfügen. Die KI sucht deinen Mäher und dein Handy selbst und lässt sie dich bestätigen.
 - **KI ohne Zugriff** (z. B. ChatGPT oder Claude im Browser): Ersetze im Kontext-Block `rasenrobo` durch den Namen deines Mähers. Die genauen Entity-IDs findest du unter *Einstellungen → Geräte & Dienste → Greenworks → dein Mäher*. Nach deinem Handy fragt die KI dann selbst.
 
-**Inhalt:** [Kontext-Block](#kontext-block) · [Fehler melden](#fehler-melden) · [Wochenübersicht](#wochenubersicht) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#zeitumstellung) · [Messerwechsel](#messerwechsel) · [Dashboard-Karte](#dashboard-karte) · [Automation prüfen](#automation-prufen) · [Datenschutz](#datenschutz)
+**Inhalt:** [Kontext-Block](#kontext-block) · [Fehler melden](#fehler-melden) · [Wochenübersicht](#wochenubersicht) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#zeitumstellung) · [Messerwechsel](#messerwechsel) · [Bei Regen parken](#bei-regen-parken) · [Dashboard-Karte](#dashboard-karte) · [Automation prüfen](#automation-prufen) · [Datenschutz](#datenschutz)
 
 ## Kontext-Block
 
 ```text
 Ich nutze in Home Assistant die Integration "Greenworks" (HACS, github.com/paberke/GreenWorks-HA)
 für meinen Greenworks-Mähroboter. Wichtig:
-- Die Integration kann NUR LESEN. Es gibt keine Befehle zum Starten, Parken oder Einstellen.
-  Schlage keine Aktionen am Mäher vor, nur Benachrichtigungen, Helfer und Anzeigen.
+- Steuerung ist optional. Standard ist "Nur lesen": dann keine Aktionen am Mäher, nur
+  Benachrichtigungen, Helfer und Anzeigen. Ist unter Konfigurieren "Lesen und steuern"
+  eingestellt (frag mich, falls du es nicht siehst), gibt es: lawn_mower.start_mowing
+  (Mähen starten / Zeitplan fortsetzen), lawn_mower.pause, lawn_mower.dock (parken bis auf
+  Weiteres), greenworks.park (hours 1–24) und greenworks.mow_continuously (days 1–24, 0 = aus),
+  dazu binary_sensor.rasenrobo_mahen_ohne_unterbrechung (Attribut until). Zeitplan und
+  Einstellungen des Mähers lassen sich nicht ändern. Starten nur, wenn der Mäher pausiert
+  oder vom Benutzer geparkt ist (status parked_by_user).
 - Hast du Zugriff auf mein Home Assistant: Suche die Entitäten der Integration "greenworks" und
   meinen notify-Dienst fürs Handy selbst und lass sie mich bestätigen, bevor du baust.
   Sonst: Frag mich nach meinem notify-Dienst. Beispiel für die Entitäten (Mäher "rasenrobo",
@@ -84,6 +90,17 @@ Die Automation soll die Zeitumstellung selbst erkennen, ohne feste Daten.
 Schick mir eine Nachricht aufs Handy, sobald "Messerwechsel fällig" auf an geht,
 mit der aktuellen Messer-Laufzeit. Und eine zweite Nachricht, wenn nur noch 10 Stunden übrig
 sind (Attribut remaining).
+```
+
+<a id="bei-regen-parken"></a>
+
+## Bei Regen parken
+
+```text
+Ich habe "Lesen und steuern" eingeschaltet. Wenn meine Wetterstation Regen meldet, soll der
+Mäher bis auf Weiteres parken. Ist es eine Stunde trocken, soll der Zeitplan fortgesetzt werden,
+aber nur, wenn die Automation selbst geparkt hat (nimm dafür einen Schalter-Helfer und sag mir,
+wie ich ihn anlege). Such meinen Regen-Sensor bzw. frag mich danach.
 ```
 
 ## Dashboard-Karte
