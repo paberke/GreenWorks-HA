@@ -83,7 +83,7 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 |---|---|
 | **Fehler ausführlich** | Letzter Fehlercode, Letzter Fehler (Zeitpunkt), Letzte Fehlermeldung (Klartext, mit der Fehlerliste der App als Attribut), Schwere Fehler |
 | **Statistik** | Mähzeit gesamt, Laufzeit gesamt, Ladezeit gesamt, Statistik-Stand, Letzte Statusmeldung |
-| **Einstellungen aus der App** | Mähplan (z. B. *Mo–Fr 09:00–12:30*), Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regenschutz, Frostschutz, **PIN-Schutz** und **Geofence** (Diebstahlschutz, wie in der App eingestellt) – nur Anzeige |
+| **Einstellungen aus der App** | Mähplan (z. B. *Mo–Fr 09:00–12:30*), Überfahrweite, Abstand beim Drahtfolgen, Startpunkte, Regenschutz, Frostschutz, **PIN-Schutz** und **Geofence** (Diebstahlschutz, wie in der App eingestellt) – nur Anzeige. *Geofence* zeigt, ob der Schutz **eingeschaltet** ist, nicht ob der Mäher den Bereich verlassen hat; das meldet er als Status *Alarm* |
 | **Diagnose** | Software (mit Mähwerk und Ladestation), Signalqualität |
 | **Kalender** | Der Mähplan als Kalendertermine („Mähen“) |
 | **Position** | Der Mäher auf der Karte (GPS) |

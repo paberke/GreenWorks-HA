@@ -81,7 +81,7 @@ The **standard entities** are always created. Everything else is grouped and can
 |---|---|
 | **Detailed errors** | Last error code, Last error (time), Last error message (plain text, with the app's error history as attribute), Fatal errors |
 | **Statistics** | Total cutting time, Total running time, Total charging time, Statistics as of, Last status report |
-| **Settings from the app** | Mowing schedule (e.g. *Mon–Fri 09:00–12:30*), Drive past wire distance, Follow wire distance, Starting points, Rain protection, Frost protection, **PIN protection** and **Geofence** (anti-theft, as set in the app) – display only |
+| **Settings from the app** | Mowing schedule (e.g. *Mon–Fri 09:00–12:30*), Drive past wire distance, Follow wire distance, Starting points, Rain protection, Frost protection, **PIN protection** and **Geofence** (anti-theft, as set in the app) – display only. *Geofence* shows whether the protection is **switched on**, not whether the mower has left the area; that is reported as status *Alarm* |
 | **Diagnostics** | Software (with cutting unit and charging station), Signal quality |
 | **Calendar** | The mowing schedule as calendar events ("Mowing") |
 | **Position** | The mower on the map (GPS) |

@@ -43,6 +43,8 @@ für meinen Greenworks-Mähroboter. Wichtig:
   sensor.rasenrobo_messer_laufzeit (h), binary_sensor.rasenrobo_messerwechsel_fallig
     (Attribute limit, remaining)
   switch.rasenrobo_winterpause (ändert nur die Anzeige in Home Assistant, nichts am Mäher)
+  binary_sensor.rasenrobo_geofence zeigt nur, ob der Diebstahlschutz eingeschaltet ist, NICHT ob
+    der Mäher den Bereich verlassen hat (dafür: sensor.rasenrobo_status = alarm)
   Optional, wenn eingeschaltet: sensor.rasenrobo_letzte_fehlermeldung, sensor.rasenrobo_mahplan,
     calendar.rasenrobo_mahplan, device_tracker.rasenrobo_position
 - Der Mäher stellt Sommer-/Winterzeit nicht selbst um; das passiert nur in der Greenworks-App.
