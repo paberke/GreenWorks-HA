@@ -17,7 +17,7 @@
 
 Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Auf Wunsch kann sie den Mäher auch starten, pausieren und parken – wie die Knöpfe in der App. Zeitplan und Einstellungen änderst du weiterhin in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Einstellungen](#einstellungen-konfigurieren) · [Steuerung](#steuerung) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Einstellungen](#einstellungen-konfigurieren) · [Steuerung](#steuerung) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Geplant](#geplant) · [Entfernen](#entfernen)
 
 **Zum Nachschlagen:** 📋 [Fehlercodes](ERRORS.de.md) · 🛠️ [Beispiele: Automationen und Dashboard](BEISPIELE.md) · 🤖 [KI-Prompts](PROMPTS.de.md)
 
@@ -213,6 +213,17 @@ Damit du es nicht vergisst: [Beispiel-Automation, die dich am Tag der Zeitumstel
 Ein Greenworks-Konto kann anscheinend immer nur an **einer** Stelle gleichzeitig angemeldet sein. Meldest du dich in der App an, wird die Anmeldung von Home Assistant ungültig. Home Assistant meldet sich innerhalb einer Minute still neu an – und dadurch wirst du in der App abgemeldet. Home Assistant selbst läuft dabei zuverlässig weiter.
 
 Wenn dich das stört: Die Integration ausschalten, solange du die App benutzt (*Einstellungen → Geräte & Dienste → Greenworks → ⋮ → Deaktivieren*), und danach wieder einschalten. Der Greenworks-Support hat empfohlen, für Home Assistant ein **zweites Konto** zu nutzen und den Mäher damit zu teilen; das haben wir noch nicht ausprobiert.
+
+## Geplant
+
+Was wir als Nächstes angehen wollen. **Ob und wann das klappt, ist noch nicht sicher.** Wir probieren es aus und testen alles erst am eigenen Mäher.
+
+- Aufnahme in den HACS-Store bzw. den neuen **Marketplace** ab Home Assistant 2026.11
+- **Mähplan** aus Home Assistant einstellen (zuerst als Testphase)
+- **Uhrzeit** des Mähers nach der Zeitumstellung automatisch stellen
+- **Konto wechseln**, ohne die Integration neu einzurichten
+
+Ideen und Wünsche gern als [Issue](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
 
 ## Entfernen
 

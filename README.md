@@ -17,7 +17,7 @@
 
 The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. If you want, it can also start, pause and park the mower – like the buttons in the app. The schedule and settings are still changed in the Greenworks app.
 
-**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Settings](#settings-configure) · [Control](#control) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Settings](#settings-configure) · [Control](#control) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Planned](#planned) · [Removal](#removal)
 
 **More:** 📋 [Error codes](ERRORS.md) · 🛠️ [Examples: automations and dashboard](EXAMPLES.md) · 🤖 [AI prompts](PROMPTS.md)
 
@@ -207,6 +207,17 @@ So you don't forget: [example automation that reminds you on the day the clocks 
 A Greenworks account can apparently only be logged in at **one** place at a time. When you log in to the app, Home Assistant's login becomes invalid; Home Assistant silently logs back in within a minute – and that logs the app out. Home Assistant itself keeps working.
 
 If that bothers you, disable the integration while you use the app (*Settings → Devices & services → Greenworks → ⋮ → Disable*) and enable it again afterwards. Greenworks support suggested using a **second account** for Home Assistant and sharing the mower with it; we have not tested this yet.
+
+## Planned
+
+What we want to tackle next. **Whether and when this works out is not certain yet.** We try it and test everything on our own mower first.
+
+- Inclusion in the HACS store or the new **Marketplace** from Home Assistant 2026.11
+- Set the **mowing schedule** from Home Assistant (test phase first)
+- Set the mower's **clock** automatically after daylight saving time changes
+- **Switch accounts** without setting up the integration again
+
+Ideas and wishes are welcome as an [issue](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
 
 ## Removal
 
