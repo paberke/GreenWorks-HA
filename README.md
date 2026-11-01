@@ -158,7 +158,7 @@ Both notices disappear by themselves as soon as everything works again. If the p
 
 ## Limitations
 
-- **No control:** read-only. Starting, parking or changing settings is not possible from Home Assistant and not planned.
+- **Control in progress:** this version is read-only. Start, pause and park from Home Assistant is being built and tested and can later be switched on in the settings, see [issue #1](https://github.com/paberke/GreenWorks-HA/issues/1). Schedule and settings stay in the app.
 - **Statistics only update when the app asks for them:** the mower sends cutting, running and charging time only when the statistics are opened in the app. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower is *mowing* and adds them to the last real value (attribute *Counted since last statistics*). When new real statistics arrive, they take over again.
 - **Schedule, error history and settings are only as current as the app:** the cloud updates them when you open the respective page in the app (attribute *Updated*).
 - **No software update notice:** whether there is new mower software is only shown by the Greenworks app (page *Software*). Its update server does not answer requests from outside the app.

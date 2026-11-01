@@ -162,7 +162,7 @@ Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Pas
 
 ## Einschränkungen
 
-- **Keine Steuerung:** nur Auslesen. Starten, Parken oder Einstellungen ändern ist über Home Assistant nicht möglich und auch nicht geplant.
+- **Steuerung in Arbeit:** Diese Version liest nur aus. Starten, Pause und Parken aus Home Assistant wird gerade gebaut und getestet und lässt sich später in den Einstellungen einschalten, siehe [Issue #1](https://github.com/paberke/GreenWorks-HA/issues/1). Zeitplan und Einstellungen bleiben in der App.
 - **Statistik nur beim Öffnen der App aktuell:** Mäh-, Lauf- und Ladezeit schickt der Mäher nur, wenn in der App die Statistik geöffnet wird. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher *mäht*, und schlägt sie auf den letzten echten Wert auf (Attribut *Davon gezählt*). Kommt eine neue echte Statistik, gilt wieder diese.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie, wenn du in der App die jeweilige Seite öffnest (Attribut *Aktualisiert*).
 - **Keine Anzeige für Software-Updates:** Ob es neue Mäher-Software gibt, zeigt nur die Greenworks-App (Seite *Software*). Ihr Update-Server beantwortet keine Anfragen von außerhalb der App.
