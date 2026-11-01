@@ -484,6 +484,23 @@
       "calendar": {
         "name": "Mowing schedule"
       }
+    },
+    "button": {
+      "park_2h": {
+        "name": "Park for 2 hours"
+      },
+      "park_rest_of_day": {
+        "name": "Park for the rest of the day"
+      },
+      "continuous_2_days": {
+        "name": "Mow without interruption: 2 days"
+      },
+      "continuous_1_week": {
+        "name": "Mow without interruption: 1 week"
+      },
+      "continuous_off": {
+        "name": "Mow without interruption: off"
+      }
     }
   },
   "options": {
@@ -493,10 +510,14 @@
         "description": "Which entities are shown and how the integration works. Switched-off entities are disabled, not deleted, so their entity IDs stay the same. Tip for winter: switch on the “Winter pause” switch on the mower's device page – then there are no offline notices and Problem shows “No problem”. Nothing is changed on the mower.",
         "data": {
           "groups": "Additional entities",
+          "control": "Control",
           "scan_interval": "Update interval (30–600 seconds)",
           "outage_grace": "Keep last values during drops (1–60 minutes)",
           "blade_limit": "Blade change after (0 = off, 0–1000 hours)",
           "offline_hours": "Repair notice when offline for (0 = off, 0–72 hours)"
+        },
+        "data_description": {
+          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. Schedule and settings stay in the app."
         }
       }
     }
@@ -510,6 +531,12 @@
         "diagnostics": "Diagnostics (software, signal quality)",
         "calendar": "Calendar (mowing schedule as calendar events)",
         "position": "Position (mower on the map)"
+      }
+    },
+    "control": {
+      "options": {
+        "read_only": "Read only",
+        "read_and_control": "Read and control (start, pause, park)"
       }
     }
   },
@@ -529,6 +556,40 @@
     },
     "cloud_unreachable": {
       "message": "Greenworks cloud not reachable: {error}"
+    },
+    "control_disabled": {
+      "message": "Control is switched off. Choose “Read and control” under Configure."
+    },
+    "control_not_connected": {
+      "message": "No connection to the Greenworks control channel. Please try again in a minute."
+    },
+    "control_no_reply": {
+      "message": "The mower did not confirm the command within 30 seconds. Please check the Greenworks app."
+    },
+    "control_rejected": {
+      "message": "The mower rejected the command."
+    }
+  },
+  "services": {
+    "park": {
+      "name": "Park",
+      "description": "Sends the mower to its station and keeps it there. Without hours it stays parked until further notice. Only works with “Read and control”.",
+      "fields": {
+        "hours": {
+          "name": "Hours",
+          "description": "How long to park (1–720 hours). Leave empty for “until further notice”."
+        }
+      }
+    },
+    "mow_continuously": {
+      "name": "Mow without interruption",
+      "description": "Mows without the schedule for a number of days, like in the app. 0 switches it off. Only works with “Read and control”.",
+      "fields": {
+        "days": {
+          "name": "Days",
+          "description": "How many days (1–30), 0 = off."
+        }
+      }
     }
   }
 }

@@ -11,13 +11,13 @@
 
 > [!WARNING]
 > - Diese Integration wurde von **Claude (KI-Assistent von Anthropic)** zusammen mit [Patrick (paberke)](https://github.com/paberke) geschrieben. Sie ist ein privates Hobbyprojekt und **kein** offizielles Produkt von Greenworks.
-> - Sie kann den Mäher **nur auslesen, nicht steuern** – kein Starten, Pausieren oder Zurückschicken.
+> - Sie **liest** den Mäher standardmäßig **nur aus**. Starten, Pause und Parken gibt es nur, wenn du unter *Konfigurieren* die [Steuerung](#steuerung) einschaltest. Zeitplan und Einstellungen ändert sie nie.
 > - Du wirst in der **Greenworks-App öfter abgemeldet**, wenn Home Assistant dasselbe Konto nutzt ([Details](#abmelden-aus-der-app)).
 > - **Keine Gewähr, kein Support.** Nutzung auf eigene Verantwortung – lege vorher ein Backup an.
 
-Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Starten, Parken und Einstellungen ändern geht weiterhin nur in der Greenworks-App.
+Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Auf Wunsch kann sie den Mäher auch starten, pausieren und parken – wie die Knöpfe in der App. Zeitplan und Einstellungen änderst du weiterhin in der Greenworks-App.
 
-**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Einstellungen](#einstellungen-konfigurieren) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
+**Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Einstellungen](#einstellungen-konfigurieren) · [Steuerung](#steuerung) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Entfernen](#entfernen)
 
 **Zum Nachschlagen:** 📋 [Fehlercodes](ERRORS.de.md) · 🛠️ [Beispiele: Automationen und Dashboard](BEISPIELE.md) · 🤖 [KI-Prompts](PROMPTS.de.md)
 
@@ -128,10 +128,30 @@ Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren**:
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
 | Zusätzliche Entitäten | – | Welche zusätzlichen Gruppen angezeigt werden |
+| Steuerung | Nur lesen | *Lesen und steuern* schaltet [Starten, Pause und Parken](#steuerung) frei |
 | Abfrage-Intervall | 60 s | Wie oft die Cloud gefragt wird (30–600 s) |
 | Letzte Werte bei Aussetzern behalten | 5 min | Kurze Ausfälle der Cloud werden überbrückt (1–60 min) |
 | Messerwechsel nach | 150 h | Grenze für *Messerwechsel fällig* (0 = aus). Greenworks nennt kein festes Intervall; allgemein empfohlen wird ein Wechsel alle 6–10 Wochen Mähbetrieb |
 | Hinweis unter Reparaturen, wenn offline seit | 1 h | Siehe [Hinweise unter Reparaturen](#hinweise-unter-reparaturen) (0 = aus) |
+
+<a id="steuerung"></a>
+
+## Steuerung (optional)
+
+Standardmäßig liest die Integration nur. Stellst du unter **Konfigurieren** die **Steuerung** auf *Lesen und steuern*, kannst du den Mäher aus Home Assistant heraus bedienen – mit denselben Befehlen, die auch die Greenworks-App schickt:
+
+| Was | Wo |
+|---|---|
+| **Mähen starten** / **Pause** / **Zur Station** (= parken bis auf Weiteres) | Die Knöpfe der **Mäher**-Entität |
+| **Parken für 2 Stunden** / **Parken für den Rest des Tages** | Tasten auf der Geräteseite |
+| **Mähen ohne Unterbrechung: 2 Tage** / **1 Woche** / **aus** | Tasten auf der Geräteseite |
+| Parken für eine eigene Zeit | Aktion `greenworks.park` mit `hours` (1–720; ohne Angabe: bis auf Weiteres) |
+| Mähen ohne Unterbrechung für eigene Tage | Aktion `greenworks.mow_continuously` mit `days` (1–30, 0 = aus) |
+
+- Home Assistant wartet auf die **Bestätigung des Mähers**. Kommt keine (z. B. Mäher offline) oder lehnt er ab, erscheint eine Fehlermeldung.
+- Die Tasten sind nur verfügbar, solange der Mäher **online** ist.
+- Ist in der App eine **PIN** für das Starten eingerichtet, kann der Mäher den Start ablehnen.
+- Zurück auf *Nur lesen* stellen schaltet alles wieder ab: die Tasten werden deaktiviert, die Verbindung für die Befehle wird beendet.
 
 ## Winterpause
 
@@ -162,7 +182,7 @@ Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Pas
 
 ## Einschränkungen
 
-- **Keine Steuerung:** nur Auslesen. Starten, Parken oder Einstellungen ändern ist über Home Assistant nicht möglich und auch nicht geplant.
+- **Zeitplan und Einstellungen nur in der App:** Die [Steuerung](#steuerung) kann starten, pausieren und parken. Zeitplan, Regensensor, Schnittbreite usw. ändert die Integration nicht und das ist auch nicht geplant.
 - **Statistik nur beim Öffnen der App aktuell:** Mäh-, Lauf- und Ladezeit schickt der Mäher nur, wenn in der App die Statistik geöffnet wird. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher *mäht*, und schlägt sie auf den letzten echten Wert auf (Attribut *Davon gezählt*). Kommt eine neue echte Statistik, gilt wieder diese.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie, wenn du in der App die jeweilige Seite öffnest (Attribut *Aktualisiert*).
 - **Keine Anzeige für Software-Updates:** Ob es neue Mäher-Software gibt, zeigt nur die Greenworks-App (Seite *Software*). Ihr Update-Server beantwortet keine Anfragen von außerhalb der App.

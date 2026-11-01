@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.4.1"
+VERSION: Final = "0.5.0"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -28,6 +28,12 @@ CONF_OFFLINE_HOURS: Final = "offline_hours"  # Stunden, 0 = Hinweis aus
 DEFAULT_OFFLINE_HOURS: Final = 1
 OFFLINE_HOURS_RANGE: Final = (0, 72)
 
+# Steuerung (Knopf "Konfigurieren"): standardmaessig nur lesen
+CONF_CONTROL: Final = "control"
+CONTROL_READ_ONLY: Final = "read_only"
+CONTROL_READ_AND_CONTROL: Final = "read_and_control"
+CONTROL_OPTIONS: Final = (CONTROL_READ_ONLY, CONTROL_READ_AND_CONTROL)
+
 # Gruppen von Entitaeten, die man ein- und ausschalten kann (Standard ist immer an)
 CONF_GROUPS: Final = "groups"
 GROUP_STANDARD: Final = "standard"
@@ -37,6 +43,8 @@ GROUP_APP_SETTINGS: Final = "app_settings"
 GROUP_DIAGNOSTICS: Final = "diagnostics"
 GROUP_CALENDAR: Final = "calendar"
 GROUP_POSITION: Final = "position"
+# Nicht frei waehlbar, haengt am Umschalter "Steuerung"
+GROUP_CONTROL: Final = "control"
 OPTIONAL_GROUPS: Final = (
     GROUP_ERRORS,
     GROUP_STATISTICS,
@@ -98,6 +106,12 @@ ENTITY_GROUPS: Final[dict[str, str]] = {
     # Kalender und Position
     "calendar": GROUP_CALENDAR,
     "position": GROUP_POSITION,
+    # Steuerung (nur bei "Lesen und steuern")
+    "park_2h": GROUP_CONTROL,
+    "park_rest_of_day": GROUP_CONTROL,
+    "continuous_2_days": GROUP_CONTROL,
+    "continuous_1_week": GROUP_CONTROL,
+    "continuous_off": GROUP_CONTROL,
 }
 
 # Entitaeten, die es nicht mehr gibt (werden beim Start aus der Registry entfernt)
@@ -193,4 +207,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.4.1
+# Version 0.5.0

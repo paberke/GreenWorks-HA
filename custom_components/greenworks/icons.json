@@ -42,6 +42,31 @@
       "status_text": {
         "default": "mdi:message-text-outline"
       }
+    },
+    "button": {
+      "park_2h": {
+        "default": "mdi:timer-pause-outline"
+      },
+      "park_rest_of_day": {
+        "default": "mdi:weather-night"
+      },
+      "continuous_2_days": {
+        "default": "mdi:robot-mower"
+      },
+      "continuous_1_week": {
+        "default": "mdi:robot-mower"
+      },
+      "continuous_off": {
+        "default": "mdi:robot-mower-outline"
+      }
+    }
+  },
+  "services": {
+    "park": {
+      "service": "mdi:home-import-outline"
+    },
+    "mow_continuously": {
+      "service": "mdi:robot-mower"
     }
   }
 }

@@ -17,15 +17,18 @@ from homeassistant.util import dt as dt_util
 
 from .api import GreenworksAuthError, GreenworksClient, GreenworksError, GreenworksMower
 from .const import (
+    CONF_CONTROL,
     CONF_GROUPS,
     CONF_OFFLINE_HOURS,
     CONF_OUTAGE_GRACE,
+    CONTROL_READ_AND_CONTROL,
     COUNTED_STATES,
     DEFAULT_GROUPS_EXISTING,
     DEFAULT_OFFLINE_HOURS,
     DEFAULT_OUTAGE_GRACE,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
+    GROUP_CONTROL,
     GROUP_STANDARD,
 )
 
@@ -36,9 +39,17 @@ type GreenworksConfigEntry = ConfigEntry[GreenworksCoordinator]
 ISSUE_CLOUD = "cloud_unreachable"
 
 
+def control_enabled(entry: ConfigEntry) -> bool:
+    """Darf die Integration den Maeher steuern? (Standard: nur lesen)"""
+    return entry.options.get(CONF_CONTROL) == CONTROL_READ_AND_CONTROL
+
+
 def enabled_groups(entry: ConfigEntry) -> set[str]:
     """Eingeschaltete Gruppen (Standard ist immer dabei)."""
-    return {GROUP_STANDARD, *entry.options.get(CONF_GROUPS, DEFAULT_GROUPS_EXISTING)}
+    groups = {GROUP_STANDARD, *entry.options.get(CONF_GROUPS, DEFAULT_GROUPS_EXISTING)}
+    if control_enabled(entry):
+        groups.add(GROUP_CONTROL)
+    return groups
 
 
 def offline_issue_id(device_id: int) -> str:
@@ -62,6 +73,8 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
             update_interval=timedelta(seconds=interval),
         )
         self.client = client
+        # MQTT-Steuerkanal (nur bei "Lesen und steuern", sonst None)
+        self.control: Any = None
         self._outage_grace = timedelta(
             minutes=int(entry.options.get(CONF_OUTAGE_GRACE, DEFAULT_OUTAGE_GRACE))
         )
@@ -233,4 +246,4 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         return mowers
 
 
-# Version 0.4.1
+# Version 0.5.0

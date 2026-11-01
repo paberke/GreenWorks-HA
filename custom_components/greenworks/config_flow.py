@@ -35,9 +35,12 @@ from .api import (
 from .const import (
     BLADE_LIMIT_RANGE,
     CONF_BLADE_LIMIT,
+    CONF_CONTROL,
     CONF_GROUPS,
     CONF_OFFLINE_HOURS,
     CONF_OUTAGE_GRACE,
+    CONTROL_OPTIONS,
+    CONTROL_READ_ONLY,
     DEFAULT_BLADE_LIMIT,
     DEFAULT_GROUPS_EXISTING,
     DEFAULT_GROUPS_NEW,
@@ -195,9 +198,12 @@ class GreenworksOptionsFlow(OptionsFlow):
     ) -> ConfigFlowResult:
         if user_input is not None:
             data: dict[str, Any] = {
-                key: int(value) for key, value in user_input.items() if key != CONF_GROUPS
+                key: int(value)
+                for key, value in user_input.items()
+                if key not in (CONF_GROUPS, CONF_CONTROL)
             }
             data[CONF_GROUPS] = list(user_input.get(CONF_GROUPS, []))
+            data[CONF_CONTROL] = user_input.get(CONF_CONTROL, CONTROL_READ_ONLY)
             return self.async_create_entry(data=data)
         options = self.config_entry.options
         schema = vol.Schema(
@@ -206,6 +212,16 @@ class GreenworksOptionsFlow(OptionsFlow):
                     CONF_GROUPS,
                     default=list(options.get(CONF_GROUPS, DEFAULT_GROUPS_EXISTING)),
                 ): _groups_selector(),
+                vol.Required(
+                    CONF_CONTROL,
+                    default=options.get(CONF_CONTROL, CONTROL_READ_ONLY),
+                ): SelectSelector(
+                    SelectSelectorConfig(
+                        options=list(CONTROL_OPTIONS),
+                        mode=SelectSelectorMode.LIST,
+                        translation_key="control",
+                    )
+                ),
                 vol.Required(
                     CONF_SCAN_INTERVAL,
                     default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
@@ -227,4 +243,4 @@ class GreenworksOptionsFlow(OptionsFlow):
         return self.async_show_form(step_id="init", data_schema=schema)
 
 
-# Version 0.4.1
+# Version 0.5.0

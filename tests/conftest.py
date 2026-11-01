@@ -10,10 +10,10 @@ def no_real_mqtt(request):
     Wird vor hass aufgebaut und erst danach abgebaut, damit auch ein
     Neuladen beim Herunterfahren nicht echt verbindet.
     """
-    if "real_listener" in request.keywords:
+    if "real_control" in request.keywords:
         yield
         return
-    with patch("custom_components.greenworks.mqtt_listen.GreenworksMqttListener._start"):
+    with patch("custom_components.greenworks.control.GreenworksControl._start"):
         yield
 
 

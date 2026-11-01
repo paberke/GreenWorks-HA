@@ -18,17 +18,19 @@ from .const import (
     ENTITY_GROUPS,
     REMOVED_ENTITIES,
 )
+from .control import GreenworksControl
 from .coordinator import (
     GreenworksConfigEntry,
     GreenworksCoordinator,
+    control_enabled,
     enabled_groups,
 )
-from .mqtt_listen import GreenworksMqttListener
 
 _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [
     Platform.BINARY_SENSOR,
+    Platform.BUTTON,
     Platform.CALENDAR,
     Platform.DEVICE_TRACKER,
     Platform.EVENT,
@@ -88,13 +90,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -
     entry.runtime_data = coordinator
     _async_sync_groups(hass, entry)
 
+    # Steuerkanal nur bei "Lesen und steuern"; sonst wird nichts verbunden
+    if control_enabled(entry):
+        control = GreenworksControl(hass, client, list(coordinator.data or {}))
+        await control.async_start()
+        coordinator.control = control
+        entry.async_on_unload(control.async_stop)
+
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
-
-    # Testzweig: dem MQTT-Kanal nur zuhoeren, nichts senden
-    listener = GreenworksMqttListener(hass, client, list(coordinator.data or {}))
-    await listener.async_start()
-    entry.async_on_unload(listener.async_stop)
     return True
 
 
@@ -118,4 +122,4 @@ async def async_remove_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) 
             ir.async_delete_issue(hass, DOMAIN, issue_id)
 
 
-# Version 0.4.1
+# Version 0.5.0

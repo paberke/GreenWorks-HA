@@ -484,6 +484,23 @@
       "calendar": {
         "name": "Mähplan"
       }
+    },
+    "button": {
+      "park_2h": {
+        "name": "Parken für 2 Stunden"
+      },
+      "park_rest_of_day": {
+        "name": "Parken für den Rest des Tages"
+      },
+      "continuous_2_days": {
+        "name": "Mähen ohne Unterbrechung: 2 Tage"
+      },
+      "continuous_1_week": {
+        "name": "Mähen ohne Unterbrechung: 1 Woche"
+      },
+      "continuous_off": {
+        "name": "Mähen ohne Unterbrechung: aus"
+      }
     }
   },
   "options": {
@@ -493,10 +510,14 @@
         "description": "Welche Entitäten angezeigt werden und wie die Integration arbeitet. Ausgeschaltete Entitäten werden deaktiviert, nicht gelöscht – ihre Entity-IDs bleiben gleich. Tipp für den Winter: den Schalter „Winterpause“ auf der Geräteseite des Mähers einschalten – dann gibt es keine Offline-Hinweise und Problem zeigt „Kein Problem“. Am Mäher wird dabei nichts verändert.",
         "data": {
           "groups": "Zusätzliche Entitäten",
+          "control": "Steuerung",
           "scan_interval": "Abfrage-Intervall (30–600 Sekunden)",
           "outage_grace": "Letzte Werte bei Aussetzern behalten (1–60 Minuten)",
           "blade_limit": "Messerwechsel nach (0 = aus, 0–1000 Stunden)",
           "offline_hours": "Hinweis unter Reparaturen, wenn offline seit (0 = aus, 0–72 Stunden)"
+        },
+        "data_description": {
+          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Zeitplan und Einstellungen bleiben in der App."
         }
       }
     }
@@ -510,6 +531,12 @@
         "diagnostics": "Diagnose (Software, Signalqualität)",
         "calendar": "Kalender (Mähplan als Kalendertermine)",
         "position": "Position (Mäher auf der Karte)"
+      }
+    },
+    "control": {
+      "options": {
+        "read_only": "Nur lesen",
+        "read_and_control": "Lesen und steuern (Starten, Pause, Parken)"
       }
     }
   },
@@ -529,6 +556,40 @@
     },
     "cloud_unreachable": {
       "message": "Greenworks-Cloud nicht erreichbar: {error}"
+    },
+    "control_disabled": {
+      "message": "Die Steuerung ist ausgeschaltet. Unter „Konfigurieren“ „Lesen und steuern“ wählen."
+    },
+    "control_not_connected": {
+      "message": "Keine Verbindung zum Steuerkanal von Greenworks. Bitte in einer Minute noch einmal versuchen."
+    },
+    "control_no_reply": {
+      "message": "Der Mäher hat den Befehl nicht innerhalb von 30 Sekunden bestätigt. Bitte in der Greenworks-App nachsehen."
+    },
+    "control_rejected": {
+      "message": "Der Mäher hat den Befehl abgelehnt."
+    }
+  },
+  "services": {
+    "park": {
+      "name": "Parken",
+      "description": "Schickt den Mäher zur Station und lässt ihn dort. Ohne Stunden bleibt er bis auf Weiteres geparkt. Nur bei „Lesen und steuern“.",
+      "fields": {
+        "hours": {
+          "name": "Stunden",
+          "description": "Wie lange parken (1–720 Stunden). Leer lassen für „bis auf Weiteres“."
+        }
+      }
+    },
+    "mow_continuously": {
+      "name": "Mähen ohne Unterbrechung",
+      "description": "Mäht wie in der App einige Tage ohne Zeitplan. 0 schaltet es aus. Nur bei „Lesen und steuern“.",
+      "fields": {
+        "days": {
+          "name": "Tage",
+          "description": "Wie viele Tage (1–30), 0 = aus."
+        }
+      }
     }
   }
 }

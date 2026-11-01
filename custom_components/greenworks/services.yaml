@@ -1,0 +1,32 @@
+park:
+  target:
+    entity:
+      integration: greenworks
+      domain: lawn_mower
+  fields:
+    hours:
+      required: false
+      selector:
+        number:
+          min: 1
+          max: 720
+          step: 1
+          mode: box
+          unit_of_measurement: h
+
+mow_continuously:
+  target:
+    entity:
+      integration: greenworks
+      domain: lawn_mower
+  fields:
+    days:
+      required: true
+      default: 2
+      selector:
+        number:
+          min: 0
+          max: 30
+          step: 1
+          mode: box
+          unit_of_measurement: d

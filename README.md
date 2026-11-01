@@ -11,13 +11,13 @@
 
 > [!WARNING]
 > - This integration was written by **Claude (AI assistant by Anthropic)** together with [Patrick (paberke)](https://github.com/paberke). It is a private hobby project, **not** an official Greenworks product.
-> - It can only **read** the mower, **not control** it – no start, pause or return to station.
+> - By default it only **reads** the mower. Start, pause and park are only available if you switch on [control](#control) under *Configure*. It never changes the schedule or settings.
 > - You will often be **logged out of the Greenworks app** if Home Assistant uses the same account ([details](#you-will-often-be-logged-out-of-the-greenworks-app)).
 > - **No warranty, no support.** Use at your own risk and make a backup first.
 
-The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. Starting, parking and changing settings still only work in the Greenworks app.
+The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. If you want, it can also start, pause and park the mower – like the buttons in the app. The schedule and settings are still changed in the Greenworks app.
 
-**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Settings](#settings-configure) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
+**Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Settings](#settings-configure) · [Control](#control) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Removal](#removal)
 
 **More:** 📋 [Error codes](ERRORS.md) · 🛠️ [Examples: automations and dashboard](EXAMPLES.md) · 🤖 [AI prompts](PROMPTS.md)
 
@@ -126,10 +126,30 @@ Settings → Devices & services → Greenworks → **Configure**:
 | Setting | Default | Meaning |
 |---|---|---|
 | Additional entities | – | Which optional groups are shown |
+| Control | Read only | *Read and control* enables [start, pause and park](#control) |
 | Update interval | 60 s | How often the cloud is asked (30–600 s) |
 | Keep last values during drops | 5 min | Short cloud outages are bridged (1–60 min) |
 | Blade change after | 150 h | Limit for *Blade change due* (0 = off). Greenworks gives no fixed interval; a common recommendation is every 6–10 weeks of mowing |
 | Repair notice when offline for | 1 h | See [Notices under Repairs](#notices-under-repairs) (0 = off) |
+
+<a id="control"></a>
+
+## Control (optional)
+
+By default the integration only reads. If you set **Control** to *Read and control* under **Configure**, you can operate the mower from Home Assistant – with the same commands the Greenworks app sends:
+
+| What | Where |
+|---|---|
+| **Start mowing** / **Pause** / **Return to dock** (= park until further notice) | The buttons of the **Mower** entity |
+| **Park for 2 hours** / **Park for the rest of the day** | Buttons on the device page |
+| **Mow without interruption: 2 days** / **1 week** / **off** | Buttons on the device page |
+| Park for a custom time | Action `greenworks.park` with `hours` (1–720; empty: until further notice) |
+| Mow without interruption for custom days | Action `greenworks.mow_continuously` with `days` (1–30, 0 = off) |
+
+- Home Assistant waits for the **mower's confirmation**. If none arrives (e.g. mower offline) or the mower refuses, you get an error message.
+- The buttons are only available while the mower is **online**.
+- If a **PIN** for starting is set up in the app, the mower may refuse to start.
+- Setting it back to *Read only* switches everything off again: the buttons are disabled and the command connection is closed.
 
 ## Winter pause
 
@@ -158,7 +178,7 @@ Both notices disappear by themselves as soon as everything works again. If the p
 
 ## Limitations
 
-- **No control:** read-only. Starting, parking or changing settings is not possible from Home Assistant and not planned.
+- **Schedule and settings only in the app:** [control](#control) can start, pause and park. The integration does not change the schedule, rain sensor, cutting settings etc., and this is not planned.
 - **Statistics only update when the app asks for them:** the mower sends cutting, running and charging time only when the statistics are opened in the app. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower is *mowing* and adds them to the last real value (attribute *Counted since last statistics*). When new real statistics arrive, they take over again.
 - **Schedule, error history and settings are only as current as the app:** the cloud updates them when you open the respective page in the app (attribute *Updated*).
 - **No software update notice:** whether there is new mower software is only shown by the Greenworks app (page *Software*). Its update server does not answer requests from outside the app.
