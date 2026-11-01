@@ -536,7 +536,7 @@
     "control": {
       "options": {
         "read_only": "Nur lesen",
-        "read_and_control": "Lesen und steuern (Testphase: vorher in der Anleitung lesen, welche Mäher getestet wurden)"
+        "read_and_control": "Lesen und steuern (Starten, Pause, Parken) – Testphase: vorher in der Anleitung lesen, welche Mäher getestet wurden"
       }
     }
   },

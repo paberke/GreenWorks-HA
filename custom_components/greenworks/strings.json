@@ -536,7 +536,7 @@
     "control": {
       "options": {
         "read_only": "Read only",
-        "read_and_control": "Read and control (test phase: first check in the readme which mowers were tested)"
+        "read_and_control": "Read and control (start, pause, park) – test phase: first check in the readme which mowers were tested"
       }
     }
   },
