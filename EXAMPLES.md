@@ -239,7 +239,7 @@ mode: single
 
 ## Park when it rains
 
-Needs **Read and control** (see [Control](README.md#control)). When your weather station reports rain, the mower drives to the station and stays there (*Park until further notice*). After one dry hour the schedule is resumed: if that is still within the mowing window it drives out again, otherwise it waits for the next slot. The mower's built-in rain sensor only notices rain once it is already wet; the weather station is faster.
+Needs **Read and control** (see [Control](README.md#control)). When your weather station reports rain (or the mower drives out while it is raining), the mower drives to the station and stays there (*Park until further notice*). After one dry hour the schedule is resumed: if that is still within the mowing window it drives out again, otherwise it waits for the next slot. The mower's built-in rain sensor only notices rain once it is already wet; the weather station is faster.
 
 Create first: a **Toggle** helper (*Settings → Devices & services → Helpers → Create helper → Toggle*) named `Rasenrobo rain pause`. It remembers that the automation parked the mower, so a mower you parked yourself is not sent out again. Replace `sensor.weather_station_rain_rate` with your rain sensor (rain rate, e.g. mm/h).
 
@@ -252,6 +252,10 @@ triggers:
     entity_id: sensor.weather_station_rain_rate
     above: 0
     id: rain
+  - trigger: state
+    entity_id: lawn_mower.rasenrobo
+    to: mowing
+    id: rain
   - trigger: numeric_state
     entity_id: sensor.weather_station_rain_rate
     below: 0.1
@@ -263,6 +267,9 @@ actions:
       - conditions:
           - condition: trigger
             id: rain
+          - condition: numeric_state
+            entity_id: sensor.weather_station_rain_rate
+            above: 0
           - condition: state
             entity_id: input_boolean.rasenrobo_rain_pause
             state: "off"

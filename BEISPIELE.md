@@ -245,7 +245,7 @@ mode: single
 
 ## Bei Regen parken
 
-Braucht **Lesen und steuern** (siehe [Steuerung](README.de.md#steuerung)). Fängt es laut deiner Wetterstation an zu regnen, fährt der Mäher zur Station und bleibt dort (*Parken bis auf Weiteres*). Ist es eine Stunde trocken, wird der Zeitplan fortgesetzt: Liegt das noch im Mähfenster, fährt er wieder los, sonst wartet er auf den nächsten Termin. Der eingebaute Regensensor des Mähers merkt Regen erst, wenn er schon nass ist; die Wetterstation ist schneller.
+Braucht **Lesen und steuern** (siehe [Steuerung](README.de.md#steuerung)). Fängt es laut deiner Wetterstation an zu regnen (oder fährt er los, während es regnet), fährt der Mäher zur Station und bleibt dort (*Parken bis auf Weiteres*). Ist es eine Stunde trocken, wird der Zeitplan fortgesetzt: Liegt das noch im Mähfenster, fährt er wieder los, sonst wartet er auf den nächsten Termin. Der eingebaute Regensensor des Mähers merkt Regen erst, wenn er schon nass ist; die Wetterstation ist schneller.
 
 Vorher anlegen: einen Helfer **Schalter** (*Einstellungen → Geräte & Dienste → Helfer → Helfer erstellen → Schalter*) mit dem Namen `Rasenrobo Regenpause`. Er merkt sich, dass die Automation geparkt hat, damit sie einen Mäher, den du selbst geparkt hast, nicht wieder losschickt. Ersetze `sensor.wetterstation_regenrate` durch deinen Regen-Sensor (Regenrate, z. B. mm/h).
 
@@ -258,6 +258,10 @@ triggers:
     entity_id: sensor.wetterstation_regenrate
     above: 0
     id: regen
+  - trigger: state
+    entity_id: lawn_mower.rasenrobo
+    to: mowing
+    id: regen
   - trigger: numeric_state
     entity_id: sensor.wetterstation_regenrate
     below: 0.1
@@ -269,6 +273,9 @@ actions:
       - conditions:
           - condition: trigger
             id: regen
+          - condition: numeric_state
+            entity_id: sensor.wetterstation_regenrate
+            above: 0
           - condition: state
             entity_id: input_boolean.rasenrobo_regenpause
             state: "off"
