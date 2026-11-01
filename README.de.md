@@ -28,7 +28,7 @@ Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud a
 | Mäher | Lesen | Lesen und steuern | Getestet von |
 |---|:---:|:---:|---|
 | Greenworks **Optimow 10** | ✅ | ✅ (Testphase) | dem Entwickler, im täglichen Betrieb |
-| Cramer **RM1000** und **RM1500** (mit der Greenworks-App) | ✅ | – nicht getestet | von einem Nutzer gemeldet ([Kommentar](https://github.com/Boes24/GreenWorks-HA/issues/1)) |
+| Cramer **RM1000** und **RM1500** (mit der Greenworks-App) | ✅ | – nicht getestet | von Nutzern gemeldet ([Kommentar 1](https://github.com/Boes24/GreenWorks-HA/issues/1), [Kommentar 2](https://github.com/paberke/GreenWorks-HA/issues/1)) |
 
 Andere Greenworks-/Cramer-Mähroboter, die mit der Greenworks-App laufen, funktionieren wahrscheinlich auch. Die [Steuerung](#steuerung) ist in der **Testphase** und wurde bisher **nur mit dem Optimow 10** getestet. **Cramer-Flottenkonten** (`fleet.cramertools.com`) sind ein eigener Dienst und werden **nicht** unterstützt. Wenn du ein anderes Modell ausprobierst, [gib uns gern Bescheid](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
 
