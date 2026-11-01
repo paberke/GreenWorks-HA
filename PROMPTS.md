@@ -44,7 +44,8 @@ for my Greenworks robotic mower. Important:
     (attributes limit, remaining)
   switch.rasenrobo_winter_pause (only changes what Home Assistant shows, nothing on the mower)
   binary_sensor.rasenrobo_geofence only shows whether anti-theft protection is switched on, NOT
-    whether the mower has left the area (for that: sensor.rasenrobo_status = alarm)
+    whether the mower has left the area (that probably shows as sensor.rasenrobo_status = alarm,
+    not yet confirmed live)
   Optional, if enabled: sensor.rasenrobo_last_error_message, sensor.rasenrobo_mowing_schedule,
     calendar.rasenrobo_mowing_schedule, device_tracker.rasenrobo_position
 - The mower does not switch between summer and winter time by itself; only the Greenworks app does.
