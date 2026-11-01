@@ -88,6 +88,11 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         self._store: Store[dict[str, Any]] = Store(hass, 1, f"{DOMAIN}.counters.{entry.entry_id}")
         self._counters: dict[str, dict[str, Any]] = {}
         self._last_success: datetime | None = None
+        # Direkt vom Maeher gemeldeter Stand "Maehen ohne Unterbrechung":
+        # device_id -> (gemeldet um, Ende oder None)
+        self._continuous: dict[int, tuple[datetime, datetime | None]] = {}
+        # Eigene Zeiten fuer Parken (Stunden) / Maehen ohne Unterbrechung (Tage)
+        self.custom_values: dict[tuple[int, str], int] = {}
 
     async def async_load_counters(self) -> None:
         """Gespeicherte Zaehler laden (vor der ersten Abfrage)."""
@@ -120,6 +125,26 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
             mower.winter_pause = value
         self._update_issues(dt_util.utcnow())
         self.async_update_listeners()
+
+    # --- Maehen ohne Unterbrechung ----------------------------------------------
+
+    @callback
+    def async_set_continuous(self, device_id: int, until: datetime | None) -> None:
+        """Stand vom Steuerkanal uebernehmen (gilt, bis die Cloud Neueres meldet)."""
+        now = dt_util.utcnow()
+        self._continuous[device_id] = (now, until)
+        mower = (self.data or {}).get(device_id)
+        if mower is not None:
+            mower.continuous_until, mower.continuous_time = until, now
+            self.async_update_listeners()
+
+    def _apply_continuous(self, mowers: dict[int, GreenworksMower]) -> None:
+        for device_id, (when, until) in self._continuous.items():
+            mower = mowers.get(device_id)
+            if mower is not None and (
+                mower.continuous_time is None or when > mower.continuous_time
+            ):
+                mower.continuous_until, mower.continuous_time = until, when
 
     # --- Maehzeit mitzaehlen ----------------------------------------------------
 
@@ -237,6 +262,7 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         self._failing_since = None
         now = dt_util.utcnow()
         self._count_mowing(mowers, now)
+        self._apply_continuous(mowers)
         self._track_online(mowers, now)
         self._save()
         self._last_success = now

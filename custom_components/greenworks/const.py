@@ -107,11 +107,20 @@ ENTITY_GROUPS: Final[dict[str, str]] = {
     "calendar": GROUP_CALENDAR,
     "position": GROUP_POSITION,
     # Steuerung (nur bei "Lesen und steuern")
+    "start": GROUP_CONTROL,
+    "pause": GROUP_CONTROL,
+    "park_until_further_notice": GROUP_CONTROL,
     "park_2h": GROUP_CONTROL,
     "park_rest_of_day": GROUP_CONTROL,
+    "park_custom": GROUP_CONTROL,
+    "park_hours": GROUP_CONTROL,
     "continuous_2_days": GROUP_CONTROL,
     "continuous_1_week": GROUP_CONTROL,
+    "continuous_custom": GROUP_CONTROL,
+    "continuous_days": GROUP_CONTROL,
     "continuous_off": GROUP_CONTROL,
+    # Anzeige, ob ohne Unterbrechung gemaeht wird (immer, auch bei "Nur lesen")
+    "continuous_mowing": GROUP_STANDARD,
 }
 
 # Entitaeten, die es nicht mehr gibt (werden beim Start aus der Registry entfernt)
@@ -144,6 +153,10 @@ DP_SCHEDULE_READ: Final = "125"
 DP_DRIVE_PAST_WIRE: Final = ("89", "90")
 DP_WIRE_CORRIDOR: Final = ("55", "56", "122")
 DP_START_POINTS: Final = ("58", "59", "60", "123")
+# Maehen ohne Unterbrechung: zuletzt gesetzt (129) / zuletzt abgefragt (130)
+DP_CONTINUOUS: Final = ("129", "130")
+# Grund im Status, solange ohne Unterbrechung gemaeht wird
+CONTINUOUS_REASONS: Final = frozenset({52, 53})
 
 # Hauptzustand des Maehers (mower_main_state), Bedeutung laut Greenworks-App
 MOWER_STATES: Final[dict[int, str]] = {

@@ -73,6 +73,7 @@ Die **Standard-Entitäten** werden immer angelegt. Alles andere ist in Gruppen e
 | **Fehler** (Ereignis) | Löst bei jedem neuen Fehler einmal aus, mit Code, Text und Uhrzeit – ideal für Automationen mit Benachrichtigung |
 | **Winterpause** (Schalter) | Siehe [Winterpause](#winterpause) |
 | **Messer-Laufzeit** | Mähstunden seit dem letzten Zurücksetzen der Messerzeit in der App (gleiche Rechnung wie die App) |
+| **Mähen ohne Unterbrechung** | *An* mit Attribut *Bis*, solange der Mäher ohne Zeitplan durchmäht ([Steuerung](#steuerung)) |
 | **Messerwechsel fällig** | *Fällig*, sobald die Messer-Laufzeit die Grenze erreicht (Standard 150 h) |
 
 <details>
@@ -140,18 +141,23 @@ Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren**:
 
 Standardmäßig liest die Integration nur. Stellst du unter **Konfigurieren** die **Steuerung** auf *Lesen und steuern*, kannst du den Mäher aus Home Assistant heraus bedienen – mit denselben Befehlen, die auch die Greenworks-App schickt:
 
-| Was | Wo |
-|---|---|
-| **Mähen starten** / **Pause** / **Zur Station** (= parken bis auf Weiteres) | Die Knöpfe der **Mäher**-Entität |
-| **Parken für 2 Stunden** / **Parken für den Rest des Tages** | Tasten auf der Geräteseite |
-| **Mähen ohne Unterbrechung: 2 Tage** / **1 Woche** / **aus** | Tasten auf der Geräteseite |
-| Parken für eine eigene Zeit | Aktion `greenworks.park` mit `hours` (1–720; ohne Angabe: bis auf Weiteres) |
-| Mähen ohne Unterbrechung für eigene Tage | Aktion `greenworks.mow_continuously` mit `days` (1–30, 0 = aus) |
+Auf der Geräteseite gibt es dieselben Auswahlen wie in der App:
 
+| Taste | Wie in der App |
+|---|---|
+| **Mähen starten / Zeitplan fortsetzen** | Play-Knopf |
+| **Pause** | Pause-Knopf |
+| **Parken bis auf Weiteres** / **für 2 Stunden** / **für den Rest des Tages** / **für eigene Zeit** | Dialog *Rasenmäher parken* |
+| **Mähen ohne Unterbrechung: 2 Tage** / **1 Woche** / **eigene Zeit** / **aus** | ∞ auf der Seite *Zeitplan* |
+
+- Die **eigene Zeit** stellst du in den Zahlenfeldern *Eigene Zeit: Parken* (1–24 Stunden) und *Eigene Zeit: Mähen ohne Unterbrechung* (1–24 Tage) ein, wie in der App.
+- **Gesperrt wie in der App:** Tasten, die im aktuellen Zustand nicht gehen, sind *nicht verfügbar*. Beispiel: Ist der Mäher *nach Zeitplan*, *durch Regen-* oder *Frostschutz* geparkt, geht nur *Parken bis auf Weiteres*. *Start* gibt es nur, wenn er pausiert oder vom Benutzer geparkt ist, *Pause* nur, wenn er unterwegs ist.
+- Für Automationen gibt es die Aktionen `greenworks.park` (`hours` 1–24, ohne Angabe: bis auf Weiteres) und `greenworks.mow_continuously` (`days` 1–24, 0 = aus). Die Mäher-Entität hat außerdem die üblichen Knöpfe Start, Pause und Zur Station.
 - Home Assistant wartet auf die **Bestätigung des Mähers**. Kommt keine (z. B. Mäher offline) oder lehnt er ab, erscheint eine Fehlermeldung.
 - Die Tasten sind nur verfügbar, solange der Mäher **online** ist.
 - Ist in der App eine **PIN** für das Starten eingerichtet, kann der Mäher den Start ablehnen.
 - Zurück auf *Nur lesen* stellen schaltet alles wieder ab: die Tasten werden deaktiviert, die Verbindung für die Befehle wird beendet.
+- Der Sensor **Mähen ohne Unterbrechung** (immer da, auch bei *Nur lesen*) zeigt, ob es gerade an ist und bis wann. Das ist wichtig, weil die App es nicht anzeigt, solange der Mäher *vom Benutzer geparkt* ist: Gibst du ihn dann frei, mäht er sofort durch.
 
 ## Winterpause
 

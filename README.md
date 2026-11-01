@@ -71,6 +71,7 @@ The **standard entities** are always created. Everything else is grouped and can
 | **Error** (event) | Fires once for every new error, with code, text and time – ideal for notification automations |
 | **Winter pause** (switch) | See [Winter pause](#winter-pause) |
 | **Blade time** | Mowing hours since the blade time was last reset in the app (same as the app) |
+| **Mow without interruption** | *On* with attribute *Until* while the mower mows non-stop without schedule ([control](#control)) |
 | **Blade change due** | *Due* when the blade time reaches the limit (default 150 h) |
 
 <details>
@@ -138,18 +139,23 @@ Settings → Devices & services → Greenworks → **Configure**:
 
 By default the integration only reads. If you set **Control** to *Read and control* under **Configure**, you can operate the mower from Home Assistant – with the same commands the Greenworks app sends:
 
-| What | Where |
-|---|---|
-| **Start mowing** / **Pause** / **Return to dock** (= park until further notice) | The buttons of the **Mower** entity |
-| **Park for 2 hours** / **Park for the rest of the day** | Buttons on the device page |
-| **Mow without interruption: 2 days** / **1 week** / **off** | Buttons on the device page |
-| Park for a custom time | Action `greenworks.park` with `hours` (1–720; empty: until further notice) |
-| Mow without interruption for custom days | Action `greenworks.mow_continuously` with `days` (1–30, 0 = off) |
+The device page offers the same choices as the app:
 
+| Button | As in the app |
+|---|---|
+| **Start mowing / resume schedule** | Play button |
+| **Pause** | Pause button |
+| **Park until further notice** / **for 2 hours** / **for the rest of the day** / **for custom time** | Dialog *Park mower* |
+| **Mow without interruption: 2 days** / **1 week** / **custom time** / **off** | ∞ on the *Schedule* page |
+
+- Set the **custom time** in the number fields *Custom time: park* (1–24 hours) and *Custom time: mow without interruption* (1–24 days), as in the app.
+- **Locked like in the app:** buttons that don't work in the current state are *unavailable*. Example: while the mower is parked *by schedule*, *rain guard* or *frost guard*, only *Park until further notice* works. *Start* is only offered when the mower is paused or parked by the user, *Pause* only while it is on its way.
+- For automations there are the actions `greenworks.park` (`hours` 1–24, empty: until further notice) and `greenworks.mow_continuously` (`days` 1–24, 0 = off). The mower entity also has the usual start, pause and dock buttons.
 - Home Assistant waits for the **mower's confirmation**. If none arrives (e.g. mower offline) or the mower refuses, you get an error message.
 - The buttons are only available while the mower is **online**.
 - If a **PIN** for starting is set up in the app, the mower may refuse to start.
 - Setting it back to *Read only* switches everything off again: the buttons are disabled and the command connection is closed.
+- The **Mow without interruption** sensor (always there, also in *Read only*) shows whether it is on and until when. This matters because the app hides it while the mower is *parked by the user*: as soon as you release it, it mows non-stop.
 
 ## Winter pause
 

@@ -15,6 +15,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers import entity_platform
 
+from .button import can_park_timed
 from .const import DOMAIN, status_key
 from .control import (
     MAX_CONTINUOUS_DAYS,
@@ -122,6 +123,17 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
 
     async def async_park(self, hours: int | None = None) -> None:
         """Parken fuer X Stunden, ohne Angabe bis auf Weiteres."""
+        mower = self.mower
+        if (
+            hours is not None
+            and self.coordinator.control is not None
+            and mower is not None
+            and not can_park_timed(mower)
+        ):
+            # Wie in der App: im Zeitplan-, Regen- oder Frost-Parken nur bis auf Weiteres
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="park_timed_not_possible"
+            )
         await self._async_command(park_payload(None if hours is None else hours * 60))
 
     async def async_mow_continuously(self, days: int) -> None:

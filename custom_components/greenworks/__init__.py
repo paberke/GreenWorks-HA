@@ -35,6 +35,7 @@ PLATFORMS: list[Platform] = [
     Platform.DEVICE_TRACKER,
     Platform.EVENT,
     Platform.LAWN_MOWER,
+    Platform.NUMBER,
     Platform.SENSOR,
     Platform.SWITCH,
 ]
@@ -92,7 +93,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -
 
     # Steuerkanal nur bei "Lesen und steuern"; sonst wird nichts verbunden
     if control_enabled(entry):
-        control = GreenworksControl(hass, client, list(coordinator.data or {}))
+        control = GreenworksControl(
+            hass,
+            client,
+            list(coordinator.data or {}),
+            on_continuous=coordinator.async_set_continuous,
+        )
         await control.async_start()
         coordinator.control = control
         entry.async_on_unload(control.async_stop)

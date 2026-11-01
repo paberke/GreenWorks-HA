@@ -12,10 +12,25 @@ from homeassistant.helpers import entity_registry as er
 from custom_components.greenworks import control as ctl
 from custom_components.greenworks.const import DOMAIN
 
-from .test_greenworks import DID
+from .test_greenworks import DATAPOINTS, DID, dp
 from .test_v030 import _setup, eid
 
 CONTROL = {"control": "read_and_control"}
+STATUS_REQUEST = "0007000900406000a003500000"
+CONTINUOUS_REQUEST = "0007000900346000a0034c0100"
+
+
+def _state(state, reason=0, **extra):
+    """Datenpunkte mit anderem Zustand (Status-Datenpunkt 32 ist der neueste)."""
+    dps = dict(DATAPOINTS)
+    dps["32"] = dp({"mower_main_state": state, "next_start": 1791874800, "battery_status": 99,
+                    "source_for_next_start": reason, "request_time": "2026-10-12T20:01:35.126Z"})
+    dps.update(extra)
+    return dps
+
+
+# Laedt in der Station: alle Park-Varianten moeglich
+CHARGING = _state(7)
 
 
 # --- Befehle: genau wie die Greenworks-App ------------------------------------
@@ -54,9 +69,13 @@ async def test_read_only_is_default(hass, aioclient_mock):
     mower = hass.states.get(eid(hass, "lawn_mower", "mower"))
     assert mower.attributes["supported_features"] == 0
     reg = er.async_get(hass)
-    for key in ("park_2h", "park_rest_of_day", "continuous_2_days", "continuous_1_week",
+    for key in ("start", "pause", "park_until_further_notice", "park_2h", "park_rest_of_day",
+                "park_custom", "continuous_2_days", "continuous_1_week", "continuous_custom",
                 "continuous_off"):
         entity_id = eid(hass, "button", key)
+        assert entity_id is not None and reg.async_get(entity_id).disabled_by is not None
+    for key in ("park_hours", "continuous_days"):
+        entity_id = eid(hass, "number", key)
         assert entity_id is not None and reg.async_get(entity_id).disabled_by is not None
     with pytest.raises(HomeAssistantError) as err:
         await hass.services.async_call(
@@ -109,7 +128,7 @@ async def test_controls_present(hass, aioclient_mock):
     ],
 )
 async def test_commands(hass, aioclient_mock, service, data, sent, reply):
-    entry = await _setup(hass, aioclient_mock, options=CONTROL)
+    entry = await _setup(hass, aioclient_mock, options=CONTROL, datapoints=CHARGING)
     control = _connect(entry)
     mower_id = eid(hass, "lawn_mower", "mower")
     domain, name = service.split(".")
@@ -123,12 +142,13 @@ async def test_commands(hass, aioclient_mock, service, data, sent, reply):
     assert first[0] == f"$7/{DID}"
     assert first[1].hex().endswith(sent)
     assert first[2] == 1
-    # Danach wie in der App: Status neu anfordern
-    assert control._mqtt.publish.call_args_list[1].args[1].hex() == "0007000900406000a003500000"
+    # Danach wie in der App: Status bzw. "Maehen ohne Unterbrechung" neu abfragen
+    follow_up = CONTINUOUS_REQUEST if sent.startswith("4a0103") else STATUS_REQUEST
+    assert control._mqtt.publish.call_args_list[1].args[1].hex() == follow_up
 
 
 async def test_button_press(hass, aioclient_mock):
-    entry = await _setup(hass, aioclient_mock, options=CONTROL)
+    entry = await _setup(hass, aioclient_mock, options=CONTROL, datapoints=CHARGING)
     control = _connect(entry)
 
     async def call():
@@ -193,7 +213,10 @@ async def test_service_ranges(hass, aioclient_mock):
             DOMAIN, "park", {"entity_id": mower_id, "hours": 0}, blocking=True)
     with pytest.raises(vol.Invalid):
         await hass.services.async_call(
-            DOMAIN, "mow_continuously", {"entity_id": mower_id, "days": 31}, blocking=True)
+            DOMAIN, "mow_continuously", {"entity_id": mower_id, "days": 25}, blocking=True)
+    with pytest.raises(vol.Invalid):
+        await hass.services.async_call(
+            DOMAIN, "park", {"entity_id": mower_id, "hours": 25}, blocking=True)
 
 
 async def test_switch_on_in_options(hass, aioclient_mock):

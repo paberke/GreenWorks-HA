@@ -13,6 +13,7 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
+from homeassistant.util import dt as dt_util
 
 from .api import GreenworksMower
 from .const import CONF_BLADE_LIMIT, DEFAULT_BLADE_LIMIT, PROBLEM_STATES, status_key
@@ -142,6 +143,34 @@ class GreenworksBladeChangeSensor(GreenworksEntity, BinarySensorEntity):
         }
 
 
+class GreenworksContinuousSensor(GreenworksEntity, BinarySensorEntity):
+    """An, solange "Maehen ohne Unterbrechung" laeuft (Attribut: bis wann)."""
+
+    _attr_translation_key = "continuous_mowing"
+
+    def __init__(self, coordinator: GreenworksCoordinator, device_id: int) -> None:
+        super().__init__(coordinator, device_id, "continuous_mowing")
+
+    @property
+    def is_on(self) -> bool | None:
+        mower = self.mower
+        if mower is None or mower.continuous_time is None:
+            return None  # noch nie gemeldet
+        until = mower.continuous_until
+        return until is not None and until > dt_util.utcnow()
+
+    @property
+    def extra_state_attributes(self) -> dict[str, Any]:
+        mower = self.mower
+        until = mower.continuous_until if mower else None
+        return {
+            "until": until.isoformat() if self.is_on and until else None,
+            "reported": mower.continuous_time.isoformat()
+            if mower and mower.continuous_time
+            else None,
+        }
+
+
 async def async_setup_entry(
     hass: HomeAssistant,
     entry: GreenworksConfigEntry,
@@ -154,6 +183,7 @@ async def async_setup_entry(
         for description in BINARY_SENSORS
     ]
     entities += [GreenworksBladeChangeSensor(coordinator, device_id) for device_id in coordinator.data]
+    entities += [GreenworksContinuousSensor(coordinator, device_id) for device_id in coordinator.data]
     async_add_entities(entities)
 
 

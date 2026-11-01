@@ -9,7 +9,8 @@ Einstellungen werden nie geschrieben.
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
+from collections.abc import Callable
+from datetime import datetime, timedelta
 import hashlib
 import json
 import logging
@@ -42,10 +43,14 @@ _PAUSE = ("0007000b00386000A005e20002", "e200020000")
 _CONTINUOUS = ("0007000c00366000A0064a0103", "4a0103")
 # Nach einem erfolgreichen Befehl fragt die App den Status neu ab
 _STATUS_REQUEST = "0007000900406000A003500000"
+# Abfrage "Maehen ohne Unterbrechung" (wie die App auf der Seite Zeitplan)
+_CONTINUOUS_REQUEST = "0007000900346000A0034c0100"
+_CONTINUOUS_QUERY_KEY = "4c0100"
 
 PARK_UNTIL_FURTHER_NOTICE = 0xFFFE
-MAX_PARK_HOURS = 720  # 30 Tage
-MAX_CONTINUOUS_DAYS = 30
+# Eigene Zeit wie in der App: 1 bis 24 Stunden bzw. Tage
+MAX_PARK_HOURS = 24
+MAX_CONTINUOUS_DAYS = 24
 
 
 def le16(value: int) -> str:
@@ -109,9 +114,16 @@ class GreenworksControl:
     """MQTT-Verbindung zum Senden von Befehlen und Empfangen der Bestaetigung."""
 
     def __init__(
-        self, hass: HomeAssistant, client: GreenworksClient, device_ids: list[int]
+        self,
+        hass: HomeAssistant,
+        client: GreenworksClient,
+        device_ids: list[int],
+        on_continuous: Callable[[int, datetime | None], None] | None = None,
     ) -> None:
         self._hass = hass
+        # Wird mit (device_id, Ende oder None) aufgerufen, wenn der Maeher den
+        # Stand "Maehen ohne Unterbrechung" meldet
+        self._on_continuous = on_continuous
         self._api = client
         self._device_ids = device_ids
         self._mqtt: Any = None
@@ -184,8 +196,31 @@ class GreenworksControl:
         if not payload:
             return
         device_id = message.topic.partition("/")[2]
+        if payload.startswith(_CONTINUOUS_QUERY_KEY):
+            response = reply.get("response") or {}
+            if "time_minute" in response:
+                self._hass.loop.call_soon_threadsafe(
+                    self._continuous_reply, device_id, response
+                )
+            return
         ok = json.dumps(reply.get("response")).replace(" ", "").find('"return_code":0') >= 0
         self._hass.loop.call_soon_threadsafe(self._resolve, device_id, payload, ok)
+
+    @callback
+    def _continuous_reply(self, device_id: str, response: dict[str, Any]) -> None:
+        if self._on_continuous is None or not device_id.isdigit():
+            return
+        try:
+            minutes = int(response.get("time_minute") or 0)
+            option = int(response.get("override_option") or 0)
+        except (TypeError, ValueError):
+            return
+        until = (
+            dt_util.utcnow() + timedelta(minutes=minutes)
+            if minutes and option in (1, 2)
+            else None
+        )
+        self._on_continuous(int(device_id), until)
 
     @callback
     def _resolve(self, device_id: str, payload: str, ok: bool) -> None:
@@ -220,9 +255,14 @@ class GreenworksControl:
             raise HomeAssistantError(
                 translation_domain=DOMAIN, translation_key="control_rejected"
             )
-        # Wie die App: Status neu anfordern, damit die Anzeige schnell nachzieht
+        # Wie die App: Stand neu abfragen, damit die Anzeige schnell nachzieht
+        follow_up = (
+            _CONTINUOUS_REQUEST
+            if key[1] == _CONTINUOUS[1]
+            else _STATUS_REQUEST
+        )
         await self._hass.async_add_executor_job(
-            self._mqtt.publish, topic, bytes.fromhex(_STATUS_REQUEST), 1
+            self._mqtt.publish, topic, bytes.fromhex(follow_up), 1
         )
 
     async def async_stop(self) -> None:

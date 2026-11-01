@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import json
 import logging
 import time
@@ -26,6 +26,8 @@ from .const import (
     DP_DEVICE_DATA,
     DP_SCHEDULE_READ,
     DP_SCHEDULE_WRITE,
+    CONTINUOUS_REASONS,
+    DP_CONTINUOUS,
     DP_START_POINTS,
     DP_WIRE_CORRIDOR,
     DP_LAST_ERROR,
@@ -206,6 +208,37 @@ def _dp_newest(datapoints: dict[str, Any], keys: tuple[str, ...], needed: str):
     return best
 
 
+def _parse_continuous(mower: GreenworksMower, datapoints: dict[str, Any]) -> None:
+    """Maehen ohne Unterbrechung: letzter Befehl (129) oder letzte Abfrage (130).
+
+    time_minute = Dauer bzw. Restminuten, override_option 1/2 = an. Beim Maehen
+    meldet der Status zusaetzlich Grund 52/53 und als naechsten Start das Ende.
+    """
+    found = _dp_newest(datapoints, DP_CONTINUOUS, "time_minute")
+    if found:
+        when, flat = found
+        minutes = _to_int(flat.get("time_minute"))
+        option = _to_int(flat.get("override_option"))
+        code = flat.get("return_code")
+        accepted = code is None or _to_int(code) == 0
+        if accepted:
+            mower.continuous_time = when
+            mower.continuous_until = (
+                when + timedelta(minutes=minutes)
+                if minutes and option in (1, 2)
+                else None
+            )
+    if (
+        mower.park_reason in CONTINUOUS_REASONS
+        and mower.next_start is not None
+        and (mower.continuous_time is None or (
+            mower.status_time is not None and mower.status_time > mower.continuous_time
+        ))
+    ):
+        mower.continuous_until = mower.next_start
+        mower.continuous_time = mower.status_time
+
+
 # --------------------------------------------------------------------------
 # Datenmodell
 # --------------------------------------------------------------------------
@@ -284,6 +317,10 @@ class GreenworksMower:
     # (Nummer, Draht-Art, Entfernung in m, Anteil der Starts in %)
     start_points: list[tuple[int, int, int, int]] | None = None
     start_points_time: datetime | None = None
+
+    # Maehen ohne Unterbrechung: Ende (None = aus) und Stand der Angabe
+    continuous_until: datetime | None = None
+    continuous_time: datetime | None = None
 
     raw_properties: dict[str, Any] = field(default_factory=dict)
     raw_datapoints: dict[str, Any] = field(default_factory=dict)
@@ -460,6 +497,9 @@ def build_mower(
                 continue  # Startpunkt nicht belegt
             points.append((n, how, dist, often))
         mower.start_points, mower.start_points_time = points, found[0]
+
+    # --- Maehen ohne Unterbrechung -------------------------------------------
+    _parse_continuous(mower, datapoints)
 
     # --- Diebstahlschutz (PIN-Schutz / Geofence) -----------------------------
     found = _dp_newest(datapoints, DP_SECURITY, "security_level")

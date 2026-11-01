@@ -18,6 +18,12 @@
         "state": {
           "off": "mdi:map-marker-off-outline"
         }
+      },
+      "continuous_mowing": {
+        "default": "mdi:all-inclusive",
+        "state": {
+          "off": "mdi:calendar-clock"
+        }
       }
     },
     "switch": {
@@ -44,11 +50,23 @@
       }
     },
     "button": {
+      "start": {
+        "default": "mdi:play"
+      },
+      "pause": {
+        "default": "mdi:pause"
+      },
+      "park_until_further_notice": {
+        "default": "mdi:home-import-outline"
+      },
       "park_2h": {
         "default": "mdi:timer-pause-outline"
       },
       "park_rest_of_day": {
         "default": "mdi:weather-night"
+      },
+      "park_custom": {
+        "default": "mdi:timer-cog-outline"
       },
       "continuous_2_days": {
         "default": "mdi:robot-mower"
@@ -56,8 +74,19 @@
       "continuous_1_week": {
         "default": "mdi:robot-mower"
       },
+      "continuous_custom": {
+        "default": "mdi:robot-mower"
+      },
       "continuous_off": {
         "default": "mdi:robot-mower-outline"
+      }
+    },
+    "number": {
+      "park_hours": {
+        "default": "mdi:timer-cog-outline"
+      },
+      "continuous_days": {
+        "default": "mdi:calendar-range"
       }
     }
   },

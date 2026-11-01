@@ -447,6 +447,17 @@
       },
       "geofence": {
         "name": "Geofence"
+      },
+      "continuous_mowing": {
+        "name": "Mähen ohne Unterbrechung",
+        "state_attributes": {
+          "until": {
+            "name": "Bis"
+          },
+          "reported": {
+            "name": "Gemeldet"
+          }
+        }
       }
     },
     "device_tracker": {
@@ -486,11 +497,23 @@
       }
     },
     "button": {
+      "start": {
+        "name": "Mähen starten / Zeitplan fortsetzen"
+      },
+      "pause": {
+        "name": "Pause"
+      },
+      "park_until_further_notice": {
+        "name": "Parken bis auf Weiteres"
+      },
       "park_2h": {
         "name": "Parken für 2 Stunden"
       },
       "park_rest_of_day": {
         "name": "Parken für den Rest des Tages"
+      },
+      "park_custom": {
+        "name": "Parken für eigene Zeit"
       },
       "continuous_2_days": {
         "name": "Mähen ohne Unterbrechung: 2 Tage"
@@ -498,8 +521,19 @@
       "continuous_1_week": {
         "name": "Mähen ohne Unterbrechung: 1 Woche"
       },
+      "continuous_custom": {
+        "name": "Mähen ohne Unterbrechung: eigene Zeit"
+      },
       "continuous_off": {
         "name": "Mähen ohne Unterbrechung: aus"
+      }
+    },
+    "number": {
+      "park_hours": {
+        "name": "Eigene Zeit: Parken"
+      },
+      "continuous_days": {
+        "name": "Eigene Zeit: Mähen ohne Unterbrechung"
       }
     }
   },
@@ -568,6 +602,9 @@
     },
     "control_rejected": {
       "message": "Der Mäher hat den Befehl abgelehnt."
+    },
+    "park_timed_not_possible": {
+      "message": "Im Zeitplan-, Regen- oder Frost-Parken geht nur Parken bis auf Weiteres (wie in der App)."
     }
   },
   "services": {
@@ -577,7 +614,7 @@
       "fields": {
         "hours": {
           "name": "Stunden",
-          "description": "Wie lange parken (1–720 Stunden). Leer lassen für „bis auf Weiteres“."
+          "description": "Wie lange parken (1–24 Stunden, wie in der App). Leer lassen für „bis auf Weiteres“."
         }
       }
     },
@@ -587,7 +624,7 @@
       "fields": {
         "days": {
           "name": "Tage",
-          "description": "Wie viele Tage (1–30), 0 = aus."
+          "description": "Wie viele Tage (1–24, wie in der App), 0 = aus."
         }
       }
     }
