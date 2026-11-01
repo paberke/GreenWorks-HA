@@ -250,8 +250,9 @@ class GreenworksOptionsFlow(OptionsFlow):
             step_id="init",
             data_schema=schema,
             description_placeholders={
-                "tested_mowers_url": TESTED_MOWERS_URL,
-                "tested_mowers_url_de": TESTED_MOWERS_URL_DE,
+                "tested_mowers_url": TESTED_MOWERS_URL_DE
+                if (self.hass.config.language or "").startswith("de")
+                else TESTED_MOWERS_URL
             },
         )
 

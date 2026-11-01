@@ -285,3 +285,20 @@ async def test_old_paho(hass):
     fake.on_disconnect(fake, None, 1)
     assert not control.connected
     fake.publish.assert_not_called()
+
+
+async def test_options_link_placeholder(hass, aioclient_mock):
+    """Link auf "Getestete Maeher": ein Platzhalter fuer alle Sprachen."""
+    import json
+    from pathlib import Path
+    entry = await _setup(hass, aioclient_mock)
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["description_placeholders"]["tested_mowers_url"].endswith("#tested-mowers")
+    hass.config.language = "de"
+    result = await hass.config_entries.options.async_init(entry.entry_id)
+    assert result["description_placeholders"]["tested_mowers_url"].endswith("#getestete-maher")
+    base = Path(__file__).parent.parent / "custom_components" / "greenworks"
+    for name in ("strings.json", "translations/en.json", "translations/de.json"):
+        text = json.loads((base / name).read_text())["options"]["step"]["init"][
+            "data_description"]["control"]
+        assert "{tested_mowers_url}" in text
