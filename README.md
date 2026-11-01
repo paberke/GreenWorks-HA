@@ -185,7 +185,7 @@ Both notices disappear by themselves as soon as everything works again. If the p
 
 ## Limitations
 
-- **Schedule and settings only in the app:** [control](#control) can start, pause and park. The integration does not change the schedule, rain sensor, cutting settings etc., and this is not planned.
+- **Schedule and settings only in the app:** [control](#control) can start, pause and park. The integration does not change the schedule, rain sensor, cutting settings etc.
 - **Statistics only update when the app asks for them:** the mower sends cutting, running and charging time only when the statistics are opened in the app. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower is *mowing* and adds them to the last real value (attribute *Counted since last statistics*). When new real statistics arrive, they take over again.
 - **Schedule, error history and settings are only as current as the app:** the cloud updates them when you open the respective page in the app (attribute *Updated*).
 - **No software update notice:** whether there is new mower software is only shown by the Greenworks app (page *Software*). Its update server does not answer requests from outside the app.

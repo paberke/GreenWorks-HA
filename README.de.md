@@ -189,7 +189,7 @@ Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Pas
 
 ## Einschränkungen
 
-- **Zeitplan und Einstellungen nur in der App:** Die [Steuerung](#steuerung) kann starten, pausieren und parken. Zeitplan, Regensensor, Schnittbreite usw. ändert die Integration nicht und das ist auch nicht geplant.
+- **Zeitplan und Einstellungen nur in der App:** Die [Steuerung](#steuerung) kann starten, pausieren und parken. Zeitplan, Regensensor, Schnittbreite usw. ändert die Integration nicht.
 - **Statistik nur beim Öffnen der App aktuell:** Mäh-, Lauf- und Ladezeit schickt der Mäher nur, wenn in der App die Statistik geöffnet wird. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher *mäht*, und schlägt sie auf den letzten echten Wert auf (Attribut *Davon gezählt*). Kommt eine neue echte Statistik, gilt wieder diese.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie, wenn du in der App die jeweilige Seite öffnest (Attribut *Aktualisiert*).
 - **Keine Anzeige für Software-Updates:** Ob es neue Mäher-Software gibt, zeigt nur die Greenworks-App (Seite *Software*). Ihr Update-Server beantwortet keine Anfragen von außerhalb der App.
