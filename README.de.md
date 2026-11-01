@@ -154,6 +154,7 @@ Auf der Geräteseite gibt es dieselben Auswahlen wie in der App:
 - **Gesperrt wie in der App:** Tasten, die im aktuellen Zustand nicht gehen, sind *nicht verfügbar*. Beispiel: Ist der Mäher *nach Zeitplan*, *durch Regen-* oder *Frostschutz* geparkt, geht nur *Parken bis auf Weiteres*. *Start* gibt es nur, wenn er pausiert oder vom Benutzer geparkt ist, *Pause* nur, wenn er unterwegs ist.
 - Für Automationen gibt es die Aktionen `greenworks.park` (`hours` 1–24, ohne Angabe: bis auf Weiteres) und `greenworks.mow_continuously` (`days` 1–24, 0 = aus). Die Mäher-Entität hat außerdem die üblichen Knöpfe Start, Pause und Zur Station.
 - Home Assistant wartet auf die **Bestätigung des Mähers**. Kommt keine (z. B. Mäher offline) oder lehnt er ab, erscheint eine Fehlermeldung.
+- Nach einem Befehl kann es **bis zu etwa einer Minute** dauern, bis Status und Tasten in Home Assistant den neuen Stand zeigen. Die App ist manchmal schneller, weil sie die Antwort direkt bekommt.
 - Die Tasten sind nur verfügbar, solange der Mäher **online** ist.
 - Ist in der App eine **PIN** für das Starten eingerichtet, kann der Mäher den Start ablehnen.
 - Zurück auf *Nur lesen* stellen schaltet alles wieder ab: die Tasten werden deaktiviert, die Verbindung für die Befehle wird beendet.

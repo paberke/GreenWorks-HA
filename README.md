@@ -152,6 +152,7 @@ The device page offers the same choices as the app:
 - **Locked like in the app:** buttons that don't work in the current state are *unavailable*. Example: while the mower is parked *by schedule*, *rain guard* or *frost guard*, only *Park until further notice* works. *Start* is only offered when the mower is paused or parked by the user, *Pause* only while it is on its way.
 - For automations there are the actions `greenworks.park` (`hours` 1–24, empty: until further notice) and `greenworks.mow_continuously` (`days` 1–24, 0 = off). The mower entity also has the usual start, pause and dock buttons.
 - Home Assistant waits for the **mower's confirmation**. If none arrives (e.g. mower offline) or the mower refuses, you get an error message.
+- After a command it can take **up to about a minute** until status and buttons in Home Assistant show the new state. The app is sometimes faster because it gets the answer directly.
 - The buttons are only available while the mower is **online**.
 - If a **PIN** for starting is set up in the app, the mower may refuse to start.
 - Setting it back to *Read only* switches everything off again: the buttons are disabled and the command connection is closed.
