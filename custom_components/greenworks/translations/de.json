@@ -551,7 +551,12 @@
           "offline_hours": "Hinweis unter Reparaturen, wenn offline seit (0 = aus, 0–72 Stunden)"
         },
         "data_description": {
-          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Zeitplan und Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher nur mit einem Optimow 10 getestet, siehe [Getestete Mäher]({tested_mowers_url})."
+          "groups": "Häkchen setzen = diese Entitäten werden zusätzlich angelegt. Häkchen entfernen = sie werden deaktiviert, nicht gelöscht.",
+          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Zeitplan und Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher nur mit einem Optimow 10 getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
+          "scan_interval": "Wie oft Home Assistant die Greenworks-Cloud nach neuen Werten fragt. Kürzer = aktuellere Werte, aber mehr Anfragen an die Cloud. Standard: 60 Sekunden.",
+          "outage_grace": "Antwortet die Cloud kurz nicht, zeigen die Entitäten so lange die letzten Werte weiter. Erst danach werden sie „Nicht verfügbar“. Standard: 5 Minuten.",
+          "blade_limit": "Nach so vielen Stunden Messer-Laufzeit schaltet „Messerwechsel fällig“ auf an. 0 = keine Erinnerung. Standard: 150 Stunden.",
+          "offline_hours": "Ist der Mäher so lange offline, erscheint ein Hinweis unter Einstellungen → Reparaturen. Er verschwindet von selbst, sobald der Mäher wieder online ist. 0 = kein Hinweis. Standard: 1 Stunde."
         }
       }
     }

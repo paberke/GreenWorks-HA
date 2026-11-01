@@ -23,10 +23,10 @@ The integration reads your Greenworks robotic mower via the Greenworks cloud and
 
 ## Tested mowers
 
-| Mower | Tested by |
-|---|---|
-| Greenworks **Optimow 10** | the developer, daily use |
-| Cramer **RM1000** and **RM1500** (with the Greenworks app) | reported by a user ([comment](https://github.com/Boes24/GreenWorks-HA/issues/1)) |
+| Mower | Read | Read and control | Tested by |
+|---|:---:|:---:|---|
+| Greenworks **Optimow 10** | ✅ | ✅ (test phase) | the developer, daily use |
+| Cramer **RM1000** and **RM1500** (with the Greenworks app) | ✅ | – not tested | reported by a user ([comment](https://github.com/Boes24/GreenWorks-HA/issues/1)) |
 
 Other Greenworks/Cramer robotic mowers that use the Greenworks app will probably work too. [Control](#control) is in a **test phase** and has **only been tested with the Optimow 10** so far. **Cramer fleet accounts** (`fleet.cramertools.com`) are a separate service and are **not** supported. If you try another model, please [tell us](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
 
