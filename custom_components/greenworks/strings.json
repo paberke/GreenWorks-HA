@@ -517,7 +517,7 @@
           "offline_hours": "Repair notice when offline for (0 = off, 0–72 hours)"
         },
         "data_description": {
-          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. Schedule and settings stay in the app."
+          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. Schedule and settings stay in the app. Test phase: control has only been tested on an Optimow 10 so far, see [Tested mowers](https://github.com/paberke/GreenWorks-HA#tested-mowers)."
         }
       }
     }
@@ -536,7 +536,7 @@
     "control": {
       "options": {
         "read_only": "Read only",
-        "read_and_control": "Read and control (start, pause, park)"
+        "read_and_control": "Read and control (test phase: first check in the readme which mowers were tested)"
       }
     }
   },

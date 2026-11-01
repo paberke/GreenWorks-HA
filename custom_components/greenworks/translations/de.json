@@ -517,7 +517,7 @@
           "offline_hours": "Hinweis unter Reparaturen, wenn offline seit (0 = aus, 0–72 Stunden)"
         },
         "data_description": {
-          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Zeitplan und Einstellungen bleiben in der App."
+          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Zeitplan und Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher nur mit einem Optimow 10 getestet, siehe [Getestete Mäher](https://github.com/paberke/GreenWorks-HA/blob/main/README.de.md#getestete-maher)."
         }
       }
     }
@@ -536,7 +536,7 @@
     "control": {
       "options": {
         "read_only": "Nur lesen",
-        "read_and_control": "Lesen und steuern (Starten, Pause, Parken)"
+        "read_and_control": "Lesen und steuern (Testphase: vorher in der Anleitung lesen, welche Mäher getestet wurden)"
       }
     }
   },
