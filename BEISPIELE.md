@@ -10,7 +10,7 @@ Fertige Beispiele zum Kopieren. Ersetze überall **`rasenrobo`** durch den Namen
 
 **Lieber mit einer KI bauen?** Fertige Prompts: [PROMPTS.de.md](PROMPTS.de.md).
 
-**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Bei Regen parken](#bei-regen-parken) · [Dashboard-Karte](#dashboard-karte) · [Werte abfragen](#werte-abfragen)
+**Inhalt:** [Benachrichtigung bei neuem Fehler](#benachrichtigung-bei-neuem-fehler) · [Messerwechsel fällig](#messerwechsel-fallig) · [Mäher hat ein Problem](#maher-hat-ein-problem) · [Winterpause nach Datum](#winterpause-nach-datum) · [Einwintern und Saisonstart](#einwintern-und-saisonstart) · [Zeitumstellung](#erinnerung-bei-der-zeitumstellung) · [Bei Regen parken](#bei-regen-parken) · [Mähplan nach Jahreszeit](#maehplan-nach-jahreszeit) · [Dashboard-Karte](#dashboard-karte) · [Werte abfragen](#werte-abfragen)
 
 ## Benachrichtigung bei neuem Fehler
 
@@ -307,6 +307,60 @@ actions:
               entity_id: lawn_mower.rasenrobo
 mode: single
 ```
+
+<a id="maehplan-nach-jahreszeit"></a>
+
+## Mähplan nach Jahreszeit
+
+Braucht **Lesen und steuern** (siehe [Mähplan setzen](README.de.md#maehplan-setzen), Testphase). Stellt am 1. Mai den Sommerplan und am 1. Oktober den Herbstplan ein. Tage, die du nicht nennst, bleiben, wie sie sind; deshalb setzt der zweite Schritt jeweils die übrigen Tage auf „nicht mähen“. Zeiten und Tage nach Bedarf anpassen.
+
+```yaml
+alias: Rasenmäher – Mähplan nach Jahreszeit
+description: Sommerplan am 1.5., Herbstplan am 1.10.
+triggers:
+  - trigger: time
+    at: "06:00:00"
+actions:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ now().month == 5 and now().day == 1 }}"
+        sequence:
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [monday, tuesday, wednesday, thursday, friday, saturday]
+              start_1: "09:00"
+              end_1: "12:30"
+              start_2: "14:00"
+              end_2: "19:00"
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [sunday]
+      - conditions:
+          - condition: template
+            value_template: "{{ now().month == 10 and now().day == 1 }}"
+        sequence:
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [monday, thursday]
+              start_1: "14:00"
+              end_1: "19:00"
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [tuesday, wednesday, friday, saturday, sunday]
+mode: single
+```
+
+- Jeder Aufruf schreibt in den Mäher und dauert etwa 10 bis 50 Sekunden. Nur aufrufen, wenn sich wirklich etwas ändert, nicht alle paar Minuten.
+- Während *Mähen ohne Unterbrechung* läuft, ist das Setzen gesperrt (wie in der App); die Automation bricht dann mit einer Fehlermeldung ab.
 
 ## Dashboard-Karte
 

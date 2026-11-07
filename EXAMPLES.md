@@ -10,7 +10,7 @@ Ready-to-copy examples. Replace **`rasenrobo`** with the name of your mower and 
 
 **Rather build it with an AI?** Ready-made prompts: [PROMPTS.md](PROMPTS.md).
 
-**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Park when it rains](#park-when-it-rains) · [Dashboard card](#dashboard-card) · [Reading values](#reading-values)
+**Contents:** [Notification on a new error](#notification-on-a-new-error) · [Blade change due](#blade-change-due) · [Mower has a problem](#mower-has-a-problem) · [Winter pause by date](#winter-pause-by-date) · [Winterising and start of season](#winterising-and-start-of-season) · [Clock change](#reminder-when-the-clocks-change) · [Park when it rains](#park-when-it-rains) · [Schedule by season](#schedule-by-season) · [Dashboard card](#dashboard-card) · [Reading values](#reading-values)
 
 ## Notification on a new error
 
@@ -301,6 +301,58 @@ actions:
               entity_id: lawn_mower.rasenrobo
 mode: single
 ```
+
+## Schedule by season
+
+Needs **Read and control** (see [Set schedule](README.md#set-schedule), test phase). Sets the summer schedule on 1 May and the autumn schedule on 1 October. Days you don't list stay as they are, so the second step sets the remaining days to "no mowing". Adjust days and times as you like.
+
+```yaml
+alias: Mower – schedule by season
+description: Summer schedule on 1 May, autumn schedule on 1 October.
+triggers:
+  - trigger: time
+    at: "06:00:00"
+actions:
+  - choose:
+      - conditions:
+          - condition: template
+            value_template: "{{ now().month == 5 and now().day == 1 }}"
+        sequence:
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [monday, tuesday, wednesday, thursday, friday, saturday]
+              start_1: "09:00"
+              end_1: "12:30"
+              start_2: "14:00"
+              end_2: "19:00"
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [sunday]
+      - conditions:
+          - condition: template
+            value_template: "{{ now().month == 10 and now().day == 1 }}"
+        sequence:
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [monday, thursday]
+              start_1: "14:00"
+              end_1: "19:00"
+          - action: greenworks.set_schedule
+            target:
+              entity_id: lawn_mower.rasenrobo
+            data:
+              weekdays: [tuesday, wednesday, friday, saturday, sunday]
+mode: single
+```
+
+- Every call writes to the mower and takes about 10 to 50 seconds. Only call it when something really changes, not every few minutes.
+- While *Mow without interruption* is on, setting is locked (as in the app); the automation then stops with an error.
 
 ## Dashboard card
 
