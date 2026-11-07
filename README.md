@@ -253,7 +253,6 @@ If that bothers you, disable the integration while you use the app (*Settings â†
 What we want to tackle next. **Whether and when this works out is not certain yet.** We try it and test everything on our own mower first.
 
 - Inclusion in the HACS store or the new **Marketplace** from Home Assistant 2026.11
-- Set the **mowing schedule** from Home Assistant: [now in test phase](#set-schedule)
 - Set the mower's **clock** automatically after daylight saving time changes
 - **Switch accounts** without setting up the integration again
 

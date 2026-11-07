@@ -259,7 +259,6 @@ Wenn dich das stört: Die Integration ausschalten, solange du die App benutzt (*
 Was wir als Nächstes angehen wollen. **Ob und wann das klappt, ist noch nicht sicher.** Wir probieren es aus und testen alles erst am eigenen Mäher.
 
 - Aufnahme in den HACS-Store bzw. den neuen **Marketplace** ab Home Assistant 2026.11
-- **Mähplan** aus Home Assistant einstellen: [jetzt in der Testphase](#maehplan-setzen)
 - **Uhrzeit** des Mähers nach der Zeitumstellung automatisch stellen
 - **Konto wechseln**, ohne die Integration neu einzurichten
 
