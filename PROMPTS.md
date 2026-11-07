@@ -24,8 +24,10 @@ for my Greenworks robotic mower. Important:
   if you can't see it), there are: lawn_mower.start_mowing (start / resume schedule),
   lawn_mower.pause, lawn_mower.dock (park until further notice), greenworks.park (hours 1–24)
   and greenworks.mow_continuously (days 1–24, 0 = off), plus
-  binary_sensor.rasenrobo_mow_without_interruption (attribute until). The mower's schedule and
-  settings cannot be changed. Start only works when the mower is paused or parked by the user
+  binary_sensor.rasenrobo_mow_without_interruption (attribute until). The schedule is set with
+  greenworks.set_schedule (weekdays: list monday–sunday, start_1/end_1, optional start_2/end_2
+  as "HH:MM", no times = no mowing on those days; test phase, locked while mowing without
+  interruption). Other mower settings cannot be changed. Start only works when the mower is paused or parked by the user
   (status parked_by_user).
 - If you have access to my Home Assistant: look up the entities of the "greenworks" integration
   and my phone's notify service yourself and let me confirm them before you build anything.

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from datetime import time
 from typing import Any
 
 import voluptuous as vol
@@ -13,10 +14,11 @@ from homeassistant.components.lawn_mower import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
-from homeassistant.helpers import entity_platform
+from homeassistant.helpers import config_validation as cv, entity_platform
+from homeassistant.util import dt as dt_util
 
 from .button import can_park_timed
-from .const import DOMAIN, status_key
+from .const import CONF_PIN, DOMAIN, status_key
 from .control import (
     MAX_CONTINUOUS_DAYS,
     MAX_PARK_HOURS,
@@ -27,11 +29,25 @@ from .control import (
 )
 from .coordinator import GreenworksConfigEntry, GreenworksCoordinator, control_enabled
 from .entity import AddConfigEntryEntitiesCallback, GreenworksEntity
+from .schedule import (
+    READ_KEY,
+    READ_REQUEST,
+    WEEKDAYS,
+    ScheduleError,
+    active_windows,
+    apply_days,
+    check_windows,
+    fields_from_reply,
+    save_payload,
+)
 
 SERVICE_PARK = "park"
 SERVICE_MOW_CONTINUOUSLY = "mow_continuously"
 ATTR_HOURS = "hours"
 ATTR_DAYS = "days"
+SERVICE_SET_SCHEDULE = "set_schedule"
+ATTR_WEEKDAYS = "weekdays"
+WINDOW_FIELDS = (("start_1", "end_1"), ("start_2", "end_2"))
 
 _RETURNING = getattr(LawnMowerActivity, "RETURNING", LawnMowerActivity.MOWING)
 
@@ -83,6 +99,24 @@ async def async_setup_entry(
         },
         "async_mow_continuously",
     )
+    platform.async_register_entity_service(
+        SERVICE_SET_SCHEDULE,
+        {
+            vol.Required(ATTR_WEEKDAYS): vol.All(
+                cv.ensure_list, [vol.In(WEEKDAYS)], vol.Length(min=1)
+            ),
+            **{
+                vol.Optional(field): cv.time
+                for pair in WINDOW_FIELDS
+                for field in pair
+            },
+        },
+        "async_set_schedule",
+    )
+
+
+def _schedule_error(key: str) -> HomeAssistantError:
+    return HomeAssistantError(translation_domain=DOMAIN, translation_key=key)
 
 
 class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
@@ -101,18 +135,22 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         else:
             self._attr_supported_features = LawnMowerEntityFeature(0)
 
-    async def _async_command(self, payload: str) -> None:
+    def _control(self) -> Any:
         control = self.coordinator.control
         if control is None:
             raise HomeAssistantError(
                 translation_domain=DOMAIN, translation_key="control_disabled"
             )
-        await control.async_send(self._device_id, payload)
+        return control
+
+    async def _async_command(self, payload: str) -> None:
+        await self._control().async_send(self._device_id, payload)
         await self.coordinator.async_request_refresh()
 
     async def async_start_mowing(self) -> None:
-        """Maehen starten bzw. Zeitplan fortsetzen."""
-        await self._async_command(start_payload())
+        """Maehen starten bzw. Zeitplan fortsetzen (mit PIN, falls eingetragen)."""
+        pin = self.coordinator.config_entry.options.get(CONF_PIN)
+        await self._async_command(start_payload(int(pin) if pin else None))
 
     async def async_pause(self) -> None:
         await self._async_command(pause_payload())
@@ -139,6 +177,58 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
     async def async_mow_continuously(self, days: int) -> None:
         """Maehen ohne Unterbrechung fuer X Tage, 0 = aus."""
         await self._async_command(continuous_payload(days * 1440))
+
+    async def async_set_schedule(self, weekdays: list[str], **times: time) -> None:
+        """Maehplan fuer die gewaehlten Tage setzen, alle anderen Tage bleiben.
+
+        Ablauf: pruefen, Plan frisch vom Maeher lesen, nur die gewaehlten Tage
+        ersetzen, speichern, erneut lesen und vergleichen. Schlaegt ein Schritt
+        fehl, wird abgebrochen (vor dem Speichern: es wurde nichts gesendet).
+        """
+        control = self._control()
+        mower = self.mower
+        until = mower.continuous_until if mower else None
+        if until is not None and until > dt_util.utcnow():
+            # Wie in der App: waehrend "Maehen ohne Unterbrechung" gesperrt
+            raise _schedule_error("schedule_continuous_active")
+        windows: list[tuple[int, int]] = []
+        for start_key, end_key in WINDOW_FIELDS:
+            start, end = times.get(start_key), times.get(end_key)
+            if start is None and end is None:
+                continue
+            if start is None or end is None:
+                raise _schedule_error("schedule_incomplete")
+            windows.append((start.hour * 60 + start.minute, end.hour * 60 + end.minute))
+        try:
+            check_windows(windows)
+            current = fields_from_reply(
+                (await control.async_query(self._device_id, READ_REQUEST, READ_KEY)).get(
+                    "response"
+                )
+            )
+            wanted = apply_days(current, weekdays, windows)
+        except ScheduleError as err:
+            raise _schedule_error(err.key) from err
+        if wanted != current:
+            rejected: HomeAssistantError | None = None
+            try:
+                await control.async_send(self._device_id, save_payload(wanted))
+            except HomeAssistantError as err:
+                if err.translation_key != "control_rejected":
+                    raise
+                # Entscheidend ist, was der Maeher danach wirklich gespeichert hat
+                rejected = err
+            try:
+                saved = fields_from_reply(
+                    (
+                        await control.async_query(self._device_id, READ_REQUEST, READ_KEY)
+                    ).get("response")
+                )
+            except ScheduleError as err:
+                raise rejected or _schedule_error("schedule_not_confirmed") from err
+            if active_windows(saved) != active_windows(wanted):
+                raise rejected or _schedule_error("schedule_not_confirmed")
+        await self.coordinator.async_request_refresh()
 
     @property
     def available(self) -> bool:

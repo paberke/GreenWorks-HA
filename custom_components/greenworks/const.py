@@ -33,6 +33,8 @@ CONF_CONTROL: Final = "control"
 CONTROL_READ_ONLY: Final = "read_only"
 CONTROL_READ_AND_CONTROL: Final = "read_and_control"
 CONTROL_OPTIONS: Final = (CONTROL_READ_ONLY, CONTROL_READ_AND_CONTROL)
+# PIN des Maehers (nur noetig, wenn am Maeher der PIN-Schutz an ist), leer = ohne
+CONF_PIN: Final = "pin"
 
 # Gruppen von Entitaeten, die man ein- und ausschalten kann (Standard ist immer an)
 CONF_GROUPS: Final = "groups"

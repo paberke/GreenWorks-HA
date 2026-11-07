@@ -96,6 +96,9 @@
     },
     "mow_continuously": {
       "service": "mdi:robot-mower"
+    },
+    "set_schedule": {
+      "service": "mdi:calendar-clock"
     }
   }
 }

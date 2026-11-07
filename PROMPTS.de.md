@@ -24,8 +24,10 @@ für meinen Greenworks-Mähroboter. Wichtig:
   eingestellt (frag mich, falls du es nicht siehst), gibt es: lawn_mower.start_mowing
   (Mähen starten / Zeitplan fortsetzen), lawn_mower.pause, lawn_mower.dock (parken bis auf
   Weiteres), greenworks.park (hours 1–24) und greenworks.mow_continuously (days 1–24, 0 = aus),
-  dazu binary_sensor.rasenrobo_mahen_ohne_unterbrechung (Attribut until). Zeitplan und
-  Einstellungen des Mähers lassen sich nicht ändern. Starten nur, wenn der Mäher pausiert
+  dazu binary_sensor.rasenrobo_mahen_ohne_unterbrechung (Attribut until). Den Mähplan setzt
+  greenworks.set_schedule (weekdays: Liste monday–sunday, start_1/end_1, optional
+  start_2/end_2 als "HH:MM", ohne Zeiten = an diesen Tagen nicht mähen; Testphase, gesperrt
+  während Mähen ohne Unterbrechung). Andere Einstellungen des Mähers lassen sich nicht ändern. Starten nur, wenn der Mäher pausiert
   oder vom Benutzer geparkt ist (status parked_by_user).
 - Hast du Zugriff auf mein Home Assistant: Suche die Entitäten der Integration "greenworks" und
   meinen notify-Dienst fürs Handy selbst und lass sie mich bestätigen, bevor du baust.
