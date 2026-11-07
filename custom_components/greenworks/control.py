@@ -106,14 +106,19 @@ def _reply_key(payload: str) -> str:
 
 def parse_reply(raw: bytes) -> dict[str, Any] | None:
     """Antwort vom Thema $6: vor dem JSON stehen ein paar Bytes Kopf."""
+    # Der Kopf kann selbst ein "{" enthalten (z. B. als Laengenbyte bei langen
+    # Antworten wie dem Maehplan): dann ab dem naechsten "{" versuchen
     start = raw.find(b"{")
-    if start < 0:
-        return None
-    try:
-        data = json.loads(raw[start:].decode("utf-8", "replace"))
-    except ValueError:
-        return None
-    return data if isinstance(data, dict) else None
+    tries = 0
+    while 0 <= start and tries < 4:
+        try:
+            data = json.loads(raw[start:].decode("utf-8", "replace"))
+        except ValueError:
+            start = raw.find(b"{", start + 1)
+            tries += 1
+            continue
+        return data if isinstance(data, dict) else None
+    return None
 
 
 class GreenworksControl:
@@ -204,6 +209,7 @@ class GreenworksControl:
         if not payload:
             return
         device_id = message.topic.partition("/")[2]
+        _LOGGER.debug("Antwort von %s auf %s", device_id, payload[:6])
         if payload.startswith(_QUERY_KEYS):
             # Antwort auf eine Abfrage (Maehplan lesen): komplett weiterreichen
             self._hass.loop.call_soon_threadsafe(
@@ -276,7 +282,9 @@ class GreenworksControl:
         finally:
             self._queries.pop(wait_key, None)
 
-    async def async_send(self, device_id: int, payload: str) -> None:
+    async def async_send(
+        self, device_id: int, payload: str, timeout: float | None = None
+    ) -> None:
         """Befehl senden und auf die Bestaetigung des Maehers warten."""
         if self._mqtt is None or not self.connected:
             raise HomeAssistantError(
@@ -291,7 +299,7 @@ class GreenworksControl:
             await self._hass.async_add_executor_job(
                 self._mqtt.publish, topic, bytes.fromhex(payload), 1
             )
-            async with asyncio.timeout(CONFIRM_TIMEOUT):
+            async with asyncio.timeout(timeout or CONFIRM_TIMEOUT):
                 ok = await future
         except TimeoutError as err:
             raise HomeAssistantError(

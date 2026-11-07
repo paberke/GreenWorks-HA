@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from datetime import time
 from typing import Any
 
@@ -48,6 +49,8 @@ ATTR_DAYS = "days"
 SERVICE_SET_SCHEDULE = "set_schedule"
 ATTR_WEEKDAYS = "weekdays"
 WINDOW_FIELDS = (("start_1", "end_1"), ("start_2", "end_2"))
+# Speichern dauert am Maeher laenger als die anderen Befehle
+SAVE_CONFIRM_TIMEOUT = 60
 
 _RETURNING = getattr(LawnMowerActivity, "RETURNING", LawnMowerActivity.MOWING)
 
@@ -126,6 +129,7 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
 
     def __init__(self, coordinator: GreenworksCoordinator, device_id: int) -> None:
         super().__init__(coordinator, device_id, "mower")
+        self._schedule_lock = asyncio.Lock()
         if control_enabled(coordinator.config_entry):
             self._attr_supported_features = (
                 LawnMowerEntityFeature.START_MOWING
@@ -185,6 +189,11 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         ersetzen, speichern, erneut lesen und vergleichen. Schlaegt ein Schritt
         fehl, wird abgebrochen (vor dem Speichern: es wurde nichts gesendet).
         """
+        # Nie zwei Speichervorgaenge gleichzeitig (z. B. doppelt gedrueckt)
+        async with self._schedule_lock:
+            await self._async_set_schedule(weekdays, times)
+
+    async def _async_set_schedule(self, weekdays: list[str], times: dict[str, time]) -> None:
         control = self._control()
         mower = self.mower
         until = mower.continuous_until if mower else None
@@ -212,19 +221,26 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         if wanted != current:
             rejected: HomeAssistantError | None = None
             try:
-                await control.async_send(self._device_id, save_payload(wanted))
+                await control.async_send(
+                    self._device_id, save_payload(wanted), SAVE_CONFIRM_TIMEOUT
+                )
             except HomeAssistantError as err:
-                if err.translation_key != "control_rejected":
+                if err.translation_key not in ("control_rejected", "control_no_reply"):
                     raise
                 # Entscheidend ist, was der Maeher danach wirklich gespeichert hat
-                rejected = err
+                # (live gesehen: Plan gespeichert, aber keine Bestaetigung erhalten)
+                rejected = (
+                    err
+                    if err.translation_key == "control_rejected"
+                    else _schedule_error("schedule_not_confirmed")
+                )
             try:
                 saved = fields_from_reply(
                     (
                         await control.async_query(self._device_id, READ_REQUEST, READ_KEY)
                     ).get("response")
                 )
-            except ScheduleError as err:
+            except (ScheduleError, HomeAssistantError) as err:
                 raise rejected or _schedule_error("schedule_not_confirmed") from err
             if active_windows(saved) != active_windows(wanted):
                 raise rejected or _schedule_error("schedule_not_confirmed")

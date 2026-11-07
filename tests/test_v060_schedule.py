@@ -380,3 +380,66 @@ async def test_diagnostics_hide_pin(hass, aioclient_mock):
         "request_payload": "DA0104**REDACTED**"}
     assert diagnostics._hide_pin([{"request_payload": "e60002feff"}]) == [
         {"request_payload": "e60002feff"}]
+
+
+async def test_set_schedule_save_without_confirmation_but_saved(hass, aioclient_mock, monkeypatch):
+    """Live gesehen: Plan gespeichert, Bestaetigung kam nicht. Nachlesen entscheidet."""
+    from custom_components.greenworks import lawn_mower as lm
+    monkeypatch.setattr(lm, "SAVE_CONFIRM_TIMEOUT", 0.05)
+    _, _, mower = await _ready(hass, aioclient_mock)
+    original = mower.publish
+
+    def publish(topic, payload, qos):
+        body = payload.hex()[20:]
+        if body.startswith("400146"):
+            mower.sent.append(payload.hex())
+            mower.fields = _decode(body)  # gespeichert, aber keine Antwort
+            return
+        original(topic, payload, qos)
+    mower.control._mqtt.publish.side_effect = publish
+    await _call(hass, weekdays=["monday"], start_1="14:00", end_1="18:00")
+    assert sch.active_windows(mower.fields)["monday"] == [(14, 0, 240)]
+    assert mower.sent[-1] == READ
+
+
+async def test_set_schedule_save_without_confirmation_not_saved(hass, aioclient_mock, monkeypatch):
+    from custom_components.greenworks import lawn_mower as lm
+    monkeypatch.setattr(lm, "SAVE_CONFIRM_TIMEOUT", 0.05)
+    _, _, mower = await _ready(hass, aioclient_mock)
+    original = mower.publish
+
+    def publish(topic, payload, qos):
+        if payload.hex()[20:].startswith("400146"):
+            mower.sent.append(payload.hex())
+            return
+        original(topic, payload, qos)
+    mower.control._mqtt.publish.side_effect = publish
+    with pytest.raises(HomeAssistantError) as err:
+        await _call(hass, weekdays=["monday"], start_1="14:00", end_1="18:00")
+    assert err.value.translation_key == "schedule_not_confirmed"
+
+
+async def test_set_schedule_check_read_times_out(hass, aioclient_mock, monkeypatch):
+    _, control, mower = await _ready(hass, aioclient_mock)
+    original = mower.publish
+    reads = []
+
+    def publish(topic, payload, qos):
+        if payload.hex()[20:].startswith("420100"):
+            reads.append(1)
+            if len(reads) > 1:
+                mower.sent.append(payload.hex())
+                return  # Kontrolle bleibt unbeantwortet
+        original(topic, payload, qos)
+    control._mqtt.publish.side_effect = publish
+    monkeypatch.setattr(ctl, "CONFIRM_TIMEOUT", 0.3)
+    with pytest.raises(HomeAssistantError) as err:
+        await _call(hass, weekdays=["monday"], start_1="14:00", end_1="18:00")
+    assert err.value.translation_key == "schedule_not_confirmed"
+
+
+def test_parse_reply_header_with_brace():
+    """Laengenbyte 0x7b ("{") im Kopf darf die Antwort nicht verschlucken."""
+    body = b'{"request":{"request_payload":"400146"},"response":{"return_code":0}}'
+    assert ctl.parse_reply(b"\x00\x06\x08{" + body)["response"]["return_code"] == 0
+    assert ctl.parse_reply(b"{{{{{{") is None
