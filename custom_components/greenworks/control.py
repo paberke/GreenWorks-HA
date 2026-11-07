@@ -255,7 +255,7 @@ class GreenworksControl:
                 future.set_result(reply)
 
     async def async_query(
-        self, device_id: int, payload: str, key: str
+        self, device_id: int, payload: str, key: str, timeout: float | None = None
     ) -> dict[str, Any]:
         """Abfrage senden (aendert nichts am Maeher) und die Antwort zurueckgeben."""
         if self._mqtt is None or not self.connected:
@@ -273,7 +273,7 @@ class GreenworksControl:
                 bytes.fromhex(payload),
                 1,
             )
-            async with asyncio.timeout(CONFIRM_TIMEOUT):
+            async with asyncio.timeout(timeout or CONFIRM_TIMEOUT):
                 return await future
         except TimeoutError as err:
             raise HomeAssistantError(

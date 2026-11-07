@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 from datetime import time
+import logging
 from typing import Any
 
 import voluptuous as vol
@@ -51,6 +52,10 @@ ATTR_WEEKDAYS = "weekdays"
 WINDOW_FIELDS = (("start_1", "end_1"), ("start_2", "end_2"))
 # Speichern dauert am Maeher laenger als die anderen Befehle
 SAVE_CONFIRM_TIMEOUT = 60
+# Kontrolle nach dem Speichern: Pause davor (s), Versuche, Wartezeit je Versuch (s)
+CHECK_DELAY = 5
+CHECK_ATTEMPTS = 2
+CHECK_TIMEOUT = 20
 
 _RETURNING = getattr(LawnMowerActivity, "RETURNING", LawnMowerActivity.MOWING)
 
@@ -71,6 +76,7 @@ ACTIVITY_MAP: dict[int, LawnMowerActivity] = {
 
 
 PARALLEL_UPDATES = 0
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -219,32 +225,55 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         except ScheduleError as err:
             raise _schedule_error(err.key) from err
         if wanted != current:
-            rejected: HomeAssistantError | None = None
-            try:
-                await control.async_send(
-                    self._device_id, save_payload(wanted), SAVE_CONFIRM_TIMEOUT
-                )
-            except HomeAssistantError as err:
-                if err.translation_key not in ("control_rejected", "control_no_reply"):
-                    raise
-                # Entscheidend ist, was der Maeher danach wirklich gespeichert hat
-                # (live gesehen: Plan gespeichert, aber keine Bestaetigung erhalten)
-                rejected = (
-                    err
-                    if err.translation_key == "control_rejected"
-                    else _schedule_error("schedule_not_confirmed")
-                )
+            await self._async_save_schedule(control, wanted)
+        await self.coordinator.async_request_refresh()
+
+    async def _async_save_schedule(self, control: Any, wanted: dict[str, int]) -> None:
+        """Speichern und kontrollieren.
+
+        Live gesehen (Optimow 10): Der Maeher bestaetigt das Speichern, beantwortet
+        aber eine Abfrage direkt danach oft nicht. Darum: kurz warten, bis zu zweimal
+        nachlesen. Ergebnis:
+        - nachgelesen und gleich: in Ordnung
+        - nachgelesen und anders: Fehler
+        - nicht nachlesbar: in Ordnung nur, wenn der Maeher das Speichern bestaetigt hat
+        """
+        confirmed = True
+        failure: HomeAssistantError | None = None
+        try:
+            await control.async_send(
+                self._device_id, save_payload(wanted), SAVE_CONFIRM_TIMEOUT
+            )
+        except HomeAssistantError as err:
+            if err.translation_key not in ("control_rejected", "control_no_reply"):
+                raise
+            confirmed = False
+            failure = (
+                err
+                if err.translation_key == "control_rejected"
+                else _schedule_error("schedule_not_confirmed")
+            )
+        for attempt in range(CHECK_ATTEMPTS):
+            await asyncio.sleep(CHECK_DELAY)
             try:
                 saved = fields_from_reply(
                     (
-                        await control.async_query(self._device_id, READ_REQUEST, READ_KEY)
+                        await control.async_query(
+                            self._device_id, READ_REQUEST, READ_KEY, CHECK_TIMEOUT
+                        )
                     ).get("response")
                 )
             except (ScheduleError, HomeAssistantError) as err:
-                raise rejected or _schedule_error("schedule_not_confirmed") from err
+                _LOGGER.debug("Maehplan nachlesen, Versuch %s: %s", attempt + 1, err)
+                continue
             if active_windows(saved) != active_windows(wanted):
-                raise rejected or _schedule_error("schedule_not_confirmed")
-        await self.coordinator.async_request_refresh()
+                raise failure or _schedule_error("schedule_not_confirmed")
+            return
+        if not confirmed:
+            raise failure or _schedule_error("schedule_not_confirmed")
+        _LOGGER.info(
+            "Maehplan gespeichert (vom Maeher bestaetigt), Nachlesen nicht moeglich"
+        )
 
     @property
     def available(self) -> bool:

@@ -24,6 +24,13 @@ APP_PAYLOAD = APP_REQUEST["request_payload"]
 READ = "0007000900306000a003420100"
 
 
+@pytest.fixture(autouse=True)
+def _fast_check(monkeypatch):
+    """Keine echten Pausen in den Tests."""
+    from custom_components.greenworks import lawn_mower as lm
+    monkeypatch.setattr(lm, "CHECK_DELAY", 0)
+
+
 # --- Befehl genau wie die App ---------------------------------------------------
 
 def test_save_payload_matches_app():
@@ -420,6 +427,9 @@ async def test_set_schedule_save_without_confirmation_not_saved(hass, aioclient_
 
 
 async def test_set_schedule_check_read_times_out(hass, aioclient_mock, monkeypatch):
+    """Live gesehen: Speichern bestaetigt, Nachlesen unbeantwortet -> trotzdem ok."""
+    from custom_components.greenworks import lawn_mower as lm
+    monkeypatch.setattr(lm, "CHECK_TIMEOUT", 0.05)
     _, control, mower = await _ready(hass, aioclient_mock)
     original = mower.publish
     reads = []
@@ -432,7 +442,52 @@ async def test_set_schedule_check_read_times_out(hass, aioclient_mock, monkeypat
                 return  # Kontrolle bleibt unbeantwortet
         original(topic, payload, qos)
     control._mqtt.publish.side_effect = publish
-    monkeypatch.setattr(ctl, "CONFIRM_TIMEOUT", 0.3)
+    await _call(hass, weekdays=["monday"], start_1="14:00", end_1="18:00")
+    assert len(reads) == 1 + lm.CHECK_ATTEMPTS
+    assert sch.active_windows(mower.fields)["monday"] == [(14, 0, 240)]
+
+
+async def test_set_schedule_check_second_read_answers(hass, aioclient_mock, monkeypatch):
+    """Erstes Nachlesen unbeantwortet, zweites zeigt einen anderen Plan -> Fehler."""
+    from custom_components.greenworks import lawn_mower as lm
+    monkeypatch.setattr(lm, "CHECK_TIMEOUT", 0.05)
+    _, control, mower = await _ready(hass, aioclient_mock)
+    original = mower.publish
+    reads = []
+
+    def publish(topic, payload, qos):
+        body = payload.hex()[20:]
+        if body.startswith("420100"):
+            reads.append(1)
+            if len(reads) == 2:
+                return
+            if len(reads) == 3:
+                mower.fields = dict(APP_FIELDS)  # z. B. in der App zurueckgestellt
+        original(topic, payload, qos)
+    control._mqtt.publish.side_effect = publish
+    with pytest.raises(HomeAssistantError) as err:
+        await _call(hass, weekdays=["monday"], start_1="14:00", end_1="18:00")
+    assert err.value.translation_key == "schedule_not_confirmed"
+
+
+async def test_set_schedule_unconfirmed_and_unreadable(hass, aioclient_mock, monkeypatch):
+    from custom_components.greenworks import lawn_mower as lm
+    monkeypatch.setattr(lm, "SAVE_CONFIRM_TIMEOUT", 0.05)
+    monkeypatch.setattr(lm, "CHECK_TIMEOUT", 0.05)
+    _, control, mower = await _ready(hass, aioclient_mock)
+    original = mower.publish
+    reads = []
+
+    def publish(topic, payload, qos):
+        body = payload.hex()[20:]
+        if body.startswith("400146"):
+            return
+        if body.startswith("420100"):
+            reads.append(1)
+            if len(reads) > 1:
+                return
+        original(topic, payload, qos)
+    control._mqtt.publish.side_effect = publish
     with pytest.raises(HomeAssistantError) as err:
         await _call(hass, weekdays=["monday"], start_1="14:00", end_1="18:00")
     assert err.value.translation_key == "schedule_not_confirmed"
