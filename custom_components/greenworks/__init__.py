@@ -128,4 +128,4 @@ async def async_remove_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) 
             ir.async_delete_issue(hass, DOMAIN, issue_id)
 
 
-# Version 0.5.0
+# Version 0.6.0

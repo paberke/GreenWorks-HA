@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.5.0"
+VERSION: Final = "0.6.0"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -33,6 +33,8 @@ CONF_CONTROL: Final = "control"
 CONTROL_READ_ONLY: Final = "read_only"
 CONTROL_READ_AND_CONTROL: Final = "read_and_control"
 CONTROL_OPTIONS: Final = (CONTROL_READ_ONLY, CONTROL_READ_AND_CONTROL)
+# PIN des Maehers (nur noetig, wenn am Maeher der PIN-Schutz an ist), leer = ohne
+CONF_PIN: Final = "pin"
 
 # Gruppen von Entitaeten, die man ein- und ausschalten kann (Standard ist immer an)
 CONF_GROUPS: Final = "groups"
@@ -220,4 +222,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.5.0
+# Version 0.6.0

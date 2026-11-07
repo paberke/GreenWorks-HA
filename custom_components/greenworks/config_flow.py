@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 import logging
+import re
 from typing import Any
 
 import voluptuous as vol
@@ -24,6 +25,9 @@ from homeassistant.helpers.selector import (
     SelectSelector,
     SelectSelectorConfig,
     SelectSelectorMode,
+    TextSelector,
+    TextSelectorConfig,
+    TextSelectorType,
 )
 
 from .api import (
@@ -39,6 +43,7 @@ from .const import (
     CONF_GROUPS,
     CONF_OFFLINE_HOURS,
     CONF_OUTAGE_GRACE,
+    CONF_PIN,
     CONTROL_OPTIONS,
     CONTROL_READ_ONLY,
     DEFAULT_BLADE_LIMIT,
@@ -202,15 +207,22 @@ class GreenworksOptionsFlow(OptionsFlow):
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
+        errors: dict[str, str] = {}
         if user_input is not None:
-            data: dict[str, Any] = {
-                key: int(value)
-                for key, value in user_input.items()
-                if key not in (CONF_GROUPS, CONF_CONTROL)
-            }
-            data[CONF_GROUPS] = list(user_input.get(CONF_GROUPS, []))
-            data[CONF_CONTROL] = user_input.get(CONF_CONTROL, CONTROL_READ_ONLY)
-            return self.async_create_entry(data=data)
+            pin = str(user_input.get(CONF_PIN) or "").strip()
+            if pin and not re.fullmatch(r"\d{4}", pin):
+                errors[CONF_PIN] = "pin_invalid"
+            else:
+                data: dict[str, Any] = {
+                    key: int(value)
+                    for key, value in user_input.items()
+                    if key not in (CONF_GROUPS, CONF_CONTROL, CONF_PIN)
+                }
+                data[CONF_GROUPS] = list(user_input.get(CONF_GROUPS, []))
+                data[CONF_CONTROL] = user_input.get(CONF_CONTROL, CONTROL_READ_ONLY)
+                if pin:
+                    data[CONF_PIN] = pin
+                return self.async_create_entry(data=data)
         options = self.config_entry.options
         schema = vol.Schema(
             {
@@ -228,6 +240,10 @@ class GreenworksOptionsFlow(OptionsFlow):
                         translation_key="control",
                     )
                 ),
+                vol.Optional(
+                    CONF_PIN,
+                    description={"suggested_value": options.get(CONF_PIN, "")},
+                ): TextSelector(TextSelectorConfig(type=TextSelectorType.PASSWORD)),
                 vol.Required(
                     CONF_SCAN_INTERVAL,
                     default=options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
@@ -249,6 +265,7 @@ class GreenworksOptionsFlow(OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=schema,
+            errors=errors,
             description_placeholders={
                 "tested_mowers_url": TESTED_MOWERS_URL_DE
                 if (self.hass.config.language or "").startswith("de")
@@ -257,4 +274,4 @@ class GreenworksOptionsFlow(OptionsFlow):
         )
 
 
-# Version 0.5.0
+# Version 0.6.0

@@ -64,4 +64,4 @@ class GreenworksEntity(CoordinatorEntity[GreenworksCoordinator]):
         return super().available and self.mower is not None
 
 
-# Version 0.5.0
+# Version 0.6.0

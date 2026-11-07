@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict
+import re
 from typing import Any
 
 from homeassistant.components.diagnostics import async_redact_data
@@ -27,11 +28,39 @@ TO_REDACT = {
     "return_code",
     "loop_code",
     "cm_id",
+    "pin",
 }
 
 # Datenpunkte ab 225 sind Fertigungs-/Geraetedaten als Text (u. a. Seriennummer,
 # Teilenummern, SIM-Kartennummer) - komplett unkenntlich machen.
 RAW_ID_DATAPOINT_MIN = 225
+
+
+# Befehle, in denen die PIN des Maehers steht (Starten mit PIN, PIN aendern):
+# nur der Befehlsanfang bleibt sichtbar
+_PIN_PAYLOAD = re.compile(
+    r'("request_payload"\s*:\s*"(?:e40004|da0104))[0-9a-f]*', re.IGNORECASE
+)
+
+
+def _hide_pin(value: Any) -> Any:
+    """PIN aus gespeicherten Befehlen entfernen (Datenpunkte sind JSON-Text)."""
+    if isinstance(value, str):
+        return _PIN_PAYLOAD.sub(r"\1**REDACTED**", value)
+    if isinstance(value, dict):
+        return {
+            key: (
+                item[:6] + "**REDACTED**"
+                if key == "request_payload"
+                and isinstance(item, str)
+                and item.lower().startswith(("e40004", "da0104"))
+                else _hide_pin(item)
+            )
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_hide_pin(item) for item in value]
+    return value
 
 
 def _redact_mower(mower: dict[str, Any]) -> dict[str, Any]:
@@ -41,7 +70,7 @@ def _redact_mower(mower: dict[str, Any]) -> dict[str, Any]:
             key: (
                 "**REDACTED**"
                 if key.isdigit() and int(key) >= RAW_ID_DATAPOINT_MIN
-                else value
+                else _hide_pin(value)
             )
             for key, value in raw.items()
         }
@@ -54,7 +83,7 @@ async def async_get_config_entry_diagnostics(
     coordinator = entry.runtime_data
     return {
         "entry": async_redact_data(dict(entry.data), TO_REDACT),
-        "options": dict(entry.options),
+        "options": async_redact_data(dict(entry.options), TO_REDACT),
         "mowers": {
             str(dev_id): _redact_mower(asdict(mower))
             for dev_id, mower in (coordinator.data or {}).items()
@@ -62,4 +91,4 @@ async def async_get_config_entry_diagnostics(
     }
 
 
-# Version 0.5.0
+# Version 0.6.0

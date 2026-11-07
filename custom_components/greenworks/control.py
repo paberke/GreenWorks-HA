@@ -2,8 +2,8 @@
 
 Nur aktiv, wenn unter "Konfigurieren" die Steuerung auf "Lesen und steuern"
 steht. Die Befehle sind genau die, die auch die Greenworks-App schickt
-(Parken, Starten, Pause, Maehen ohne Unterbrechung). Zeitplan und
-Einstellungen werden nie geschrieben.
+(Parken, Starten, Pause, Maehen ohne Unterbrechung, Maehplan speichern).
+Andere Einstellungen werden nie geschrieben.
 """
 
 from __future__ import annotations
@@ -46,6 +46,8 @@ _STATUS_REQUEST = "0007000900406000A003500000"
 # Abfrage "Maehen ohne Unterbrechung" (wie die App auf der Seite Zeitplan)
 _CONTINUOUS_REQUEST = "0007000900346000A0034c0100"
 _CONTINUOUS_QUERY_KEY = "4c0100"
+# Abfragen, deren Antwort komplett gebraucht wird (Maehplan lesen)
+_QUERY_KEYS = ("420100",)
 
 PARK_UNTIL_FURTHER_NOTICE = 0xFFFE
 # Eigene Zeit wie in der App: 1 bis 24 Stunden bzw. Tage
@@ -73,9 +75,13 @@ def park_payload(minutes: int | None) -> str:
     return _PARK[0] + le16(value)
 
 
-def start_payload() -> str:
-    """Maehen starten bzw. Zeitplan fortsetzen (ohne PIN)."""
-    return _START[0] + le16(0) + le16(0)
+def start_payload(pin: int | None = None) -> str:
+    """Maehen starten bzw. Zeitplan fortsetzen.
+
+    Ohne PIN wie bisher 0000. Mit PIN wie die App nach der PIN-Abfrage:
+    die vierstellige PIN als Zahl, niedriges Byte zuerst.
+    """
+    return _START[0] + le16(0) + le16(pin or 0)
 
 
 def pause_payload() -> str:
@@ -100,14 +106,19 @@ def _reply_key(payload: str) -> str:
 
 def parse_reply(raw: bytes) -> dict[str, Any] | None:
     """Antwort vom Thema $6: vor dem JSON stehen ein paar Bytes Kopf."""
+    # Der Kopf kann selbst ein "{" enthalten (z. B. als Laengenbyte bei langen
+    # Antworten wie dem Maehplan): dann ab dem naechsten "{" versuchen
     start = raw.find(b"{")
-    if start < 0:
-        return None
-    try:
-        data = json.loads(raw[start:].decode("utf-8", "replace"))
-    except ValueError:
-        return None
-    return data if isinstance(data, dict) else None
+    tries = 0
+    while 0 <= start and tries < 4:
+        try:
+            data = json.loads(raw[start:].decode("utf-8", "replace"))
+        except ValueError:
+            start = raw.find(b"{", start + 1)
+            tries += 1
+            continue
+        return data if isinstance(data, dict) else None
+    return None
 
 
 class GreenworksControl:
@@ -130,6 +141,8 @@ class GreenworksControl:
         self.connected = False
         # Wartende Befehle: (device_id, Erkennung) -> Future
         self._waiting: dict[tuple[str, str], asyncio.Future[bool]] = {}
+        # Wartende Abfragen (z. B. Maehplan lesen): (device_id, Erkennung) -> Antwort
+        self._queries: dict[tuple[str, str], asyncio.Future[dict[str, Any]]] = {}
 
     def _credentials(self) -> tuple[str, str]:
         user = str(self._api.user_id)
@@ -196,6 +209,13 @@ class GreenworksControl:
         if not payload:
             return
         device_id = message.topic.partition("/")[2]
+        _LOGGER.debug("Antwort von %s auf %s", device_id, payload[:6])
+        if payload.startswith(_QUERY_KEYS):
+            # Antwort auf eine Abfrage (Maehplan lesen): komplett weiterreichen
+            self._hass.loop.call_soon_threadsafe(
+                self._resolve_query, device_id, payload, reply
+            )
+            return
         if payload.startswith(_CONTINUOUS_QUERY_KEY):
             response = reply.get("response") or {}
             if "time_minute" in response:
@@ -228,7 +248,43 @@ class GreenworksControl:
             if dev == device_id and payload.startswith(key) and not future.done():
                 future.set_result(ok)
 
-    async def async_send(self, device_id: int, payload: str) -> None:
+    @callback
+    def _resolve_query(self, device_id: str, payload: str, reply: dict[str, Any]) -> None:
+        for (dev, key), future in list(self._queries.items()):
+            if dev == device_id and payload.startswith(key) and not future.done():
+                future.set_result(reply)
+
+    async def async_query(
+        self, device_id: int, payload: str, key: str, timeout: float | None = None
+    ) -> dict[str, Any]:
+        """Abfrage senden (aendert nichts am Maeher) und die Antwort zurueckgeben."""
+        if self._mqtt is None or not self.connected:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="control_not_connected"
+            )
+        wait_key = (str(device_id), key)
+        future: asyncio.Future[dict[str, Any]] = self._hass.loop.create_future()
+        self._queries[wait_key] = future
+        _LOGGER.debug("Abfrage an %s: %s", device_id, payload[20:])
+        try:
+            await self._hass.async_add_executor_job(
+                self._mqtt.publish,
+                f"{TOPIC_COMMAND}/{device_id}",
+                bytes.fromhex(payload),
+                1,
+            )
+            async with asyncio.timeout(timeout or CONFIRM_TIMEOUT):
+                return await future
+        except TimeoutError as err:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="control_no_reply"
+            ) from err
+        finally:
+            self._queries.pop(wait_key, None)
+
+    async def async_send(
+        self, device_id: int, payload: str, timeout: float | None = None
+    ) -> None:
         """Befehl senden und auf die Bestaetigung des Maehers warten."""
         if self._mqtt is None or not self.connected:
             raise HomeAssistantError(
@@ -243,7 +299,7 @@ class GreenworksControl:
             await self._hass.async_add_executor_job(
                 self._mqtt.publish, topic, bytes.fromhex(payload), 1
             )
-            async with asyncio.timeout(CONFIRM_TIMEOUT):
+            async with asyncio.timeout(timeout or CONFIRM_TIMEOUT):
                 ok = await future
         except TimeoutError as err:
             raise HomeAssistantError(
@@ -267,10 +323,11 @@ class GreenworksControl:
 
     async def async_stop(self) -> None:
         """Verbindung beenden."""
-        for future in self._waiting.values():
+        for future in [*self._waiting.values(), *self._queries.values()]:
             if not future.done():
                 future.cancel()
         self._waiting.clear()
+        self._queries.clear()
         if self._mqtt is not None:
             client, self._mqtt = self._mqtt, None
             self.connected = False
@@ -293,4 +350,4 @@ def _stop(client: Any) -> None:
     client.loop_stop()
 
 
-# Version 0.5.0
+# Version 0.6.0

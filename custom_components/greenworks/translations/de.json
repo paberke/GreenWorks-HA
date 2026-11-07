@@ -548,17 +548,22 @@
           "scan_interval": "Abfrage-Intervall (30–600 Sekunden)",
           "outage_grace": "Letzte Werte bei Aussetzern behalten (1–60 Minuten)",
           "blade_limit": "Messerwechsel nach (0 = aus, 0–1000 Stunden)",
-          "offline_hours": "Hinweis unter Reparaturen, wenn offline seit (0 = aus, 0–72 Stunden)"
+          "offline_hours": "Hinweis unter Reparaturen, wenn offline seit (0 = aus, 0–72 Stunden)",
+          "pin": "PIN (nur bei PIN-Schutz)"
         },
         "data_description": {
           "groups": "Häkchen setzen = diese Entitäten werden zusätzlich angelegt. Häkchen entfernen = sie werden deaktiviert, nicht gelöscht.",
-          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Zeitplan und Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher nur mit einem Optimow 10 getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
+          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Dazu kommt die Aktion „Mähplan setzen“ (Testphase). Andere Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher nur mit einem Optimow 10 getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
           "scan_interval": "Wie oft Home Assistant die Greenworks-Cloud nach neuen Werten fragt. Kürzer = aktuellere Werte, aber mehr Anfragen an die Cloud. Standard: 60 Sekunden.",
           "outage_grace": "Antwortet die Cloud kurz nicht, zeigen die Entitäten so lange die letzten Werte weiter. Erst danach werden sie „Nicht verfügbar“. Standard: 5 Minuten.",
           "blade_limit": "Nach so vielen Stunden Messer-Laufzeit schaltet „Messerwechsel fällig“ auf an. 0 = keine Erinnerung. Standard: 150 Stunden.",
-          "offline_hours": "Ist der Mäher so lange offline, erscheint ein Hinweis unter Einstellungen → Reparaturen. Er verschwindet von selbst, sobald der Mäher wieder online ist. 0 = kein Hinweis. Standard: 1 Stunde."
+          "offline_hours": "Ist der Mäher so lange offline, erscheint ein Hinweis unter Einstellungen → Reparaturen. Er verschwindet von selbst, sobald der Mäher wieder online ist. 0 = kein Hinweis. Standard: 1 Stunde.",
+          "pin": "Nur nötig, wenn am Mäher der PIN-Schutz an ist und Starten abgelehnt wird. 4 Ziffern wie in der App. Sonst leer lassen. Die PIN bleibt in Home Assistant und wird in der Diagnose ausgeblendet."
         }
       }
+    },
+    "error": {
+      "pin_invalid": "Die PIN muss genau 4 Ziffern haben."
     }
   },
   "selector": {
@@ -576,6 +581,17 @@
       "options": {
         "read_only": "Nur lesen",
         "read_and_control": "Lesen und steuern (Starten, Pause, Parken) – Testphase: vorher in der Anleitung lesen, welche Mäher getestet wurden"
+      }
+    },
+    "weekdays": {
+      "options": {
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "sunday": "Sonntag"
       }
     }
   },
@@ -610,6 +626,27 @@
     },
     "park_timed_not_possible": {
       "message": "Im Zeitplan-, Regen- oder Frost-Parken geht nur Parken bis auf Weiteres (wie in der App)."
+    },
+    "schedule_continuous_active": {
+      "message": "Während „Mähen ohne Unterbrechung“ läuft, lässt sich der Mähplan nicht ändern (wie in der App). Bitte zuerst ausschalten."
+    },
+    "schedule_incomplete": {
+      "message": "Jedes Zeitfenster braucht Beginn und Ende."
+    },
+    "schedule_end_before_start": {
+      "message": "Das Ende muss am selben Tag nach dem Beginn liegen (kein Fenster über Mitternacht)."
+    },
+    "schedule_overlap": {
+      "message": "Die beiden Zeitfenster überschneiden sich."
+    },
+    "schedule_invalid": {
+      "message": "Ungültiger Mähplan."
+    },
+    "schedule_read_failed": {
+      "message": "Der aktuelle Mähplan konnte nicht vom Mäher gelesen werden. Es wurde nichts gesendet."
+    },
+    "schedule_not_confirmed": {
+      "message": "Der Mähplan wurde gesendet, aber beim erneuten Lesen stimmen die Werte nicht. Bitte in der Greenworks-App prüfen."
     }
   },
   "services": {
@@ -630,6 +667,32 @@
         "days": {
           "name": "Tage",
           "description": "Wie viele Tage (1–24, wie in der App), 0 = aus."
+        }
+      }
+    },
+    "set_schedule": {
+      "name": "Mähplan setzen",
+      "description": "Setzt den Mähplan für die gewählten Tage wie in der App. Die anderen Tage bleiben, wie sie sind. Ohne Zeiten wird an den gewählten Tagen nicht gemäht. Testphase. Nur bei „Lesen und steuern“.",
+      "fields": {
+        "weekdays": {
+          "name": "Tage",
+          "description": "Welche Tage geändert werden."
+        },
+        "start_1": {
+          "name": "Fenster 1 Beginn",
+          "description": "Beginn des ersten Zeitfensters. Fenster 1 und 2 leer lassen = an diesen Tagen nicht mähen."
+        },
+        "end_1": {
+          "name": "Fenster 1 Ende",
+          "description": "Ende des ersten Zeitfensters, am selben Tag."
+        },
+        "start_2": {
+          "name": "Fenster 2 Beginn",
+          "description": "Optionales zweites Zeitfenster. Darf Fenster 1 nicht überschneiden."
+        },
+        "end_2": {
+          "name": "Fenster 2 Ende",
+          "description": "Ende des zweiten Zeitfensters, am selben Tag."
         }
       }
     }

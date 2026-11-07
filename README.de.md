@@ -15,7 +15,7 @@
 > - Du wirst in der **Greenworks-App öfter abgemeldet**, wenn Home Assistant dasselbe Konto nutzt ([Details](#abmelden-aus-der-app)).
 > - **Keine Gewähr, kein Support.** Nutzung auf eigene Verantwortung – lege vorher ein Backup an.
 
-Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Auf Wunsch kann sie den Mäher auch starten, pausieren und parken – wie die Knöpfe in der App. Zeitplan und Einstellungen änderst du weiterhin in der Greenworks-App.
+Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud aus und zeigt die Werte in Home Assistant an: Status, Batterie, nächster Start, Fehler im Klartext, Messer-Laufzeit, Mähplan und mehr. Auf Wunsch kann sie den Mäher auch starten, pausieren und parken – wie die Knöpfe in der App – und den Mähplan setzen (Testphase). Andere Einstellungen änderst du weiterhin in der Greenworks-App.
 
 **Inhalt:** [Getestete Mäher](#getestete-maher) · [Installation](#installation) · [Was du bekommst](#was-du-bekommst) · [Einstellungen](#einstellungen-konfigurieren) · [Steuerung](#steuerung) · [Winterpause](#winterpause) · [Reparaturen](#hinweise-unter-reparaturen) · [Einschränkungen](#einschrankungen) · [Zeitumstellung](#uhrzeit-nach-der-zeitumstellung) · [Abmelden aus der App](#abmelden-aus-der-app) · [Geplant](#geplant) · [Entfernen](#entfernen)
 
@@ -129,7 +129,8 @@ Einstellungen → Geräte & Dienste → Greenworks → **Konfigurieren**:
 | Einstellung | Standard | Bedeutung |
 |---|---|---|
 | Zusätzliche Entitäten | – | Welche zusätzlichen Gruppen angezeigt werden |
-| Steuerung | Nur lesen | *Lesen und steuern* schaltet [Starten, Pause und Parken](#steuerung) frei |
+| Steuerung | Nur lesen | *Lesen und steuern* schaltet [Starten, Pause, Parken und Mähplan](#steuerung) frei |
+| PIN | leer | Nur nötig, wenn am Mäher der **PIN-Schutz** an ist und *Starten* abgelehnt wird. 4 Ziffern wie in der App. Siehe [PIN](#pin) |
 | Abfrage-Intervall | 60 s | Wie oft die Cloud gefragt wird (30–600 s) |
 | Letzte Werte bei Aussetzern behalten | 5 min | Kurze Ausfälle der Cloud werden überbrückt (1–60 min) |
 | Messerwechsel nach | 150 h | Grenze für *Messerwechsel fällig* (0 = aus). Greenworks nennt kein festes Intervall; allgemein empfohlen wird ein Wechsel alle 6–10 Wochen Mähbetrieb |
@@ -156,9 +157,48 @@ Auf der Geräteseite gibt es dieselben Auswahlen wie in der App:
 - Home Assistant wartet auf die **Bestätigung des Mähers**. Kommt keine (z. B. Mäher offline) oder lehnt er ab, erscheint eine Fehlermeldung.
 - Nach einem Befehl kann es **bis zu etwa einer Minute** dauern, bis Status und Tasten in Home Assistant den neuen Stand zeigen. Die App ist manchmal schneller, weil sie die Antwort direkt bekommt.
 - Die Tasten sind nur verfügbar, solange der Mäher **online** ist.
-- Ist in der App eine **PIN** für das Starten eingerichtet, kann der Mäher den Start ablehnen.
+- Ist am Mäher der **PIN-Schutz** an, lehnt er *Starten* ohne PIN ab. Dann die PIN unter **Konfigurieren** eintragen, siehe [PIN](#pin).
+- **Mähen ohne Unterbrechung: aus** während der Mäher gerade mäht: Er hört auf und fährt zur Station. Danach geht es nach Mähplan weiter.
 - Zurück auf *Nur lesen* stellen schaltet alles wieder ab: die Tasten werden deaktiviert, die Verbindung für die Befehle wird beendet.
 - Der Sensor **Mähen ohne Unterbrechung** (immer da, auch bei *Nur lesen*) zeigt, ob es gerade an ist und bis wann. Das ist wichtig, weil die App es nicht anzeigt, solange der Mäher *vom Benutzer geparkt* ist: Gibst du ihn dann frei, mäht er sofort durch.
+
+<a id="maehplan-setzen"></a>
+
+### Mähplan setzen (Testphase)
+
+Mit der Aktion `greenworks.set_schedule` (*Mähplan setzen*) stellst du den Mähplan ein wie in der App auf der Seite *Zeitplan bearbeiten*. In *Entwicklerwerkzeuge → Aktionen* oder in einer Automation gibt es dafür eine Maske:
+
+| Feld | Bedeutung |
+|---|---|
+| **Tage** | Welche Tage geändert werden. Die anderen Tage bleiben, wie sie sind |
+| **Fenster 1 Beginn / Ende** | Erstes Zeitfenster, z. B. 14:00 bis 19:00 |
+| **Fenster 2 Beginn / Ende** | Optionales zweites Zeitfenster |
+
+```yaml
+action: greenworks.set_schedule
+target:
+  entity_id: lawn_mower.mein_maeher
+data:
+  weekdays: [monday, thursday]
+  start_1: "14:00"
+  end_1: "19:00"
+```
+
+- **Ohne Zeiten** wird an den gewählten Tagen nicht gemäht.
+- **Geprüft wie in der App:** Das Ende muss am selben Tag nach dem Beginn liegen (kein Fenster über Mitternacht), die beiden Fenster dürfen sich nicht überschneiden.
+- **Abgesichert:** Vor dem Speichern liest Home Assistant den aktuellen Plan frisch vom Mäher und ändert nur die gewählten Tage. Klappt das Lesen nicht, wird nichts gesendet. Nach dem Speichern liest es den Plan noch einmal und meldet einen Fehler, wenn er nicht stimmt.
+- **Gesperrt**, solange *Mähen ohne Unterbrechung* läuft (wie in der App).
+- Sensor und Kalender *Mähplan* zeigen den neuen Plan nach spätestens etwa einer Minute.
+- **Testphase:** bisher nur am Optimow 10 getestet.
+
+<a id="pin"></a>
+
+### PIN
+
+Ist am Mäher der **PIN-Schutz** an, fragt die App beim Starten nach der PIN. Home Assistant kann nicht nachfragen. Darum trägst du die PIN einmal unter **Konfigurieren** ein (4 Ziffern). Ohne PIN schickt die Integration den Start wie bisher.
+
+- Die PIN bleibt in Home Assistant. In der heruntergeladenen Diagnose ist sie ausgeblendet.
+- **Testphase:** noch nicht an einem Mäher mit PIN-Schutz bestätigt.
 
 ## Winterpause
 
@@ -189,7 +229,7 @@ Beide Hinweise verschwinden von selbst, sobald wieder alles läuft. Wird das Pas
 
 ## Einschränkungen
 
-- **Zeitplan und Einstellungen nur in der App:** Die [Steuerung](#steuerung) kann starten, pausieren und parken. Zeitplan, Regensensor, Schnittbreite usw. ändert die Integration nicht.
+- **Einstellungen nur in der App:** Die [Steuerung](#steuerung) kann starten, pausieren, parken und den [Mähplan setzen](#maehplan-setzen). Regensensor, Schnittbreite usw. ändert die Integration nicht.
 - **Statistik nur beim Öffnen der App aktuell:** Mäh-, Lauf- und Ladezeit schickt der Mäher nur, wenn in der App die Statistik geöffnet wird. Damit **Mähzeit gesamt** und **Messer-Laufzeit** trotzdem aktuell sind, zählt die Integration die Minuten selbst mit, in denen der Mäher *mäht*, und schlägt sie auf den letzten echten Wert auf (Attribut *Davon gezählt*). Kommt eine neue echte Statistik, gilt wieder diese.
 - **Mähplan, Fehlerverlauf und Einstellungen sind nur so aktuell wie die App:** Die Cloud aktualisiert sie, wenn du in der App die jeweilige Seite öffnest (Attribut *Aktualisiert*).
 - **Keine Anzeige für Software-Updates:** Ob es neue Mäher-Software gibt, zeigt nur die Greenworks-App (Seite *Software*). Ihr Update-Server beantwortet keine Anfragen von außerhalb der App.
@@ -219,7 +259,6 @@ Wenn dich das stört: Die Integration ausschalten, solange du die App benutzt (*
 Was wir als Nächstes angehen wollen. **Ob und wann das klappt, ist noch nicht sicher.** Wir probieren es aus und testen alles erst am eigenen Mäher.
 
 - Aufnahme in den HACS-Store bzw. den neuen **Marketplace** ab Home Assistant 2026.11
-- **Mähplan** aus Home Assistant einstellen (zuerst als Testphase)
 - **Uhrzeit** des Mähers nach der Zeitumstellung automatisch stellen
 - **Konto wechseln**, ohne die Integration neu einzurichten
 

@@ -91,4 +91,4 @@ def status_text(m: GreenworksMower, language: str | None, now: datetime | None =
     return name
 
 
-# Version 0.5.0
+# Version 0.6.0

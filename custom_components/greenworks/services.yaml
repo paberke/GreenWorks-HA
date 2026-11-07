@@ -30,3 +30,40 @@ mow_continuously:
           step: 1
           mode: box
           unit_of_measurement: d
+
+set_schedule:
+  target:
+    entity:
+      integration: greenworks
+      domain: lawn_mower
+  fields:
+    weekdays:
+      required: true
+      selector:
+        select:
+          multiple: true
+          translation_key: weekdays
+          options:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+    start_1:
+      required: false
+      selector:
+        time:
+    end_1:
+      required: false
+      selector:
+        time:
+    start_2:
+      required: false
+      selector:
+        time:
+    end_2:
+      required: false
+      selector:
+        time:

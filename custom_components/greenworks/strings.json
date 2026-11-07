@@ -548,17 +548,22 @@
           "scan_interval": "Update interval (30–600 seconds)",
           "outage_grace": "Keep last values during drops (1–60 minutes)",
           "blade_limit": "Blade change after (0 = off, 0–1000 hours)",
-          "offline_hours": "Repair notice when offline for (0 = off, 0–72 hours)"
+          "offline_hours": "Repair notice when offline for (0 = off, 0–72 hours)",
+          "pin": "PIN (only with PIN protection)"
         },
         "data_description": {
           "groups": "Ticked = these entities are created in addition. Unticked = they are disabled, not deleted.",
-          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. Schedule and settings stay in the app. Test phase: control has only been tested on an Optimow 10 so far, see [Tested mowers]({tested_mowers_url}).",
+          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. It also adds the action “Set schedule” (test phase). Other settings stay in the app. Test phase: control has only been tested on an Optimow 10 so far, see [Tested mowers]({tested_mowers_url}).",
           "scan_interval": "How often Home Assistant asks the Greenworks cloud for new values. Shorter = fresher values, but more requests to the cloud. Default: 60 seconds.",
           "outage_grace": "If the cloud briefly doesn't answer, the entities keep showing the last values for this long. Only then do they become “Unavailable”. Default: 5 minutes.",
           "blade_limit": "After this many hours of blade time, “Blade change due” turns on. 0 = no reminder. Default: 150 hours.",
-          "offline_hours": "If the mower is offline for this long, a notice appears under Settings → Repairs. It disappears by itself once the mower is back online. 0 = no notice. Default: 1 hour."
+          "offline_hours": "If the mower is offline for this long, a notice appears under Settings → Repairs. It disappears by itself once the mower is back online. 0 = no notice. Default: 1 hour.",
+          "pin": "Only needed if PIN protection is on at the mower and starting is rejected. 4 digits, like in the app. Leave empty otherwise. The PIN stays in Home Assistant and is hidden in diagnostics."
         }
       }
+    },
+    "error": {
+      "pin_invalid": "The PIN must have exactly 4 digits."
     }
   },
   "selector": {
@@ -576,6 +581,17 @@
       "options": {
         "read_only": "Read only",
         "read_and_control": "Read and control (start, pause, park) – test phase: first check in the readme which mowers were tested"
+      }
+    },
+    "weekdays": {
+      "options": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
       }
     }
   },
@@ -610,6 +626,27 @@
     },
     "park_timed_not_possible": {
       "message": "While parked by schedule, rain or frost guard, only \"park until further notice\" is possible (as in the app)."
+    },
+    "schedule_continuous_active": {
+      "message": "The schedule cannot be changed while “Mow without interruption” is on (same as in the app). Switch it off first."
+    },
+    "schedule_incomplete": {
+      "message": "Each time window needs both a start and an end."
+    },
+    "schedule_end_before_start": {
+      "message": "The end must be after the start on the same day (no window past midnight)."
+    },
+    "schedule_overlap": {
+      "message": "The two time windows overlap."
+    },
+    "schedule_invalid": {
+      "message": "Invalid schedule."
+    },
+    "schedule_read_failed": {
+      "message": "The current schedule could not be read from the mower. Nothing was sent."
+    },
+    "schedule_not_confirmed": {
+      "message": "The schedule was sent, but reading it back did not show the expected values. Please check it in the Greenworks app."
     }
   },
   "services": {
@@ -630,6 +667,32 @@
         "days": {
           "name": "Days",
           "description": "How many days (1–24, as in the app), 0 = off."
+        }
+      }
+    },
+    "set_schedule": {
+      "name": "Set schedule",
+      "description": "Sets the mowing schedule for the selected days, like in the app. The other days stay as they are. Without times, the selected days are set to no mowing. Test phase. Only works with “Read and control”.",
+      "fields": {
+        "weekdays": {
+          "name": "Days",
+          "description": "Which days to change."
+        },
+        "start_1": {
+          "name": "Window 1 start",
+          "description": "Start of the first time window. Leave both fields of window 1 and 2 empty for no mowing."
+        },
+        "end_1": {
+          "name": "Window 1 end",
+          "description": "End of the first time window, on the same day."
+        },
+        "start_2": {
+          "name": "Window 2 start",
+          "description": "Optional second time window. Must not overlap window 1."
+        },
+        "end_2": {
+          "name": "Window 2 end",
+          "description": "End of the second time window, on the same day."
         }
       }
     }

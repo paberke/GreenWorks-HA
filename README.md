@@ -15,7 +15,7 @@
 > - You will often be **logged out of the Greenworks app** if Home Assistant uses the same account ([details](#you-will-often-be-logged-out-of-the-greenworks-app)).
 > - **No warranty, no support.** Use at your own risk and make a backup first.
 
-The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. If you want, it can also start, pause and park the mower – like the buttons in the app. The schedule and settings are still changed in the Greenworks app.
+The integration reads your Greenworks robotic mower via the Greenworks cloud and shows the values in Home Assistant: status, battery, next start, errors in plain text, blade runtime, mowing schedule and more. If you want, it can also start, pause and park the mower – like the buttons in the app – and set the mowing schedule (test phase). Other settings are still changed in the Greenworks app.
 
 **Contents:** [Tested mowers](#tested-mowers) · [Installation](#installation) · [What you get](#what-you-get) · [Settings](#settings-configure) · [Control](#control) · [Winter pause](#winter-pause) · [Repairs](#notices-under-repairs) · [Limitations](#limitations) · [Clock change](#clock-after-daylight-saving-time-changes) · [App logout](#you-will-often-be-logged-out-of-the-greenworks-app) · [Planned](#planned) · [Removal](#removal)
 
@@ -127,7 +127,8 @@ Settings → Devices & services → Greenworks → **Configure**:
 | Setting | Default | Meaning |
 |---|---|---|
 | Additional entities | – | Which optional groups are shown |
-| Control | Read only | *Read and control* enables [start, pause and park](#control) |
+| Control | Read only | *Read and control* enables [start, pause, park and schedule](#control) |
+| PIN | empty | Only needed if **PIN protection** is on at the mower and *Start* is refused. 4 digits, as in the app. See [PIN](#pin) |
 | Update interval | 60 s | How often the cloud is asked (30–600 s) |
 | Keep last values during drops | 5 min | Short cloud outages are bridged (1–60 min) |
 | Blade change after | 150 h | Limit for *Blade change due* (0 = off). Greenworks gives no fixed interval; a common recommendation is every 6–10 weeks of mowing |
@@ -154,9 +155,48 @@ The device page offers the same choices as the app:
 - Home Assistant waits for the **mower's confirmation**. If none arrives (e.g. mower offline) or the mower refuses, you get an error message.
 - After a command it can take **up to about a minute** until status and buttons in Home Assistant show the new state. The app is sometimes faster because it gets the answer directly.
 - The buttons are only available while the mower is **online**.
-- If a **PIN** for starting is set up in the app, the mower may refuse to start.
+- If **PIN protection** is on at the mower, it refuses *Start* without the PIN. Enter the PIN under **Configure**, see [PIN](#pin).
+- **Mow without interruption: off** while the mower is mowing: it stops and returns to the station. After that it continues by schedule.
 - Setting it back to *Read only* switches everything off again: the buttons are disabled and the command connection is closed.
 - The **Mow without interruption** sensor (always there, also in *Read only*) shows whether it is on and until when. This matters because the app hides it while the mower is *parked by the user*: as soon as you release it, it mows non-stop.
+
+<a id="set-schedule"></a>
+
+### Set schedule (test phase)
+
+The action `greenworks.set_schedule` (*Set schedule*) sets the mowing schedule like the app's *Edit schedule* page. In *Developer tools → Actions* or in an automation you get a form:
+
+| Field | Meaning |
+|---|---|
+| **Days** | Which days to change. The other days stay as they are |
+| **Window 1 start / end** | First time window, e.g. 14:00 to 19:00 |
+| **Window 2 start / end** | Optional second time window |
+
+```yaml
+action: greenworks.set_schedule
+target:
+  entity_id: lawn_mower.my_mower
+data:
+  weekdays: [monday, thursday]
+  start_1: "14:00"
+  end_1: "19:00"
+```
+
+- **Without times** the selected days are set to no mowing.
+- **Checked like in the app:** the end must be after the start on the same day (no window past midnight), and the two windows must not overlap.
+- **Safeguarded:** before saving, Home Assistant reads the current schedule fresh from the mower and changes only the selected days. If reading fails, nothing is sent. After saving it reads the schedule again and reports an error if it does not match.
+- **Locked** while *Mow without interruption* is on (as in the app).
+- The *Mowing schedule* sensor and calendar show the new schedule within about a minute.
+- **Test phase:** only tested on an Optimow 10 so far.
+
+<a id="pin"></a>
+
+### PIN
+
+If **PIN protection** is on at the mower, the app asks for the PIN when starting. Home Assistant cannot ask. So you enter the PIN once under **Configure** (4 digits). Without a PIN the integration sends the start command as before.
+
+- The PIN stays in Home Assistant. It is hidden in the downloaded diagnostics.
+- **Test phase:** not yet confirmed on a mower with PIN protection.
 
 ## Winter pause
 
@@ -185,7 +225,7 @@ Both notices disappear by themselves as soon as everything works again. If the p
 
 ## Limitations
 
-- **Schedule and settings only in the app:** [control](#control) can start, pause and park. The integration does not change the schedule, rain sensor, cutting settings etc.
+- **Settings only in the app:** [control](#control) can start, pause, park and [set the schedule](#set-schedule). The integration does not change the rain sensor, cutting settings etc.
 - **Statistics only update when the app asks for them:** the mower sends cutting, running and charging time only when the statistics are opened in the app. To keep **Total cutting time** and **Blade time** current anyway, the integration counts the minutes in which the mower is *mowing* and adds them to the last real value (attribute *Counted since last statistics*). When new real statistics arrive, they take over again.
 - **Schedule, error history and settings are only as current as the app:** the cloud updates them when you open the respective page in the app (attribute *Updated*).
 - **No software update notice:** whether there is new mower software is only shown by the Greenworks app (page *Software*). Its update server does not answer requests from outside the app.
@@ -213,7 +253,6 @@ If that bothers you, disable the integration while you use the app (*Settings �
 What we want to tackle next. **Whether and when this works out is not certain yet.** We try it and test everything on our own mower first.
 
 - Inclusion in the HACS store or the new **Marketplace** from Home Assistant 2026.11
-- Set the **mowing schedule** from Home Assistant (test phase first)
 - Set the mower's **clock** automatically after daylight saving time changes
 - **Switch accounts** without setting up the integration again
 
