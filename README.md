@@ -26,9 +26,9 @@ The integration reads your Greenworks robotic mower via the Greenworks cloud and
 | Mower | Read | Read and control | Tested by |
 |---|:---:|:---:|---|
 | Greenworks **Optimow 10** | ✅ | ✅ (test phase) | the developer, daily use |
-| Cramer **RM1000** and **RM1500** (with the Greenworks app) | ✅ | – not tested | reported by users ([comment 1](https://github.com/Boes24/GreenWorks-HA/issues/1), [comment 2](https://github.com/paberke/GreenWorks-HA/issues/1)) |
+| Cramer **RM1000** and **RM1500** (with the Greenworks app) | ✅ | ✅ RM1000 with [PIN](#pin) (test phase), RM1500 not tested | reported by users ([comment 1](https://github.com/Boes24/GreenWorks-HA/issues/1), [comment 2](https://github.com/paberke/GreenWorks-HA/issues/1), [control test](https://github.com/paberke/GreenWorks-HA/issues/1#issuecomment-6766979832)) |
 
-Other Greenworks/Cramer robotic mowers that use the Greenworks app will probably work too. [Control](#control) is in a **test phase** and has **only been tested with the Optimow 10** so far. **Cramer fleet accounts** (`fleet.cramertools.com`) are a separate service and are **not** supported. If you try another model, please [tell us](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
+Other Greenworks/Cramer robotic mowers that use the Greenworks app will probably work too. [Control](#control) is in a **test phase** and has been tested with the **Optimow 10** and the **Cramer RM1000** so far. **Cramer fleet accounts** (`fleet.cramertools.com`) are a separate service and are **not** supported. If you try another model, please [tell us](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
 
 ## Installation
 
@@ -151,6 +151,7 @@ The device page offers the same choices as the app:
 
 - Set the **custom time** in the number fields *Park for custom time: hours* (1–24) and *Mow without interruption: custom time, days* (1–24), as in the app. They sit right below their button.
 - **Locked like in the app:** buttons that don't work in the current state are *unavailable*. Example: while the mower is parked *by schedule*, *rain guard* or *frost guard*, only *Park until further notice* works. *Start* is only offered when the mower is paused or parked by the user, *Pause* only while it is on its way.
+- **Start means "resume schedule":** outside the mowing window the mower stays in the station and leaves at the next slot. If the battery is not full enough yet, it keeps charging first (status *Charging*); the mower decides that itself.
 - For automations there are the actions `greenworks.park` (`hours` 1–24, empty: until further notice) and `greenworks.mow_continuously` (`days` 1–24, 0 = off). The mower entity also has the usual start, pause and dock buttons.
 - Home Assistant waits for the **mower's confirmation**. If none arrives (e.g. mower offline) or the mower refuses, you get an error message.
 - After a command it can take **up to about a minute** until status and buttons in Home Assistant show the new state. The app is sometimes faster because it gets the answer directly.
@@ -187,7 +188,7 @@ data:
 - **Safeguarded:** before saving, Home Assistant reads the current schedule fresh from the mower and changes only the selected days. If reading fails, nothing is sent. After saving it reads the schedule again and reports an error if it does not match.
 - **Locked** while *Mow without interruption* is on (as in the app).
 - The *Mowing schedule* sensor and calendar show the new schedule within about a minute.
-- **Test phase:** only tested on an Optimow 10 so far.
+- **Test phase:** tested on an Optimow 10 and a Cramer RM1000.
 
 <a id="pin"></a>
 
@@ -196,7 +197,7 @@ data:
 If **PIN protection** is on at the mower, the app asks for the PIN when starting. Home Assistant cannot ask. So you enter the PIN once under **Configure** (4 digits). Without a PIN the integration sends the start command as before.
 
 - The PIN stays in Home Assistant. It is hidden in the downloaded diagnostics.
-- **Test phase:** not yet confirmed on a mower with PIN protection.
+- **Test phase:** confirmed on a Cramer RM1000 with PIN protection (start after pause and after *parked by user*).
 
 ## Winter pause
 

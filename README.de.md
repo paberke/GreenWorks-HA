@@ -28,9 +28,9 @@ Die Integration liest deinen Greenworks-Mähroboter über die Greenworks-Cloud a
 | Mäher | Lesen | Lesen und steuern | Getestet von |
 |---|:---:|:---:|---|
 | Greenworks **Optimow 10** | ✅ | ✅ (Testphase) | dem Entwickler, im täglichen Betrieb |
-| Cramer **RM1000** und **RM1500** (mit der Greenworks-App) | ✅ | – nicht getestet | von Nutzern gemeldet ([Kommentar 1](https://github.com/Boes24/GreenWorks-HA/issues/1), [Kommentar 2](https://github.com/paberke/GreenWorks-HA/issues/1)) |
+| Cramer **RM1000** und **RM1500** (mit der Greenworks-App) | ✅ | ✅ RM1000 mit [PIN](#pin) (Testphase), RM1500 nicht getestet | von Nutzern gemeldet ([Kommentar 1](https://github.com/Boes24/GreenWorks-HA/issues/1), [Kommentar 2](https://github.com/paberke/GreenWorks-HA/issues/1), [Test Steuerung](https://github.com/paberke/GreenWorks-HA/issues/1#issuecomment-6766979832)) |
 
-Andere Greenworks-/Cramer-Mähroboter, die mit der Greenworks-App laufen, funktionieren wahrscheinlich auch. Die [Steuerung](#steuerung) ist in der **Testphase** und wurde bisher **nur mit dem Optimow 10** getestet. **Cramer-Flottenkonten** (`fleet.cramertools.com`) sind ein eigener Dienst und werden **nicht** unterstützt. Wenn du ein anderes Modell ausprobierst, [gib uns gern Bescheid](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
+Andere Greenworks-/Cramer-Mähroboter, die mit der Greenworks-App laufen, funktionieren wahrscheinlich auch. Die [Steuerung](#steuerung) ist in der **Testphase** und wurde bisher mit dem **Optimow 10** und dem **Cramer RM1000** getestet. **Cramer-Flottenkonten** (`fleet.cramertools.com`) sind ein eigener Dienst und werden **nicht** unterstützt. Wenn du ein anderes Modell ausprobierst, [gib uns gern Bescheid](https://github.com/paberke/GreenWorks-HA/issues/new/choose).
 
 ## Installation
 
@@ -153,6 +153,7 @@ Auf der Geräteseite gibt es dieselben Auswahlen wie in der App:
 
 - Die **eigene Zeit** stellst du in den Zahlenfeldern *Parken für eigene Zeit: Stunden* (1–24) und *Mähen ohne Unterbrechung: eigene Zeit, Tage* (1–24) ein, wie in der App. Sie stehen direkt unter ihrer Taste.
 - **Gesperrt wie in der App:** Tasten, die im aktuellen Zustand nicht gehen, sind *nicht verfügbar*. Beispiel: Ist der Mäher *nach Zeitplan*, *durch Regen-* oder *Frostschutz* geparkt, geht nur *Parken bis auf Weiteres*. *Start* gibt es nur, wenn er pausiert oder vom Benutzer geparkt ist, *Pause* nur, wenn er unterwegs ist.
+- **Start heißt „Zeitplan fortsetzen“:** Außerhalb des Mähfensters bleibt der Mäher in der Station und fährt erst zum nächsten Termin los. Ist der Akku noch nicht voll genug, lädt er erst weiter (Status *Lädt*), auch das entscheidet der Mäher selbst.
 - Für Automationen gibt es die Aktionen `greenworks.park` (`hours` 1–24, ohne Angabe: bis auf Weiteres) und `greenworks.mow_continuously` (`days` 1–24, 0 = aus). Die Mäher-Entität hat außerdem die üblichen Knöpfe Start, Pause und Zur Station.
 - Home Assistant wartet auf die **Bestätigung des Mähers**. Kommt keine (z. B. Mäher offline) oder lehnt er ab, erscheint eine Fehlermeldung.
 - Nach einem Befehl kann es **bis zu etwa einer Minute** dauern, bis Status und Tasten in Home Assistant den neuen Stand zeigen. Die App ist manchmal schneller, weil sie die Antwort direkt bekommt.
@@ -189,7 +190,7 @@ data:
 - **Abgesichert:** Vor dem Speichern liest Home Assistant den aktuellen Plan frisch vom Mäher und ändert nur die gewählten Tage. Klappt das Lesen nicht, wird nichts gesendet. Nach dem Speichern liest es den Plan noch einmal und meldet einen Fehler, wenn er nicht stimmt.
 - **Gesperrt**, solange *Mähen ohne Unterbrechung* läuft (wie in der App).
 - Sensor und Kalender *Mähplan* zeigen den neuen Plan nach spätestens etwa einer Minute.
-- **Testphase:** bisher nur am Optimow 10 getestet.
+- **Testphase:** getestet am Optimow 10 und am Cramer RM1000.
 
 <a id="pin"></a>
 
@@ -198,7 +199,7 @@ data:
 Ist am Mäher der **PIN-Schutz** an, fragt die App beim Starten nach der PIN. Home Assistant kann nicht nachfragen. Darum trägst du die PIN einmal unter **Konfigurieren** ein (4 Ziffern). Ohne PIN schickt die Integration den Start wie bisher.
 
 - Die PIN bleibt in Home Assistant. In der heruntergeladenen Diagnose ist sie ausgeblendet.
-- **Testphase:** noch nicht an einem Mäher mit PIN-Schutz bestätigt.
+- **Testphase:** am Cramer RM1000 mit PIN-Schutz bestätigt (Starten nach Pause und nach *Vom Benutzer geparkt*).
 
 ## Winterpause
 
