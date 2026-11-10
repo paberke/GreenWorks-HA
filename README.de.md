@@ -277,6 +277,7 @@ Was sich in welcher Version geändert hat: [Releases](https://github.com/paberke
 ## Mitwirkende
 
 - **[Patrick (paberke)](https://github.com/paberke)** – Idee, Tests am echten Optimow 10, Entscheidungen zum Funktionsumfang, Kontakt mit Greenworks, Betreuung des Projekts
+- **[Sander Allefs (sanderallefs)](https://github.com/sanderallefs)** – Tests mit einem Cramer RM1000 (PIN, Steuerung, Mähplan)
 - **Claude (KI-Assistent von Anthropic)** – Programmierung, automatische Tests, Dokumentation
 
 ## Danksagung

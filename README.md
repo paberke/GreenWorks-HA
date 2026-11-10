@@ -271,6 +271,7 @@ What changed in each version: [Releases](https://github.com/paberke/GreenWorks-H
 ## Contributors
 
 - **[Patrick (paberke)](https://github.com/paberke)** – idea, testing with a real Optimow 10, feature decisions, contact with Greenworks, project maintenance
+- **[Sander Allefs (sanderallefs)](https://github.com/sanderallefs)** – testing with a Cramer RM1000 (PIN, control, schedule)
 - **Claude (AI assistant by Anthropic)** – programming, automated tests, documentation
 
 ## Credits
