@@ -32,12 +32,12 @@ Other Greenworks/Cramer robotic mowers that use the Greenworks app will probably
 
 ## Installation
 
-**Requirement:** Home Assistant **2025.1 or newer**. Automatically tested with 2025.2, 2026.2 and 2026.10.
+**Requirement:** Home Assistant **2025.1 or newer**. Automatically tested with 2025.2, 2026.2 and 2026.10. Running live on 2026.11.1 (reading).
 
 **Home Assistant 2026.11 and newer (Marketplace)** – from 2026.11 HACS is built into Home Assistant as **Marketplace**:
 
-1. Settings → **Marketplace** → menu (⋮) → **Custom repositories** (you will be asked to link GitHub once)
-2. URL `https://github.com/paberke/GreenWorks-HA`, type **Integration**, add
+1. Settings → **Marketplace** → **Add via link** (in German **Über Link hinzufügen**; you may be asked once to link GitHub)
+2. GitHub link `https://github.com/paberke/GreenWorks-HA` → **Add**
 3. Download **Greenworks** and restart Home Assistant
 
 **Older versions (HACS)**

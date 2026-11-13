@@ -34,12 +34,12 @@ Andere Greenworks-/Cramer-Mähroboter, die mit der Greenworks-App laufen, funkti
 
 ## Installation
 
-**Voraussetzung:** Home Assistant **2025.1 oder neuer**. Automatisch getestet mit 2025.2, 2026.2 und 2026.10.
+**Voraussetzung:** Home Assistant **2025.1 oder neuer**. Automatisch getestet mit 2025.2, 2026.2 und 2026.10. Läuft live mit 2026.11.1 (Lesen).
 
 **Ab Home Assistant 2026.11 (Marketplace)** – ab 2026.11 ist HACS als **Marketplace** in Home Assistant eingebaut:
 
-1. Einstellungen → **Marketplace** → Menü (⋮) → **Benutzerdefinierte Repositories** (einmalig wirst du gebeten, GitHub zu verbinden)
-2. URL `https://github.com/paberke/GreenWorks-HA`, Typ **Integration**, hinzufügen
+1. Einstellungen → **Marketplace** → **Über Link hinzufügen** (eventuell wirst du einmalig gebeten, GitHub zu verbinden)
+2. GitHub-Link `https://github.com/paberke/GreenWorks-HA` eintragen → **Hinzufügen**
 3. **Greenworks** herunterladen und Home Assistant neu starten
 
 **Ältere Versionen (HACS)**
