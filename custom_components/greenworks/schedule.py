@@ -136,4 +136,4 @@ def active_windows(fields: dict[str, int]) -> dict[str, list[tuple[int, int, int
     return result
 
 
-# Version 0.6.0
+# Version 0.6.1

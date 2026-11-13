@@ -197,4 +197,4 @@ class GreenworksButton(GreenworksEntity, ButtonEntity):
         await self.coordinator.async_request_refresh()
 
 
-# Version 0.6.0
+# Version 0.6.1

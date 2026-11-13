@@ -553,7 +553,7 @@
         },
         "data_description": {
           "groups": "Ticked = these entities are created in addition. Unticked = they are disabled, not deleted.",
-          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. It also adds the action “Set schedule” (test phase). Other settings stay in the app. Test phase: control has only been tested on an Optimow 10 so far, see [Tested mowers]({tested_mowers_url}).",
+          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. It also adds the action “Set schedule” (test phase). Other settings stay in the app. Test phase: control has been tested on an Optimow 10 and a Cramer RM1000 (with PIN) so far, see [Tested mowers]({tested_mowers_url}).",
           "scan_interval": "How often Home Assistant asks the Greenworks cloud for new values. Shorter = fresher values, but more requests to the cloud. Default: 60 seconds.",
           "outage_grace": "If the cloud briefly doesn't answer, the entities keep showing the last values for this long. Only then do they become “Unavailable”. Default: 5 minutes.",
           "blade_limit": "After this many hours of blade time, “Blade change due” turns on. 0 = no reminder. Default: 150 hours.",

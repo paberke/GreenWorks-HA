@@ -109,4 +109,4 @@ class GreenworksNumber(GreenworksEntity, RestoreNumber):
         self.async_write_ha_state()
 
 
-# Version 0.6.0
+# Version 0.6.1

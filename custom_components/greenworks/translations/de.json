@@ -553,7 +553,7 @@
         },
         "data_description": {
           "groups": "Häkchen setzen = diese Entitäten werden zusätzlich angelegt. Häkchen entfernen = sie werden deaktiviert, nicht gelöscht.",
-          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Dazu kommt die Aktion „Mähplan setzen“ (Testphase). Andere Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher nur mit einem Optimow 10 getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
+          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Dazu kommt die Aktion „Mähplan setzen“ (Testphase). Andere Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher mit einem Optimow 10 und einem Cramer RM1000 (mit PIN) getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
           "scan_interval": "Wie oft Home Assistant die Greenworks-Cloud nach neuen Werten fragt. Kürzer = aktuellere Werte, aber mehr Anfragen an die Cloud. Standard: 60 Sekunden.",
           "outage_grace": "Antwortet die Cloud kurz nicht, zeigen die Entitäten so lange die letzten Werte weiter. Erst danach werden sie „Nicht verfügbar“. Standard: 5 Minuten.",
           "blade_limit": "Nach so vielen Stunden Messer-Laufzeit schaltet „Messerwechsel fällig“ auf an. 0 = keine Erinnerung. Standard: 150 Stunden.",

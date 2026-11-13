@@ -75,4 +75,4 @@ class GreenworksErrorEvent(GreenworksEntity, EventEntity):
             super()._handle_coordinator_update()
 
 
-# Version 0.6.0
+# Version 0.6.1
