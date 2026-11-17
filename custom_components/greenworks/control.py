@@ -265,7 +265,8 @@ class GreenworksControl:
         wait_key = (str(device_id), key)
         future: asyncio.Future[dict[str, Any]] = self._hass.loop.create_future()
         self._queries[wait_key] = future
-        _LOGGER.debug("Abfrage an %s: %s", device_id, payload[20:])
+        # Nur die Kennung loggen, nie die ganze Nutzlast (koennte die PIN enthalten)
+        _LOGGER.debug("Abfrage an %s: %s", device_id, key)
         try:
             await self._hass.async_add_executor_job(
                 self._mqtt.publish,
@@ -294,7 +295,8 @@ class GreenworksControl:
         future: asyncio.Future[bool] = self._hass.loop.create_future()
         self._waiting[key] = future
         topic = f"{TOPIC_COMMAND}/{device_id}"
-        _LOGGER.debug("Sende Befehl an %s: %s", device_id, payload[20:])
+        # Nur die Kennung loggen, nie die ganze Nutzlast (Start enthaelt die PIN)
+        _LOGGER.debug("Sende Befehl an %s: %s", device_id, key[1])
         try:
             await self._hass.async_add_executor_job(
                 self._mqtt.publish, topic, bytes.fromhex(payload), 1
@@ -350,4 +352,4 @@ def _stop(client: Any) -> None:
     client.loop_stop()
 
 
-# Version 0.6.2
+# Version 0.6.3
