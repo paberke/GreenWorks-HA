@@ -48,6 +48,7 @@ SERVICE_MOW_CONTINUOUSLY = "mow_continuously"
 ATTR_HOURS = "hours"
 ATTR_DAYS = "days"
 SERVICE_SET_SCHEDULE = "set_schedule"
+SERVICE_SET_TIME = "set_time"
 ATTR_WEEKDAYS = "weekdays"
 WINDOW_FIELDS = (("start_1", "end_1"), ("start_2", "end_2"))
 # Speichern dauert am Maeher laenger als die anderen Befehle
@@ -122,6 +123,7 @@ async def async_setup_entry(
         },
         "async_set_schedule",
     )
+    platform.async_register_entity_service(SERVICE_SET_TIME, None, "async_set_time")
 
 
 def _schedule_error(key: str) -> HomeAssistantError:
@@ -275,6 +277,15 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
             "Maehplan gespeichert (vom Maeher bestaetigt), Nachlesen nicht moeglich"
         )
 
+    async def async_set_time(self) -> None:
+        """Uhr des Maehers jetzt auf die Zeit von Home Assistant stellen."""
+        clock = self.coordinator.clock
+        if clock is None:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="control_disabled"
+            )
+        await clock.async_set_now(self._device_id)
+
     @property
     def available(self) -> bool:
         """Nicht verfuegbar, solange der Maeher offline ist."""
@@ -301,4 +312,4 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         }
 
 
-# Version 0.6.3
+# Version 0.7.0

@@ -6,7 +6,7 @@ from datetime import timedelta
 from typing import Final
 
 DOMAIN: Final = "greenworks"
-VERSION: Final = "0.6.3"
+VERSION: Final = "0.7.0"
 
 BASE_URL: Final = "https://xapi.globetools.systems/v2/"
 CORP_ID: Final = "100fa2b00b622800"
@@ -121,6 +121,7 @@ ENTITY_GROUPS: Final[dict[str, str]] = {
     "continuous_custom": GROUP_CONTROL,
     "continuous_days": GROUP_CONTROL,
     "continuous_off": GROUP_CONTROL,
+    "set_time": GROUP_CONTROL,
     # Anzeige, ob ohne Unterbrechung gemaeht wird (immer, auch bei "Nur lesen")
     "continuous_mowing": GROUP_STANDARD,
 }
@@ -222,4 +223,4 @@ def error_key(code: int | None) -> str | None:
         return None
     return f"e{code}" if 1 <= code <= ERROR_CODE_MAX else "unknown"
 
-# Version 0.6.3
+# Version 0.7.0

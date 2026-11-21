@@ -2,7 +2,8 @@
 
 Nur aktiv, wenn unter "Konfigurieren" die Steuerung auf "Lesen und steuern"
 steht. Die Befehle sind genau die, die auch die Greenworks-App schickt
-(Parken, Starten, Pause, Maehen ohne Unterbrechung, Maehplan speichern).
+(Parken, Starten, Pause, Maehen ohne Unterbrechung, Maehplan speichern,
+Uhrzeit stellen).
 Andere Einstellungen werden nie geschrieben.
 """
 
@@ -46,8 +47,8 @@ _STATUS_REQUEST = "0007000900406000A003500000"
 # Abfrage "Maehen ohne Unterbrechung" (wie die App auf der Seite Zeitplan)
 _CONTINUOUS_REQUEST = "0007000900346000A0034c0100"
 _CONTINUOUS_QUERY_KEY = "4c0100"
-# Abfragen, deren Antwort komplett gebraucht wird (Maehplan lesen)
-_QUERY_KEYS = ("420100",)
+# Abfragen, deren Antwort komplett gebraucht wird (Maehplan lesen, Uhr lesen)
+_QUERY_KEYS = ("420100", "9c0000")
 
 PARK_UNTIL_FURTHER_NOTICE = 0xFFFE
 # Eigene Zeit wie in der App: 1 bis 24 Stunden bzw. Tage
@@ -352,4 +353,4 @@ def _stop(client: Any) -> None:
     client.loop_stop()
 
 
-# Version 0.6.3
+# Version 0.7.0

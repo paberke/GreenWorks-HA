@@ -526,6 +526,9 @@
       },
       "continuous_off": {
         "name": "Mow without interruption: off"
+      },
+      "set_time": {
+        "name": "Set clock"
       }
     },
     "number": {
@@ -553,7 +556,7 @@
         },
         "data_description": {
           "groups": "Ticked = these entities are created in addition. Unticked = they are disabled, not deleted.",
-          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. It also adds the action “Set schedule” (test phase). Other settings stay in the app. Test phase: control has been tested on an Optimow 10 and a Cramer RM1000 (with PIN) so far, see [Tested mowers]({tested_mowers_url}).",
+          "control": "“Read only” changes nothing on the mower (default). “Read and control” adds start, pause, park and “Mow without interruption” – the same commands as in the Greenworks app. It also adds the action “Set schedule” (test phase), and the mower clock is set automatically after daylight saving time changes. Other settings stay in the app. Test phase: control has been tested on an Optimow 10 and a Cramer RM1000 (with PIN) so far, see [Tested mowers]({tested_mowers_url}).",
           "scan_interval": "How often Home Assistant asks the Greenworks cloud for new values. Shorter = fresher values, but more requests to the cloud. Default: 60 seconds.",
           "outage_grace": "If the cloud briefly doesn't answer, the entities keep showing the last values for this long. Only then do they become “Unavailable”. Default: 5 minutes.",
           "blade_limit": "After this many hours of blade time, “Blade change due” turns on. 0 = no reminder. Default: 150 hours.",
@@ -647,6 +650,9 @@
     },
     "schedule_not_confirmed": {
       "message": "The schedule was sent, but reading it back did not show the expected values. Please check it in the Greenworks app."
+    },
+    "clock_not_set": {
+      "message": "The time was sent, but reading it back shows the mower clock is still wrong. Please check the schedule page in the Greenworks app."
     }
   },
   "services": {
@@ -695,6 +701,10 @@
           "description": "End of the second time window, on the same day."
         }
       }
+    },
+    "set_time": {
+      "name": "Set clock",
+      "description": "Sets the mower clock to Home Assistant's time right now (time zone from the Home Assistant settings). Usually not needed: with “Read and control” the integration checks the clock every hour and sets it by itself if it is more than 5 minutes off, e.g. after a daylight saving time change."
     }
   }
 }

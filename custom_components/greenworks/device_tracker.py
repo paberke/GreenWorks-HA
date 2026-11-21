@@ -48,4 +48,4 @@ class GreenworksTracker(GreenworksEntity, TrackerEntity):
         return (mower.gps_accuracy if mower else None) or 0
 
 
-# Version 0.6.3
+# Version 0.7.0

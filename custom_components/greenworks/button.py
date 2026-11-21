@@ -1,5 +1,5 @@
 """Knoepfe fuer Greenworks: alle Auswahlen der App (Parken, Start, Pause,
-Maehen ohne Unterbrechung).
+Maehen ohne Unterbrechung) und Uhrzeit stellen.
 
 Nur aktiv bei "Lesen und steuern" (Knopf "Konfigurieren"), sonst deaktiviert.
 Wie in der App sind Knoepfe gesperrt, die im aktuellen Zustand nicht gehen.
@@ -11,6 +11,7 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 from homeassistant.components.button import ButtonEntity, ButtonEntityDescription
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
@@ -158,6 +159,9 @@ async def async_setup_entry(
         for device_id in coordinator.data
         for description in BUTTONS
     )
+    async_add_entities(
+        GreenworksClockButton(coordinator, device_id) for device_id in coordinator.data
+    )
 
 
 class GreenworksButton(GreenworksEntity, ButtonEntity):
@@ -197,4 +201,30 @@ class GreenworksButton(GreenworksEntity, ButtonEntity):
         await self.coordinator.async_request_refresh()
 
 
-# Version 0.6.3
+class GreenworksClockButton(GreenworksEntity, ButtonEntity):
+    """Stellt die Uhr des Maehers sofort auf die Zeit von Home Assistant.
+
+    Normalerweise nicht noetig: das passiert automatisch (siehe clock.py).
+    """
+
+    _attr_translation_key = "set_time"
+    _attr_entity_category = EntityCategory.CONFIG
+
+    def __init__(self, coordinator: GreenworksCoordinator, device_id: int) -> None:
+        super().__init__(coordinator, device_id, "set_time")
+
+    @property
+    def available(self) -> bool:
+        mower = self.mower
+        return super().available and mower is not None and mower.online is not False
+
+    async def async_press(self) -> None:
+        clock = self.coordinator.clock
+        if clock is None:
+            raise HomeAssistantError(
+                translation_domain=DOMAIN, translation_key="control_disabled"
+            )
+        await clock.async_set_now(self._device_id)
+
+
+# Version 0.7.0

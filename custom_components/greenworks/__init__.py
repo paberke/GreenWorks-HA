@@ -18,6 +18,7 @@ from .const import (
     ENTITY_GROUPS,
     REMOVED_ENTITIES,
 )
+from .clock import GreenworksClock
 from .control import GreenworksControl
 from .coordinator import (
     GreenworksConfigEntry,
@@ -102,6 +103,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) -
         await control.async_start()
         coordinator.control = control
         entry.async_on_unload(control.async_stop)
+        # Uhr des Maehers automatisch stellen (Sommer-/Winterzeit)
+        clock = GreenworksClock(hass, coordinator)
+        coordinator.clock = clock
+        entry.async_on_unload(clock.async_start())
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     entry.async_on_unload(entry.add_update_listener(_async_options_updated))
@@ -128,4 +133,4 @@ async def async_remove_entry(hass: HomeAssistant, entry: GreenworksConfigEntry) 
             ir.async_delete_issue(hass, DOMAIN, issue_id)
 
 
-# Version 0.6.3
+# Version 0.7.0

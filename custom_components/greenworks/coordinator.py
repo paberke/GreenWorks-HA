@@ -75,6 +75,8 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         self.client = client
         # MQTT-Steuerkanal (nur bei "Lesen und steuern", sonst None)
         self.control: Any = None
+        # Uhr stellen (nur bei "Lesen und steuern", sonst None)
+        self.clock: Any = None
         self._outage_grace = timedelta(
             minutes=int(entry.options.get(CONF_OUTAGE_GRACE, DEFAULT_OUTAGE_GRACE))
         )
@@ -272,4 +274,4 @@ class GreenworksCoordinator(DataUpdateCoordinator[dict[int, GreenworksMower]]):
         return mowers
 
 
-# Version 0.6.3
+# Version 0.7.0

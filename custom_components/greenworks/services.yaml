@@ -67,3 +67,9 @@ set_schedule:
       required: false
       selector:
         time:
+
+set_time:
+  target:
+    entity:
+      integration: greenworks
+      domain: lawn_mower

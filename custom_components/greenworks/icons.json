@@ -79,6 +79,9 @@
       },
       "continuous_off": {
         "default": "mdi:robot-mower-outline"
+      },
+      "set_time": {
+        "default": "mdi:clock-check-outline"
       }
     },
     "number": {
@@ -99,6 +102,9 @@
     },
     "set_schedule": {
       "service": "mdi:calendar-clock"
+    },
+    "set_time": {
+      "service": "mdi:clock-check-outline"
     }
   }
 }

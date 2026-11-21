@@ -526,6 +526,9 @@
       },
       "continuous_off": {
         "name": "Mähen ohne Unterbrechung: aus"
+      },
+      "set_time": {
+        "name": "Uhrzeit stellen"
       }
     },
     "number": {
@@ -553,7 +556,7 @@
         },
         "data_description": {
           "groups": "Häkchen setzen = diese Entitäten werden zusätzlich angelegt. Häkchen entfernen = sie werden deaktiviert, nicht gelöscht.",
-          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Dazu kommt die Aktion „Mähplan setzen“ (Testphase). Andere Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher mit einem Optimow 10 und einem Cramer RM1000 (mit PIN) getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
+          "control": "„Nur lesen“ ändert nichts am Mäher (Standard). „Lesen und steuern“ fügt Starten, Pause, Parken und „Mähen ohne Unterbrechung“ hinzu – dieselben Befehle wie in der Greenworks-App. Dazu kommt die Aktion „Mähplan setzen“ (Testphase), und die Uhr des Mähers wird nach der Zeitumstellung automatisch gestellt. Andere Einstellungen bleiben in der App. Testphase: Die Steuerung wurde bisher mit einem Optimow 10 und einem Cramer RM1000 (mit PIN) getestet, siehe [Getestete Mäher]({tested_mowers_url}).",
           "scan_interval": "Wie oft Home Assistant die Greenworks-Cloud nach neuen Werten fragt. Kürzer = aktuellere Werte, aber mehr Anfragen an die Cloud. Standard: 60 Sekunden.",
           "outage_grace": "Antwortet die Cloud kurz nicht, zeigen die Entitäten so lange die letzten Werte weiter. Erst danach werden sie „Nicht verfügbar“. Standard: 5 Minuten.",
           "blade_limit": "Nach so vielen Stunden Messer-Laufzeit schaltet „Messerwechsel fällig“ auf an. 0 = keine Erinnerung. Standard: 150 Stunden.",
@@ -647,6 +650,9 @@
     },
     "schedule_not_confirmed": {
       "message": "Der Mähplan wurde gesendet, aber beim erneuten Lesen stimmen die Werte nicht. Bitte in der Greenworks-App prüfen."
+    },
+    "clock_not_set": {
+      "message": "Die Uhrzeit wurde gesendet, aber beim erneuten Lesen stimmt die Uhr des Mähers noch nicht. Bitte in der Greenworks-App auf der Seite Zeitplan prüfen."
     }
   },
   "services": {
@@ -695,6 +701,10 @@
           "description": "Ende des zweiten Zeitfensters, am selben Tag."
         }
       }
+    },
+    "set_time": {
+      "name": "Uhrzeit stellen",
+      "description": "Stellt die Uhr des Mähers sofort auf die Zeit von Home Assistant (Zeitzone aus den Home-Assistant-Einstellungen). Normalerweise nicht nötig: Bei „Lesen und steuern“ prüft die Integration die Uhr stündlich und stellt sie bei mehr als 5 Minuten Abweichung selbst, z. B. nach der Zeitumstellung."
     }
   }
 }
