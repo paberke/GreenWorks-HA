@@ -4,7 +4,7 @@
 [![Tests](https://github.com/paberke/GreenWorks-HA/actions/workflows/tests.yaml/badge.svg)](https://github.com/paberke/GreenWorks-HA/actions/workflows/tests.yaml)
 [![HACS](https://github.com/paberke/GreenWorks-HA/actions/workflows/validate.yaml/badge.svg)](https://github.com/paberke/GreenWorks-HA/actions/workflows/validate.yaml)
 [![Hassfest](https://github.com/paberke/GreenWorks-HA/actions/workflows/hassfest.yaml/badge.svg)](https://github.com/paberke/GreenWorks-HA/actions/workflows/hassfest.yaml)
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://hacs.xyz)
+[![HACS Default](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://hacs.xyz)
 ![Home Assistant 2025.1+](https://img.shields.io/badge/Home%20Assistant-2025.1%2B-blue.svg)
 
 [🇬🇧 English version](README.md) · **Deutsch**
@@ -36,19 +36,21 @@ Andere Greenworks-/Cramer-Mähroboter, die mit der Greenworks-App laufen, funkti
 
 **Voraussetzung:** Home Assistant **2025.1 oder neuer**. Automatisch getestet mit 2025.2, 2026.2 und 2026.10. Läuft live mit 2026.11.1 (Lesen).
 
-**Ab Home Assistant 2026.11 (Marketplace)** – ab 2026.11 ist HACS als **Marketplace** in Home Assistant eingebaut:
-
-1. Einstellungen → **Marketplace** → **Über Link hinzufügen** (eventuell wirst du einmalig gebeten, GitHub zu verbinden)
-2. GitHub-Link `https://github.com/paberke/GreenWorks-HA` eintragen → **Hinzufügen**
-3. **Greenworks** herunterladen und Home Assistant neu starten
-
-**Ältere Versionen (HACS)**
+Greenworks ist im offiziellen **HACS-Store** (seit 19.11.2026). Du musst keinen Link mehr hinzufügen.
 
 [![In HACS öffnen](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=paberke&repository=GreenWorks-HA&category=integration)
 
-1. HACS → Menü (⋮) → **Benutzerdefinierte Repositories**
-2. URL `https://github.com/paberke/GreenWorks-HA`, Typ **Integration**, hinzufügen
-3. **Greenworks** herunterladen und Home Assistant neu starten
+**Ab Home Assistant 2026.11 (Marketplace)** – ab 2026.11 ist HACS als **Marketplace** in Home Assistant eingebaut:
+
+1. Einstellungen → **Marketplace** → **Durchstöbern** → nach **Greenworks** suchen
+2. **Greenworks** herunterladen und Home Assistant neu starten
+
+**Ältere Versionen (HACS)**
+
+1. **HACS** öffnen → nach **Greenworks** suchen
+2. **Greenworks** herunterladen und Home Assistant neu starten
+
+Wer die Integration schon über einen Link oder als benutzerdefiniertes Repository hinzugefügt hat, muss nichts ändern.
 
 **Einrichten**
 
@@ -259,7 +261,6 @@ Wenn dich das stört: Die Integration ausschalten, solange du die App benutzt (*
 
 Was wir als Nächstes angehen wollen. **Ob und wann das klappt, ist noch nicht sicher.** Wir probieren es aus und testen alles erst am eigenen Mäher.
 
-- Aufnahme in den HACS-Store bzw. den neuen **Marketplace** ab Home Assistant 2026.11
 - **Uhrzeit** des Mähers nach der Zeitumstellung automatisch stellen
 - **Konto wechseln**, ohne die Integration neu einzurichten
 
