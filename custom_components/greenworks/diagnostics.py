@@ -29,6 +29,22 @@ TO_REDACT = {
     "loop_code",
     "cm_id",
     "pin",
+    # Konto- und Zugangsdaten, falls die Cloud sie irgendwo mitliefert
+    "user_id",
+    "uid",
+    "owner",
+    "owner_id",
+    "email",
+    "phone",
+    "access_token",
+    "refresh_token",
+    "token",
+    "authorize",
+    "iccid",
+    "imei",
+    "imsi",
+    "ssid",
+    "wifi_ssid",
 }
 
 # Datenpunkte ab 225 sind Fertigungs-/Geraetedaten als Text (u. a. Seriennummer,
@@ -91,4 +107,4 @@ async def async_get_config_entry_diagnostics(
     }
 
 
-# Version 0.6.3
+# Version 0.6.4

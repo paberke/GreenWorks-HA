@@ -11,6 +11,7 @@ from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
 import json
 import logging
+import re
 import time
 from typing import Any
 
@@ -41,6 +42,16 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 TIMEOUT = aiohttp.ClientTimeout(total=20)
+
+
+def _safe_path(path: str) -> str:
+    """Pfad fuer Fehlermeldungen ohne Kennungen (Nutzer-, Geraete-, Produkt-ID)."""
+    return re.sub(r"[0-9a-fA-F]{6,}|\d+", "…", path)
+
+
+def _err_name(err: BaseException) -> str:
+    """Nur die Art des Fehlers, nie dessen Text (kann die Adresse mit Kennungen enthalten)."""
+    return type(err).__name__
 
 
 class GreenworksError(Exception):
@@ -568,15 +579,16 @@ class GreenworksClient:
                 data = await resp.json(content_type=None)
                 status = resp.status
         except (aiohttp.ClientError, asyncio.TimeoutError, ValueError) as err:
-            raise GreenworksError(f"Login nicht moeglich: {err}") from err
+            raise GreenworksError(f"Login nicht moeglich: {_err_name(err)}") from err
 
         if status != 200:
             code = _error_code(data)
             if code == ERROR_WRONG_PASSWORD:
                 raise GreenworksAuthError("Falsches Passwort (Code 4001007)")
             if status in (400, 401, 403):
+                # Nie die Antwort selbst ausgeben (koennte die E-Mail enthalten)
                 raise GreenworksLoginRejected(
-                    f"Login abgelehnt (HTTP {status}, Code {code}): {data}"
+                    f"Login abgelehnt (HTTP {status}, Code {code})"
                 )
         if status != 200 or not isinstance(data, dict) or "access_token" not in data:
             raise GreenworksError(f"Unerwartete Login-Antwort (HTTP {status})")
@@ -584,7 +596,7 @@ class GreenworksClient:
         self._store_tokens(data)
         self.user_id = data.get("user_id")
         self.authorize = data.get("authorize") or self.authorize
-        _LOGGER.debug("Greenworks-Login erfolgreich (user_id=%s)", self.user_id)
+        _LOGGER.debug("Greenworks-Login erfolgreich")
 
     def _store_tokens(self, data: dict[str, Any]) -> None:
         self._access_token = data.get("access_token")
@@ -643,9 +655,11 @@ class GreenworksClient:
                     # z. B. leere Antwort bei 401: trotzdem neu anmelden koennen
                     data = None
         except (aiohttp.ClientError, asyncio.TimeoutError) as err:
-            raise GreenworksError(f"Anfrage {path} fehlgeschlagen: {err}") from err
+            raise GreenworksError(
+                f"Anfrage {_safe_path(path)} fehlgeschlagen: {_err_name(err)}"
+            ) from err
         if status == 200 and data is None:
-            raise GreenworksError(f"Anfrage {path}: Antwort ist kein JSON")
+            raise GreenworksError(f"Anfrage {_safe_path(path)}: Antwort ist kein JSON")
 
         if status in (401, 403) and _retry:
             _LOGGER.debug("Token abgelehnt (HTTP %s), melde neu an", status)
@@ -656,7 +670,7 @@ class GreenworksClient:
             # Neu angemeldet und trotzdem abgelehnt: kein Passwortproblem
             raise GreenworksError(f"Zugriff verweigert (HTTP {status})")
         if status != 200:
-            raise GreenworksError(f"Anfrage {path}: HTTP {status}")
+            raise GreenworksError(f"Anfrage {_safe_path(path)}: HTTP {status}")
         return data
 
     async def async_get_devices(self) -> list[dict[str, Any]]:
@@ -692,4 +706,4 @@ class GreenworksClient:
         return result
 
 
-# Version 0.6.3
+# Version 0.6.4

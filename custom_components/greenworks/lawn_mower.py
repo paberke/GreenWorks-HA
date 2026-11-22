@@ -301,4 +301,4 @@ class GreenworksLawnMower(GreenworksEntity, LawnMowerEntity):
         }
 
 
-# Version 0.6.3
+# Version 0.6.4
